@@ -17,7 +17,5 @@ namespace Stage0
             Console.WriteLine("{0}, welcome to my first console application", name);
         }
     }
-
-
-
+    
 }
