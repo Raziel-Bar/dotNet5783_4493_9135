@@ -1,4 +1,4 @@
 ﻿namespace Dal;
-public class DelOrder
+public class DalOrder
 {
 }
