@@ -19,15 +19,18 @@ public struct Order
     /// <summary>
     /// His real address (for delivery)
     /// </summary>
-    public int CustomerAdress { get; set; }
+    public string CustomerAdress { get; set; }
+
     /// <summary>
     /// The date on which the order was placed
     /// </summary>
     public DateTime OrderDate { get; set; }
+
     /// <summary>
     /// The date on which the order is to be shipped to the customer
     /// </summary>
     public DateTime ShipDate { get; set; }
+
     /// <summary>
     /// The date on which the order is to be delivered to the customer
     /// </summary>
