@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using System.Xml.Linq;
+
+namespace DO;
 public struct OrderItem
 {
     /// <summary>
@@ -18,10 +20,16 @@ public struct OrderItem
     /// </summary>
     public int Amount { get; set; }
 
-     //=======================================
-    // we mussed one field so i added it//===
-    //=========================================
-    public int OrderItemID { get; set; }   
+    public int OrderItemID { get; set; }
 
-
+    public override string ToString() => $@"
+       Order item ID: {OrderItemID}
+       Order ID: {OrderID}
+       Product ID: {ProductID}
+       Price: {Price}
+       Amount of product: {Amount}
+       ";
 }
+
+
+

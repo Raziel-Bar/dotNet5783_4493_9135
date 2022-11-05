@@ -1,7 +1,9 @@
 ﻿using DO;
+using System.Linq;
+using System.Collections;
 
 namespace Dal;
-static class DataSource // the internal in class is automatic
+internal static class DataSource // the internal in class is automatic
 {
 
     // an empty ctr
@@ -13,12 +15,14 @@ static class DataSource // the internal in class is automatic
     internal static class Config
     {
         internal static int _productCounter = 0;
+
         internal static int _orderCounter = 0;
-        internal static int _orderItemCOunter = 0;
 
+        internal static int _orderItemCounter = 0;
 
-        private static int runNumberOrderID = 0;
-        private static int runNumberOrderItemID = 0;
+        private static int runNumberOrderID = 1;
+
+        private static int runNumberOrderItemID = 1;
 
         internal static int getRunNumberOrderID => runNumberOrderID++;
         internal static int getRunNumberOrderItemID => runNumberOrderItemID++;
@@ -26,21 +30,23 @@ static class DataSource // the internal in class is automatic
 
 
     #region variablesAndArrays
+
     private static readonly Random _random = new Random();// in c# we have to do a new for a class 
 
-    // our arrys
+
     internal static Product[] _products = new Product[50];
     internal static Order[] _orders = new Order[100];
     internal static OrderItem[] _orderItems = new OrderItem[200];
 
 
-   
+
     // the functions that full the arrys
     private static void addProduct(Product product) => _products[Config._productCounter++] = product;
 
     private static void addOrder(Order order) => _orders[Config._orderCounter++] = order;
 
-    private static void addOrderItem(OrderItem orderItem) => _orderItems[Config._orderItemCOunter++] = orderItem;
+    private static void addOrderItem(OrderItem orderItem) => _orderItems[Config._orderItemCounter++] = orderItem;
+
     #endregion
 
 
@@ -51,28 +57,28 @@ static class DataSource // the internal in class is automatic
         initOrderItem();
     }
 
-    #region init entities
+    #region init entities///////////////////////////////////
 
     private static void initProduct()
     {
         List<List<string>> catgoriesAndNames = new List<List<string>>()
         {
-           new List<string>() { "Gamla Cabernet Sauvignon-Merlot -  2017", "Yarden Rom - 2014", "Yarden Katzrin - 2016" },
+          new List<string>() { "Gamla Cabernet Sauvignon-Merlot -  2017", "Yarden Rom - 2014", "Yarden Katzrin - 2016" },
 
-           new List<string>() { "NADAV SINGLE VINEYARD - 2020",  "GALILO - 2017", "SINGLE VINEYARD SHIRAZ ELKOSH - 2016 " },
+          new List<string>() { "NADAV SINGLE VINEYARD - 2020",  "GALILO - 2017", "SINGLE VINEYARD SHIRAZ ELKOSH - 2016 " },
 
-           new List<string>() { "PLATINUM CABERNET SAUVIGNON - 2018 ", "CABERNET SAUVIGNON - 2019 "  , "REICHAN 2014" },
+          new List<string>() { "PLATINUM CABERNET SAUVIGNON - 2018 ", "CABERNET SAUVIGNON - 2019 "  , "REICHAN 2014" },
 
           new List<string>()  { "  ", "   ", "   " },
 
           new List<string>()  {" ", " ", " ", }
-        };
+        };/////////////////////////////////////
 
         int countCatgories = catgoriesAndNames.Count();
 
-        int myIdNumber = 123456;
+        int myIdNumber = 100000;
 
-        for (int i = 0; i < countCatgories; i++)
+        for (int i = 1; i <= countCatgories; i++)
         {
             int fivePercent = (int)(catgoriesAndNames[i].Count() * 0.05);
 
@@ -84,7 +90,7 @@ static class DataSource // the internal in class is automatic
 
                 newProduct.Category = (WINERYS)i;
 
-                newProduct.InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 500000);
+                newProduct.InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101);
 
                 newProduct.Name = name;
 
@@ -95,17 +101,17 @@ static class DataSource // the internal in class is automatic
                     WINERYS.BARKAN => _random.Next(60, 100),
                     WINERYS.CARMEL => _random.Next(60, 100),
                     WINERYS.TEPERBERG => _random.Next(50, 100),
-                    _ => 0,
+                    _ => 0,// 
                 };
 
                 addProduct(newProduct);
             }
         }
-    }
+    }////////////////////////////////////
 
     private static void initOrder()
     {
-        List<List<string>> customerDeteils = new List<List<string>>()
+        List<List<string>> customerDetails = new List<List<string>>()
         {
 
          // full name
@@ -142,23 +148,23 @@ static class DataSource // the internal in class is automatic
 
         DateTime now = DateTime.Now;
 
+        int countCustomerDetails = customerDetails[0].Count();
 
-        for (int i = 0; i < customerDeteils[0].Count(); i++)
+        for (int i = 0; i < countCustomerDetails; i++)
         {
             Order newOrder = new Order();
 
-            int randomOrder = _random.Next(0, customerDeteils[0].Count() + 1);
+            int randomOrder = _random.Next(0, countCustomerDetails);
 
             newOrder.ID = Config.getRunNumberOrderID;
 
-            newOrder.CustomerName = customerDeteils[0][randomOrder];
+            newOrder.CustomerName = customerDetails[0][randomOrder];
 
-            newOrder.CustomerEmail = customerDeteils[1][randomOrder];
+            newOrder.CustomerEmail = customerDetails[1][randomOrder];
 
-            newOrder.CustomerAdress = customerDeteils[2][randomOrder];
+            newOrder.CustomerAdress = customerDetails[2][randomOrder];
 
             //========================================================
-
             newOrder.OrderDate = new DateTime(_random.Next(2020, now.Year + 1), _random.Next(1, 13), _random.Next(3, 5));
 
             DateTime shipDate = newOrder.OrderDate.AddHours(_random.Next(0, 5)).AddSeconds(5).AddDays(_random.Next(1, 14));
@@ -166,38 +172,46 @@ static class DataSource // the internal in class is automatic
             newOrder.ShipDate = shipDate;
 
             newOrder.DelveryrDate = shipDate.AddHours(_random.Next(0, 5));
-
+            //===========================================================
 
             addOrder(newOrder);
 
         }
-    }
+    }////////////////////////////
 
     private static void initOrderItem()
     {
 
-        foreach (var order in _orders)
+        for (int j = 0; j < Config._orderCounter; ++j)
         {
+
             for (int i = 0; i < _random.Next(1, 5); ++i)
             {
-                Product product = _products[_random.Next(_products.Length)];
+
+                Product product = _products[_random.Next(0, _products.Length)];
+
+                while (product.InStock == 0)
+                {
+                    product = _products[_random.Next(0, _products.Length)];
+                }
 
                 OrderItem item = new OrderItem();
 
                 item.OrderItemID = Config.getRunNumberOrderItemID;
 
-                item.OrderID = order.ID;
+                item.OrderID = _orders[j].ID;
 
                 item.ProductID = product.ID;
 
-                item.Amount = product.InStock > 0 ? (product.InStock - _random.Next(0, product.InStock)) : 0;
+                item.Amount = _random.Next(1, (int)((product.InStock) / 5) + 1);
 
                 item.Price = (double)(product.Price * item.Amount);
 
-                addOrderItem(item); 
+                addOrderItem(item);
             }
         }
-    }
 
-    #endregion
+       
+    }
+    #endregion///////////////////////////////////
 }

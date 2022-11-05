@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using System.Diagnostics;
+
+namespace DO;
 /// <summary>
 /// Structure for a given order
 /// </summary>
@@ -35,4 +37,14 @@ public struct Order
     /// The date on which the order is to be delivered to the customer
     /// </summary>
     public DateTime DelveryrDate { get; set; }
+
+    public override string ToString() => $@"
+       Order ID: {ID}
+       Customer name: {CustomerName} 
+       Customer email: {CustomerEmail}
+       Customer address: {CustomerAdress}
+       Time of the order:{OrderDate} 
+       Time of ship: {ShipDate}
+       Time of delivering: {DelveryrDate}
+       ";
 }
