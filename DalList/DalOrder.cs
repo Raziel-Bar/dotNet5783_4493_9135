@@ -25,15 +25,14 @@ public class DalOrder
         return DataSource._orders[index];
     }
 
-    public  List<Order> listOfOrders()/////////////////////////////
+    public Order[] listOfOrders()
     {
-        List<Order> ordersList = new List<Order>();
-        foreach (Order order in DataSource._orders)
-            ordersList.Add(order);
-        
-        return ordersList;
+        Order[] newOrdertlist = new Order[DataSource.Config._orderCounter];
+        for (int i = 0; i < newOrdertlist.Length; ++i)
+            newOrdertlist[i] = DataSource._orders[i];
+        return newOrdertlist;
     }
-
+    
     public void deleteOrder(int orderId)
     {
         int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
@@ -58,3 +57,11 @@ public class DalOrder
         DataSource._orders[index] = orderUpdate;
     }
 }
+//public  List<Order> listOfOrders()
+//{
+//    List<Order> ordersList = new List<Order>();
+//    foreach (Order order in DataSource._orders)
+//        ordersList.Add(order);
+
+//    return ordersList;
+//}

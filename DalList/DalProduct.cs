@@ -22,15 +22,13 @@ public class DalProduct
 
         return DataSource._products[index];
     }
-
-    public List<Product> listOfProducts()//////////////////////////////////////
+    public Product[] listOfProducts()
     {
-        List<Product> list = new List<Product>();
+        Product[] newProductlist = new Product[DataSource.Config._productCounter];
+        for (int i = 0; i < newProductlist.Length; ++i)
+            newProductlist[i] = DataSource._products[i];
 
-        foreach (Product product in DataSource._products)
-            list.Add(product);
-
-        return list;
+        return newProductlist;
     }
 
     public void deleteProduct(int productId)
@@ -57,3 +55,13 @@ public class DalProduct
         DataSource._products[index] = uppdateProduct;
     }
 }
+
+    //public List<Product> listOfProducts()
+    //{
+    //    List<Product> list = new List<Product>();
+
+    //    foreach (Product product in DataSource._products)
+    //        list.Add(product);
+
+    //    return list;
+    //}
