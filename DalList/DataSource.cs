@@ -1,18 +1,25 @@
 ﻿using DO;
 using System.Linq;
 using System.Collections;
-
 namespace Dal;
-internal static class DataSource // the internal in class is automatic
-{
 
-    // an empty ctr
+/// <summary>
+/// internal class: no access from other projects
+/// Runs the database of our shop, including lists of the products, orders and the order items.
+/// </summary>
+internal static class DataSource
+{
+    /// <summary>
+    /// Empty ctor
+    /// </summary>
     static DataSource()
     {
         s_Initialize();
     }
 
-    //internal static class Config
+    #region countersAndRunningNumbers
+
+    //internal static class Config // TO BE IGNORED ATM BASED ON INSTRUCTIONS GIVEN BY DAN ZILBERSTEIN
     //{
     internal static int _productCounter = 0;
 
@@ -27,40 +34,39 @@ internal static class DataSource // the internal in class is automatic
     internal static int getRunNumberOrderID => runNumberOrderID++;
     internal static int getRunNumberOrderItemID => runNumberOrderItemID++;
     //}
-
+    #endregion
 
     #region variablesAndArrays
 
-    private static readonly Random _random = new Random();// in c# we have to do a new for a class 
+    private static readonly Random _random = new Random();// random nums maker
 
-
+    /// <summary>
+    /// defining arrays
+    /// </summary>
     internal static Product[] _products = new Product[50];
     internal static Order[] _orders = new Order[100];
     internal static OrderItem[] _orderItems = new OrderItem[200];
 
 
-
-    // the functions that fill the arrays
+    /// <summary>
+    /// defining the adding basic methods. adds a new entity object to its appropriate list (objects will be made in the inits)
+    /// </summary>
     private static void addProduct(Product product) => _products[_productCounter++] = product;
-
     private static void addOrder(Order order) => _orders[_orderCounter++] = order;
-
     private static void addOrderItem(OrderItem orderItem) => _orderItems[_orderItemCounter++] = orderItem;
 
     #endregion
 
+    #region init entities
 
-    private static void s_Initialize()
-    {
-        initProduct();
-        initOrder();
-        initOrderItem();
-    }
-
-    #region init entities///////////////////////////////////
-
+    /// <summary>
+    /// The maker of the default database of products - wines of 5 different winerys
+    /// </summary>
     private static void initProduct()
     {
+        /// <summary>
+        /// list of lists! each inner list for an ENUM WINERY category accordingly.
+        /// </summary>
         List<List<string>> catgoriesAndNames = new List<List<string>>()
         {
           new List<string>() { "Gamla Cabernet Sauvignon-Merlot -  2017", "Yarden Rom - 2014", "Yarden Katzrin - 2016" },
@@ -78,9 +84,9 @@ internal static class DataSource // the internal in class is automatic
 
         int myIdNumber = 100000;
 
-        for (int i = 1; i <= countCatgories; i++)
+        for (int i = 0; i < countCatgories; i++)
         {
-            int fivePercent = (int)(catgoriesAndNames[i].Count() * 0.05);
+            int fivePercent = (int)(catgoriesAndNames[i].Count() * 0.05); // 5% of the products shall have 0 in stock
 
             foreach (var name in catgoriesAndNames[i])
             {
@@ -90,30 +96,35 @@ internal static class DataSource // the internal in class is automatic
 
                 newProduct.Category = (WINERYS)i;
 
-                newProduct.InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101);
+                newProduct.InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101); // first 5% are getting 0 in stock
 
                 newProduct.Name = name;
 
                 newProduct.Price = newProduct.Category switch
                 {
-                    WINERYS.GOLAN => _random.Next(80, 250),
+                    WINERYS.GOLAN => _random.Next(100, 250),
                     WINERYS.DALTON => _random.Next(70, 150),
                     WINERYS.BARKAN => _random.Next(60, 100),
                     WINERYS.CARMEL => _random.Next(60, 100),
-                    WINERYS.TEPERBERG => _random.Next(50, 100),
+                    WINERYS.TEPERBERG => _random.Next(70, 200),
                     _ => 0,// null option. program is not supposed to ever get here.
                 };
 
-                addProduct(newProduct);
+                addProduct(newProduct); // Product's ready! adding to database
             }
         }
     }
 
+    /// <summary>
+    /// The maker of the default database of orders list
+    /// </summary>
     private static void initOrder()
     {
+        /// <summary>
+        /// list of lists! all synchronized
+        /// </summary>
         List<List<string>> customerDetails = new List<List<string>>()
         {
-
          // full name
          new List<string>() { "Urson Haffner","Candide Oldacre","Clovis McLay","Torrie Jacobson", "Tildi Kiggel",
 
@@ -164,46 +175,44 @@ internal static class DataSource // the internal in class is automatic
 
             newOrder.CustomerAdress = customerDetails[2][randomOrder];
 
-            //========================================================
-            //newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year + 1), _random.Next(1, 13), _random.Next(3, 5));
-            newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year + 1));
-            if (newOrder.OrderDate.Year == now.Year)
+            newOrder.OrderDate = DateTime.Now - new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 10, TimeSpan.TicksPerDay * 1000)); // latest order is at least 10 days ago
+
+            if (i < countCustomerDetails * 8 / 10) // 80% of orders has a Shipping date
             {
-                newOrder.OrderDate.AddMonths(_random.Next(1, now.Month + 1));
-                if (newOrder.OrderDate.Month == now.Month)
+                newOrder.ShipDate = newOrder.OrderDate + new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 2, TimeSpan.TicksPerDay * 5)); // shipping date is between 2-5 days after the order date
+
+                if (i < (countCustomerDetails * 8 / 10) * 6 / 10) // 60% of orders THAT HAS BEEN SHIPPED has a delivery date
                 {
-                    newOrder.OrderDate.AddDays(_random.Next(1, now.Day));
+                    newOrder.DelveryrDate = newOrder.ShipDate + new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 2)); // Delivery date is at most 2 days after shipping date. Thus, the latest delivery date is at least 3 days ago!
+                }
+                else
+                {
+                    newOrder.DelveryrDate = DateTime.MinValue;
                 }
             }
             else
-                newOrder.OrderDate.AddMonths(_random.Next(1, 13));
-
-
-
-            DateTime shipDate = newOrder.OrderDate.AddHours(_random.Next(0, 5)).AddSeconds(5).AddDays(_random.Next(1, 14));
-
-            newOrder.ShipDate = shipDate;
-
-            newOrder.DelveryrDate = shipDate.AddHours(_random.Next(0, 5));
-            //===========================================================
-
-            addOrder(newOrder);
-
+            {
+                newOrder.ShipDate = DateTime.MinValue;
+            }
+            addOrder(newOrder); // Order's ready! adding to database
         }
-    }////////////////////////////
+    }
 
+    /// <summary>
+    /// The maker of the default database of order items list
+    /// </summary>
     private static void initOrderItem()
     {
 
         for (int j = 0; j < _orderCounter; ++j)
         {
 
-            for (int i = 0; i < _random.Next(1, 5); ++i)
+            for (int i = 0; i < _random.Next(1, 5); ++i) // up to 4 items in an order
             {
 
                 Product product = _products[_random.Next(0, _products.Length)];
 
-                while (product.InStock == 0)
+                while (product.InStock == 0) // In case we randomly took a product with 0 quantity
                 {
                     product = _products[_random.Next(0, _products.Length)];
                 }
@@ -220,11 +229,21 @@ internal static class DataSource // the internal in class is automatic
 
                 item.Price = product.Price;  //(double)(product.Price * item.Amount);
 
-                addOrderItem(item);
+                addOrderItem(item); // Order item's ready! Adding to database...
             }
         }
 
 
     }
-    #endregion///////////////////////////////////
+    #endregion
+
+    /// <summary>
+    /// The empty ctor calls all entities inits
+    /// </summary>
+    private static void s_Initialize()
+    {
+        initProduct();
+        initOrder();
+        initOrderItem();
+    }
 }

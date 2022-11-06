@@ -10,7 +10,7 @@
 /// 
 public enum WINERYS
 {
-    GOLAN =1,
+    GOLAN,
     DALTON,
     TEPERBERG,
     CARMEL,

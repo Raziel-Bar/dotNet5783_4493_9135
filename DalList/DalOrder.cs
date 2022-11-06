@@ -15,7 +15,7 @@ public class DalOrder
     /// <exception cref="Exception">
     /// in case the order already exists in the _orders array
     /// </exception>
-    public int addNewOrder(Order newOrder)
+    public int AddNewOrder(Order newOrder)
     {
         if (Array.Exists(DataSource._orders, p => p.ID == newOrder.ID))
             throw new Exception("The order you wish to add already exists");
@@ -39,25 +39,25 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order searchOrder(int orderId)
+    public Order SearchOrder(int orderId)
     {
         int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
 
         if (index == -1)
-            throw new Exception("The order you want does not exist");
+            throw new Exception("The order you search for does not exist");
 
         return DataSource._orders[index];
     }
 
-    /// <summary>@@@
+    /// <summary>
     /// copies all _orders' RELEVANT cells into a new array
     /// </summary>
     /// <returns>
     /// The new array
     /// </returns>
-    public Order[] listOfOrders()
+    public Order[] ListOfOrders()
     {
-        Order[] newOrderlist = new Order[DataSource._orderCounter];//EXCEPTION
+        Order[] newOrderlist = new Order[DataSource._orderCounter];
         for (int i = 0; i < newOrderlist.Length; ++i)
             newOrderlist[i] = DataSource._orders[i];
         return newOrderlist;
@@ -72,7 +72,7 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void deleteOrder(int orderId)
+    public void DeleteOrder(int orderId)
     {
         int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
 
@@ -95,7 +95,7 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public void updateOrder(Order orderUpdate)
+    public void UpdateOrder(Order orderUpdate)
     {
         int index = Array.FindIndex(DataSource._orders, p => p.ID == orderUpdate.ID);
 

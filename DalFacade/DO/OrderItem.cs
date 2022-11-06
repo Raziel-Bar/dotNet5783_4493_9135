@@ -3,8 +3,10 @@
 namespace DO;
 public struct OrderItem
 {
+    /// <summary>
+    /// The orderItem's ID (== ID attribute from the orderItem entity)
+    /// </summary>
     public int OrderItemID { get; set; }
-
 
     /// <summary>
     /// The product's ID (== ID attribute from the Product entity)
