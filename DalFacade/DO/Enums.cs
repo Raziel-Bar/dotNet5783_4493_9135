@@ -8,8 +8,6 @@
 /// The category of the product, in our case, wine - which winery is the product from.
 /// </summary>
 /// 
-
-
 public enum WINERYS
 {
     GOLAN =1,
@@ -18,7 +16,6 @@ public enum WINERYS
     CARMEL,
     BARKAN,
 
-
     //================================================
     // for stage 1 we will stay with 5 categories//===
     //================================================
@@ -26,5 +23,5 @@ public enum WINERYS
     /// <summary>
     /// ELSE is the category for non wine bottle products.
     /// </summary>
-   // ELSE
+    // ELSE
 }

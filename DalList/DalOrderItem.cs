@@ -3,14 +3,20 @@
 namespace Dal;
 public class DalOrderItem
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newOrderItem"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public int addNewOrderItem(OrderItem newOrderItem)
     {
         if (Array.Exists(DataSource._orderItems, p => p.OrderItemID == newOrderItem.OrderItemID))
             throw new Exception("The order you want to add is already exist");
 
-        newOrderItem.OrderItemID = DataSource.Config.getRunNumberOrderItemID;
+        newOrderItem.OrderItemID = DataSource.getRunNumberOrderItemID;
 
-        DataSource._orderItems[DataSource.Config._orderItemCounter++] = newOrderItem;
+        DataSource._orderItems[DataSource._orderItemCounter++] = newOrderItem;
 
         return newOrderItem.OrderItemID;
     }
@@ -34,7 +40,7 @@ public class DalOrderItem
 
     public OrderItem[] ordersList(int orderId)
     {
-        OrderItem[] newlist = new OrderItem[DataSource.Config._orderCounter];
+        OrderItem[] newlist = new OrderItem[DataSource._orderCounter];
         for (int i = 0; i < newlist.Length; ++i)
             if (DataSource._orderItems[i].OrderID == orderId)
                 newlist[i] = DataSource._orderItems[i];
@@ -44,7 +50,7 @@ public class DalOrderItem
 
     public OrderItem[] orderItemsList()
     {
-        OrderItem[] newOrderItemlist = new OrderItem[DataSource.Config._orderItemCounter];
+        OrderItem[] newOrderItemlist = new OrderItem[DataSource._orderItemCounter];
         for (int i = 0; i < newOrderItemlist.Length; ++i)
             newOrderItemlist[i] = DataSource._orderItems[i];
         return newOrderItemlist;
@@ -57,7 +63,7 @@ public class DalOrderItem
         if (index == -1)
             throw new Exception("The order item you want to delete is not exist");
 
-        int last = (--DataSource.Config._orderItemCounter);
+        int last = (--DataSource._orderItemCounter);
 
         DataSource._orderItems[index] = DataSource._orderItems[last];
 

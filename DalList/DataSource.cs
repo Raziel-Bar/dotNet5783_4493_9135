@@ -12,21 +12,21 @@ internal static class DataSource // the internal in class is automatic
         s_Initialize();
     }
 
-    internal static class Config
-    {
-        internal static int _productCounter = 0;
+    //internal static class Config
+    //{
+    internal static int _productCounter = 0;
 
-        internal static int _orderCounter = 0;
+    internal static int _orderCounter = 0;
 
-        internal static int _orderItemCounter = 0;
+    internal static int _orderItemCounter = 0;
 
-        private static int runNumberOrderID = 1;
+    private static int runNumberOrderID = 1;
 
-        private static int runNumberOrderItemID = 1;
+    private static int runNumberOrderItemID = 1;
 
-        internal static int getRunNumberOrderID => runNumberOrderID++;
-        internal static int getRunNumberOrderItemID => runNumberOrderItemID++;
-    }
+    internal static int getRunNumberOrderID => runNumberOrderID++;
+    internal static int getRunNumberOrderItemID => runNumberOrderItemID++;
+    //}
 
 
     #region variablesAndArrays
@@ -40,12 +40,12 @@ internal static class DataSource // the internal in class is automatic
 
 
 
-    // the functions that full the arrys
-    private static void addProduct(Product product) => _products[Config._productCounter++] = product;
+    // the functions that fill the arrays
+    private static void addProduct(Product product) => _products[_productCounter++] = product;
 
-    private static void addOrder(Order order) => _orders[Config._orderCounter++] = order;
+    private static void addOrder(Order order) => _orders[_orderCounter++] = order;
 
-    private static void addOrderItem(OrderItem orderItem) => _orderItems[Config._orderItemCounter++] = orderItem;
+    private static void addOrderItem(OrderItem orderItem) => _orderItems[_orderItemCounter++] = orderItem;
 
     #endregion
 
@@ -69,10 +69,10 @@ internal static class DataSource // the internal in class is automatic
 
           new List<string>() { "PLATINUM CABERNET SAUVIGNON - 2018 ", "CABERNET SAUVIGNON - 2019 "  , "REICHAN 2014" },
 
-          new List<string>()  { "  ", "   ", "   " },
+          new List<string>()  { "Carmel Private Collection Cabernet Sauvignon - 2019", "Carmel VineYard 2020", "MIDITERRANEAN 2016" },
 
-          new List<string>()  {" ", " ", " ", }
-        };/////////////////////////////////////
+          new List<string>()  {"BarKan Platinum Merlot 2018", "Altitude 720 Petite Verdot 2015", "Barkan Superior 2017", }
+        };
 
         int countCatgories = catgoriesAndNames.Count();
 
@@ -101,13 +101,13 @@ internal static class DataSource // the internal in class is automatic
                     WINERYS.BARKAN => _random.Next(60, 100),
                     WINERYS.CARMEL => _random.Next(60, 100),
                     WINERYS.TEPERBERG => _random.Next(50, 100),
-                    _ => 0,// 
+                    _ => 0,// null option. program is not supposed to ever get here.
                 };
 
                 addProduct(newProduct);
             }
         }
-    }////////////////////////////////////
+    }
 
     private static void initOrder()
     {
@@ -156,7 +156,7 @@ internal static class DataSource // the internal in class is automatic
 
             int randomOrder = _random.Next(0, countCustomerDetails);
 
-            newOrder.ID = Config.getRunNumberOrderID;
+            newOrder.ID = getRunNumberOrderID;
 
             newOrder.CustomerName = customerDetails[0][randomOrder];
 
@@ -165,7 +165,20 @@ internal static class DataSource // the internal in class is automatic
             newOrder.CustomerAdress = customerDetails[2][randomOrder];
 
             //========================================================
-            newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year +1), _random.Next(1, 13), _random.Next(3, 5));
+            //newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year + 1), _random.Next(1, 13), _random.Next(3, 5));
+            newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year + 1));
+            if (newOrder.OrderDate.Year == now.Year)
+            {
+                newOrder.OrderDate.AddMonths(_random.Next(1, now.Month + 1));
+                if (newOrder.OrderDate.Month == now.Month)
+                {
+                    newOrder.OrderDate.AddDays(_random.Next(1, now.Day));
+                }
+            }
+            else
+                newOrder.OrderDate.AddMonths(_random.Next(1, 13));
+
+
 
             DateTime shipDate = newOrder.OrderDate.AddHours(_random.Next(0, 5)).AddSeconds(5).AddDays(_random.Next(1, 14));
 
@@ -182,7 +195,7 @@ internal static class DataSource // the internal in class is automatic
     private static void initOrderItem()
     {
 
-        for (int j = 0; j < Config._orderCounter; ++j)
+        for (int j = 0; j < _orderCounter; ++j)
         {
 
             for (int i = 0; i < _random.Next(1, 5); ++i)
@@ -197,7 +210,7 @@ internal static class DataSource // the internal in class is automatic
 
                 OrderItem item = new OrderItem();
 
-                item.OrderItemID = Config.getRunNumberOrderItemID;
+                item.OrderItemID = getRunNumberOrderItemID;
 
                 item.OrderID = _orders[j].ID;
 
@@ -211,7 +224,7 @@ internal static class DataSource // the internal in class is automatic
             }
         }
 
-       
+
     }
     #endregion///////////////////////////////////
 }
