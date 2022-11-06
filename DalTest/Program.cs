@@ -18,12 +18,7 @@ namespace Test
             int menuChose;
             do
             {
-                Console.WriteLine(@"Please select the entity:
-                                 
-                              0.EXIT.    
-                              1.PRODUCT.
-                              2.ORDER.
-                              3.ORDER ITEM.");
+                Console.WriteLine("Please select the entity: \n 0.EXIT. \n 1.PRODUCT.\n 2.ORDER\n 3.ORDER ITEM.");
 
                 menuChose = yourChoiceInt();
                 switch ((ENTITIES)menuChose)
@@ -37,6 +32,7 @@ namespace Test
                         break;
 
                     case ENTITIES.ORDER_ITEM:
+                        orderItemCheck();
                         break;
                 }
 
@@ -74,7 +70,7 @@ namespace Test
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printColetion(_dalProduct.listOfProducts());
+                        printCollection(_dalProduct.listOfProducts());
                         break;
                 }
             } while (option != 0);
@@ -84,9 +80,7 @@ namespace Test
         {
             Product newProduct = new Product();
 
-            Console.WriteLine(@"Please enter the product details:
-
-                                              Enter the name of product: ");
+            Console.WriteLine("Please enter the product details: \nEnter the name of product: ");
 
             newProduct.Name = Console.ReadLine();
 
@@ -99,12 +93,13 @@ namespace Test
 
 
             Console.WriteLine(@"Please choice the product category: 
-                                            1 for GOLAN
-                                            2 for DALTON
-                                            3 for TEPERBERG
-                                            4 for CARMEL
-                                            5 for BARKAN
-                                            Enter your choice: ");
+
+1 for GOLAN
+2 for DALTON
+3 for TEPERBERG
+4 for CARMEL
+5 for BARKAN
+Enter your choice: ");
 
             int catgory = 0;
             do
@@ -137,13 +132,13 @@ namespace Test
             do
             {
                 Console.WriteLine(@"Please chose what do you want to change in the product: 
-                                            0. EXIT
-                                            1. change name.
-                                            2. change price.
-                                            3. change amount.
-                                            4. change category.        
-                  
-                                            Enter your choice:");
+0. EXIT
+1. change name.
+2. change price.
+3. change amount.
+4. change category.       
+
+Enter your choice:");
                 chengeChoice = yourChoiceInt();
                 while (chengeChoice > 4 || chengeChoice < 0)
                 {
@@ -169,12 +164,13 @@ namespace Test
 
                     case 4:
                         Console.WriteLine(@"Please choice the product category: 
-                                            1 for GOLAN
-                                            2 for DALTON
-                                            3 for TEPERBERG
-                                            4 for CARMEL
-                                            5 for BARKAN
-                                            Enter your choice: ");
+ 1 for GOLAN
+ 2 for DALTON
+ 3 for TEPERBERG
+ 4 for CARMEL
+ 5 for BARKAN
+
+Enter your choice: ");
 
                         int catgory = 0;
                         catgory = yourChoiceInt();
@@ -199,7 +195,7 @@ namespace Test
 
         // ------------------------------------------------- END OF PRODUCT ENTITIE FUNCTIONS ---------------------------------------------------
 
-        //==================================================================================================
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         //--------------------------------------------- ORDER ENTITIE FUNCTIONS ----------------------------------------
 
@@ -230,7 +226,7 @@ namespace Test
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printColetion(_dalOrder.listOfOrders());
+                        printCollection(_dalOrder.listOfOrders());
                         break;
                 }
 
@@ -241,9 +237,7 @@ namespace Test
         private static void orderCheckAdd()
         {
             Order newOrder = new Order();
-            Console.WriteLine(@"Please enter the order details: 
-
-                                             Enter order ID:  ");
+            Console.WriteLine("Please enter the order details: \n Enter order ID:  ");
             newOrder.ID = yourChoiceInt();
 
             Console.WriteLine("Enter the customer full name: ");
@@ -289,14 +283,14 @@ namespace Test
             do
             {
                 Console.WriteLine(@"Please chose what do you want to change in the order: 
-                                            0. EXIT
-                                            1. change customer name.
-                                            2. change customer email.
-                                            3. change customer address.
-                                            4. change ship date.
-                                            5. change delivery day.  
-                  
-                                            Enter your choice:");
+ 0. EXIT
+ 1. change customer name.
+ 2. change customer email.
+ 3. change customer address. 
+ 4. change ship date.
+ 5. change delivery day. 
+
+Enter your choice:");
                 chengeChoice = yourChoiceInt();
                 while (chengeChoice > 5 || chengeChoice < 0)
                 {
@@ -344,47 +338,165 @@ namespace Test
 
         //--------------------------------------------- END OF ORDER ENTITIE FUNCTIONS ----------------------------------------
 
-        //==================================================================================================
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        //--------------------------------------------- ORDER ITEM ENTITIE FUNCTIONS ----------------------------------------
+
+        private static void orderItemCheck()
+        {
+
+            int option;
+            do
+            {
+                printMenu("Order item");
+                option = yourChoiceInt();
+                switch ((OPTIONS)option)
+                {
+                    case OPTIONS.ADD:
+                        orderItemCheckAdd();
+                        break;
+
+                    case OPTIONS.UPDATE:
+                        orderCheckUpdate();
+                        break;
+
+                    case OPTIONS.DELETE:
+                        Console.WriteLine("Enter the order item ID to delete: ");
+                        _dalOrderItem.deleteOrderItem(yourChoiceInt());
+                        break;
+                    case OPTIONS.SEARCH:
+                        Console.WriteLine("Enter the order item ID to search: ");
+                        Console.WriteLine(_dalOrderItem.searchOrderItem(yourChoiceInt()));
+                        break;
+
+                    case OPTIONS.GET_LIST:
+                        printCollection(_dalOrderItem.orderItemsList());
+                        break;
+
+                    case OPTIONS.ORDER_ITEM_LIST:
+                        Console.WriteLine("Enter order ID: ");
+                        printCollection(_dalOrderItem.ordersList(yourChoiceInt()));
+                        break;
+
+                    case OPTIONS.ORDER_ITEM_SEARCH:
+                        Console.WriteLine("Enter the order ID and product ID for searching: ");
+                        Console.WriteLine(_dalOrderItem.searchProductItem(yourChoiceInt(), yourChoiceInt()));
+                        break;
+                }
+            } while (option != 0);
+        }
+        private static void orderItemCheckAdd()
+        {
+            double tempPrice = -1;
+            OrderItem newOrderItem = new OrderItem();
+
+            Console.WriteLine("Please enter the order item details: \n Enter order item ID: ");
+            newOrderItem.OrderItemID = yourChoiceInt();
+
+            Console.WriteLine("Enter product ID:");
+            newOrderItem.ProductID = yourChoiceInt();
+
+            Console.WriteLine("Enter order ID: ");
+            newOrderItem.OrderID = yourChoiceInt();
+
+            Console.WriteLine("Enter price of the product:");
+            tryParseDouble(ref tempPrice);
+            newOrderItem.Price = tempPrice;
+
+            Console.WriteLine("Enter product amount:");
+            newOrderItem.Amount = yourChoiceInt();
+
+            try
+            {
+                _dalOrderItem.addNewOrderItem(newOrderItem);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private static void orderItemCheckUpdate()
+        {
+            double tempPrice = -1;
+            int chengeChoice;
+            Console.WriteLine("Please enter the order item ID for searching: ");
+            OrderItem orderItemUpdate = _dalOrderItem.searchOrderItem(yourChoiceInt());
+            do
+            {
+                Console.WriteLine(@"Please chose what do you want to change in the order item: 
+ 0. EXIT
+ 1. change product ID.
+ 2. change order Id.
+ 3. change price. 
+ 4. change amount.
+
+Enter your choice:");
+
+                chengeChoice = yourChoiceInt();
+                while (chengeChoice > 4 || chengeChoice < 0)
+                {
+                    Console.WriteLine("ERROR please enter again");
+                    chengeChoice = yourChoiceInt();
+                }
+
+                switch (chengeChoice)
+                {
+                    case 1:
+                        orderItemUpdate.ProductID = yourChoiceInt();
+                        break;
+
+                    case 2:
+                        orderItemUpdate.OrderID = yourChoiceInt();
+                        break;
+
+                    case 3:
+                        tryParseDouble(ref tempPrice);
+                        orderItemUpdate.Price = tempPrice;
+                        break;
+
+                    case 4:
+                        orderItemUpdate.Amount = yourChoiceInt();
+                        break;
+                };
+            } while (chengeChoice != 0);
+
+            try
+            {
+                _dalOrderItem.updateOrderItem(orderItemUpdate);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
 
         //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
-        private static void printColetion<item>(item[] items)
+        private static void printMenu(string type)
+        {
+            Console.WriteLine(@$"
+Please chose on of the following options:
+
+ 0. EXIT.
+ 1. Add {type}.
+ 2. Update {type}. 
+ 3. Delete {type}
+ 4. Search {type}.
+ 5. Get List of {type}.");
+
+            if (type == "Order item")
+                Console.WriteLine(@" 6. Get list of orders from order item.  
+ 7. Search by order id and product id.
+");
+
+            Console.WriteLine("Enter your choice:");
+
+        }
+        private static void printCollection<item>(item[] items)
         {
             foreach (var obj in items)
                 Console.WriteLine(obj);
-        }
-        private static void printMenu(string type)
-        {
-            if (type == "orderItem")
-            {
-                Console.WriteLine(@$"
-               Please chose on of the following options:
-
-               0. EXIT.
-               1. Add {type}.
-               2. Update {type}. 
-               3. Delete {type}
-               4. Search {type}.
-               5. Get List of {type}.
-               6. Get list of orders from order item.  
-               7. Search by order id and product id.
-
-               enter your choice: ");
-            }
-            else
-            {
-                Console.WriteLine(@$"
-               Please chose on of the following options:
-
-               0. EXIT.
-               1. Add {type}.
-               2. Update {type}. 
-               3. Delete {type}
-               4. Search {type}.
-               5. Get List of {type}.
-
-               enter your choice: ");
-            }
         }
         private static void tryParseInt(ref int choice)
         {
@@ -407,10 +519,6 @@ namespace Test
             return tempCoice;
         }
         //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
-
-
-
     }
-
 }
 

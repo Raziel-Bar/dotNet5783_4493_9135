@@ -3,6 +3,9 @@
 namespace DO;
 public struct OrderItem
 {
+    public int OrderItemID { get; set; }
+
+
     /// <summary>
     /// The product's ID (== ID attribute from the Product entity)
     /// </summary>
@@ -20,7 +23,7 @@ public struct OrderItem
     /// </summary>
     public int Amount { get; set; }
 
-    public int OrderItemID { get; set; }
+   
 
     public override string ToString() => $@"
        Order item ID: {OrderItemID}

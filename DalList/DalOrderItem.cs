@@ -32,27 +32,23 @@ public class DalOrderItem
         return DataSource._orderItems[index];
     }
 
-    public List<OrderItem> ordersList(int orderId)
+    public OrderItem[] ordersList(int orderId)
     {
-        List<OrderItem> list = new List<OrderItem>();
-        foreach (OrderItem item in DataSource._orderItems)
-        {
-            if (item.OrderID == orderId)
-                list.Add(item);
-        }
+        OrderItem[] newlist = new OrderItem[DataSource.Config._orderCounter];
+        for (int i = 0; i < newlist.Length; ++i)
+            if (DataSource._orderItems[i].OrderID == orderId)
+                newlist[i] = DataSource._orderItems[i];
 
-        return list;
-    }/////////////////////////
+        return newlist;
+    }
 
-    public List<OrderItem> orderItemList()
+    public OrderItem[] orderItemsList()
     {
-        List<OrderItem> list = new List<OrderItem>();
-
-        foreach (OrderItem item in DataSource._orderItems)
-            list.Add(item);
-
-        return list;
-    }////////////
+        OrderItem[] newOrderItemlist = new OrderItem[DataSource.Config._orderItemCounter];
+        for (int i = 0; i < newOrderItemlist.Length; ++i)
+            newOrderItemlist[i] = DataSource._orderItems[i];
+        return newOrderItemlist;
+    }
 
     public void deleteOrderItem(int orderItemId)
     {
@@ -69,13 +65,23 @@ public class DalOrderItem
 
     }
 
-    public void UpdateOrderItem(OrderItem updateOrderItem)
+    public void updateOrderItem(OrderItem updateOrderItem)
     {
         int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == updateOrderItem.OrderItemID);
 
         if (index == -1)
             throw new Exception("The order item you want to update is not exist");
 
-        DataSource._orderItems[index] = updateOrderItem;    
+        DataSource._orderItems[index] = updateOrderItem;
     }
 }
+
+//public List<OrderItem> orderItemList()
+//{
+//    List<OrderItem> list = new List<OrderItem>();
+
+//    foreach (OrderItem item in DataSource._orderItems)
+//        list.Add(item);
+
+//    return list;
+//}

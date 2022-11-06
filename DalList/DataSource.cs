@@ -165,7 +165,7 @@ internal static class DataSource // the internal in class is automatic
             newOrder.CustomerAdress = customerDetails[2][randomOrder];
 
             //========================================================
-            newOrder.OrderDate = new DateTime(_random.Next(2020, now.Year + 1), _random.Next(1, 13), _random.Next(3, 5));
+            newOrder.OrderDate = new DateTime(_random.Next(now.Year - 2, now.Year +1), _random.Next(1, 13), _random.Next(3, 5));
 
             DateTime shipDate = newOrder.OrderDate.AddHours(_random.Next(0, 5)).AddSeconds(5).AddDays(_random.Next(1, 14));
 
@@ -205,7 +205,7 @@ internal static class DataSource // the internal in class is automatic
 
                 item.Amount = _random.Next(1, (int)((product.InStock) / 5) + 1);
 
-                item.Price = (double)(product.Price * item.Amount);
+                item.Price = product.Price;  //(double)(product.Price * item.Amount);
 
                 addOrderItem(item);
             }
