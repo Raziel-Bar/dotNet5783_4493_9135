@@ -82,8 +82,7 @@ internal static class DataSource
 
         int countCatgories = catgoriesAndNames.Count();
 
-        int myIdNumber = 100000;
-
+        int myIdNumber;
         for (int i = 0; i < countCatgories; i++)
         {
             int fivePercent = (int)(catgoriesAndNames[i].Count() * 0.05); // 5% of the products shall have 0 in stock
@@ -92,7 +91,11 @@ internal static class DataSource
             {
                 Product newProduct = new Product();
 
-                newProduct.ID = myIdNumber++;
+                myIdNumber = _random.Next(100000, 1000000);
+                while (Array.Exists(_products, p => p.ID == myIdNumber))
+                    myIdNumber = _random.Next(100000, 1000000);
+
+                newProduct.ID = myIdNumber;
 
                 newProduct.Category = (WINERYS)i;
 

@@ -25,3 +25,6 @@ public enum WINERYS
     /// </summary>
     // ELSE
 }
+
+public enum ENTITIES { EXIT = 0, PRODUCT, ORDER, ORDER_ITEM };
+public  enum OPTIONS { EXIT = 0, ADD = 1, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };

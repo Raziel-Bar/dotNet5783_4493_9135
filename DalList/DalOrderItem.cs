@@ -27,6 +27,7 @@ public class DalOrderItem
         return newOrderItem.OrderItemID;
     }
 
+
     /// <summary>
     /// Search for an order item based on the orderID and the productID
     /// </summary>
@@ -51,6 +52,7 @@ public class DalOrderItem
         return DataSource._orderItems[index];
     }
 
+
     /// <summary>
     /// Global search if the given item exists in any order at all
     /// </summary>
@@ -72,8 +74,9 @@ public class DalOrderItem
         return DataSource._orderItems[index];
     }
 
+
     /// <summary>
-    /// makes a list of all order items that are included in a specific order
+    /// makes a list of all order items that are included in a specific order 
     /// </summary>
     /// <param name="orderId">
     /// The ID of the order we copy all of its items
@@ -81,25 +84,13 @@ public class DalOrderItem
     /// <returns>
     /// The made list
     /// </returns>
-    public OrderItem[] OrdersList(int orderId) ////// TO BE CHECKED
+    public OrderItem[] OrdersList(int orderId) 
     {
-        int count = 0;
-        int orderCounter = DataSource._orderCounter;
-        for (int i = 0; i < DataSource._orderCounter; i++)
-        {
-            if (orderId == DataSource._orders[i].ID)
-            {
-                count++;
-            }
-        }
-        OrderItem[] newlist = new OrderItem[count];
-        count = 0;
-        for (int i = 0; i < newlist.Length; ++i)
-            if (DataSource._orderItems[i].OrderID == orderId)
-                newlist[count++] = DataSource._orderItems[i];
 
+        OrderItem[] newlist = Array.FindAll(DataSource._orderItems, p => p.OrderID == orderId);
         return newlist;
     }
+
 
     /// <summary>
     /// copies the order item's list into a new array
@@ -114,6 +105,7 @@ public class DalOrderItem
             newOrderItemlist[i] = DataSource._orderItems[i];
         return newOrderItemlist;
     }
+
 
     /// <summary>
     /// deletes an order item from the list
@@ -138,6 +130,7 @@ public class DalOrderItem
         Array.Clear(DataSource._orderItems, last, last); // last cell is no longer needed. cleaning...
 
     }
+
 
     /// <summary>
     /// Updates a specific order item's details

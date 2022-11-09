@@ -2,8 +2,7 @@
 using DO;
 namespace Test;
 
-enum ENTITIES { EXIT = 0, PRODUCT, ORDER, ORDER_ITEM };
-enum OPTIONS { EXIT = 0, ADD = 1, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };
+
 public class Program
 {
     private static DalProduct _dalProduct = new DalProduct();
@@ -148,15 +147,18 @@ Enter your choice:");
             {
 
                 case 1:
+                    Console.WriteLine("Enter the new name of the product:");
                     productUpdate.Name = Console.ReadLine();
                     break;
 
                 case 2:
+                    Console.WriteLine("Enter the new price:");
                     tryParseDouble(ref tempPrice);
                     productUpdate.Price = tempPrice;
                     break;
 
                 case 3:
+                    Console.WriteLine("Enter the new amount:");
                     productUpdate.InStock = yourChoiceInt();
                     break;
 
@@ -291,14 +293,17 @@ Enter your choice:");
             switch (chengeChoice)
             {
                 case 1:
+                    Console.WriteLine("Enter the new customer name:");
                     orderUpdate.CustomerName = Console.ReadLine();
                     break;
 
                 case 2:
+                    Console.WriteLine("Enter the new customer email ");
                     orderUpdate.CustomerEmail = Console.ReadLine();
                     break;
 
                 case 3:
+                    Console.WriteLine("Enter the new customer address");
                     orderUpdate.CustomerAdress = Console.ReadLine();
                     break;
 
@@ -388,7 +393,7 @@ Enter your choice:");
         newOrderItem.ProductID = yourChoiceInt();
 
         Console.WriteLine("Enter order ID: ");
-        newOrderItem.OrderID = yourChoiceInt();
+        newOrderItem.OrderID = yourChoiceInt();    
 
         Console.WriteLine("Enter price of the product:");
         tryParseDouble(ref tempPrice);
@@ -448,8 +453,6 @@ Enter your choice:");
         _dalOrderItem.UpdateOrderItem(orderItemUpdate);
     }
 
-
-
     //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
     private static void printMenu(string type)
     {
@@ -498,4 +501,3 @@ Please choose on of the following options:
     }
     //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
 }
-
