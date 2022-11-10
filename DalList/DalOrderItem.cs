@@ -17,16 +17,12 @@ public class DalOrderItem
     /// </exception>
     public int AddNewOrderItem(OrderItem newOrderItem)
     {
-        if (Array.Exists(DataSource._orderItems, p => p.OrderItemID == newOrderItem.OrderItemID))
-            throw new Exception("The order you want to add is already exist");
-
-        newOrderItem.OrderItemID = DataSource.getRunNumberOrderItemID;
+        newOrderItem.OrderItemID = DataSource.getRunNumberOrderItemID; // ID is given here
 
         DataSource._orderItems[DataSource._orderItemCounter++] = newOrderItem;
 
         return newOrderItem.OrderItemID;
     }
-
 
     /// <summary>
     /// Search for an order item based on the orderID and the productID
@@ -52,7 +48,6 @@ public class DalOrderItem
         return DataSource._orderItems[index];
     }
 
-
     /// <summary>
     /// Global search if the given item exists in any order at all
     /// </summary>
@@ -74,7 +69,6 @@ public class DalOrderItem
         return DataSource._orderItems[index];
     }
 
-
     /// <summary>
     /// makes a list of all order items that are included in a specific order 
     /// </summary>
@@ -86,11 +80,9 @@ public class DalOrderItem
     /// </returns>
     public OrderItem[] OrdersList(int orderId) 
     {
-
         OrderItem[] newlist = Array.FindAll(DataSource._orderItems, p => p.OrderID == orderId);
         return newlist;
     }
-
 
     /// <summary>
     /// copies the order item's list into a new array
@@ -105,7 +97,6 @@ public class DalOrderItem
             newOrderItemlist[i] = DataSource._orderItems[i];
         return newOrderItemlist;
     }
-
 
     /// <summary>
     /// deletes an order item from the list
@@ -131,7 +122,6 @@ public class DalOrderItem
 
     }
 
-
     /// <summary>
     /// Updates a specific order item's details
     /// </summary>
@@ -151,14 +141,3 @@ public class DalOrderItem
         DataSource._orderItems[index] = updateOrderItem;
     }
 }
-
-// DRAFT FOR LIST BASED METHODS - IGNORE!
-//public List<OrderItem> orderItemList()
-//{
-//    List<OrderItem> list = new List<OrderItem>();
-
-//    foreach (OrderItem item in DataSource._orderItems)
-//        list.Add(item);
-
-//    return list;
-//}

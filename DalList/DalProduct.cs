@@ -104,13 +104,3 @@ public class DalProduct
         DataSource._products[index] = uppdateProduct;
     }
 }
-// DRAFT FOR LIST BASED METHODS - IGNORE!
-//public List<Product> listOfProducts()
-//{
-//    List<Product> list = new List<Product>();
-
-//    foreach (Product product in DataSource._products)
-//        list.Add(product);
-
-//    return list;
-//}

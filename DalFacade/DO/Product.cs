@@ -11,7 +11,6 @@ public struct Product
     /// </summary>
     public int ID { get; set; }
   
-
     /// <summary>
     /// The product's name - should include the winery, vintage year and the grape species included in the bottle.
     /// This is, of course, only in case of wine bottles products...
@@ -33,11 +32,7 @@ public struct Product
     /// The product's quantity in the stock
     /// </summary>
     public int InStock { get; set; }
-    
 
-    /// <summary>
-    /// Here's the description of the product with all of its entities
-    /// </summary>
     public override string ToString() => $@"
         Product ID: {ID}: {Name}
         category: {Category}

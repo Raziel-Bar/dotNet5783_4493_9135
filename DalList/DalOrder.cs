@@ -17,10 +17,7 @@ public class DalOrder
     /// </exception>
     public int AddNewOrder(Order newOrder)
     {
-        if (Array.Exists(DataSource._orders, p => p.ID == newOrder.ID))
-            throw new Exception("The order you wish to add already exists");
-
-        newOrder.ID = DataSource.getRunNumberOrderID;
+        newOrder.ID = DataSource.getRunNumberOrderID; // ID is given here
 
         DataSource._orders[DataSource._orderCounter++] = newOrder;
 
@@ -105,13 +102,3 @@ public class DalOrder
         DataSource._orders[index] = orderUpdate;
     }
 }
-
-// DRAFT FOR LIST BASED METHODS - IGNORE!
-//public  List<Order> listOfOrders()
-//{
-//    List<Order> ordersList = new List<Order>();
-//    foreach (Order order in DataSource._orders)
-//        ordersList.Add(order);
-
-//    return ordersList;
-//}

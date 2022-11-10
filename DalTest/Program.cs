@@ -2,21 +2,30 @@
 using DO;
 namespace Test;
 
-
+/// <summary>
+/// tester for the DAL
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// creating an obejct from each DAL entity in order to have access to each entity's methods
+    /// </summary>
     private static DalProduct _dalProduct = new DalProduct();
     private static DalOrder _dalOrder = new DalOrder();
     private static DalOrderItem _dalOrderItem = new DalOrderItem();
+
+    /// <summary>
+    /// main program. presents the Main menu.
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
-        int menuchoose;
+        int menuChoose;
         do
         {
-            Console.WriteLine("Please select the entity: \n 0.EXIT. \n 1.PRODUCT.\n 2.ORDER\n 3.ORDER ITEM.");
-
-            menuchoose = yourChoiceInt();
-            switch ((ENTITIES)menuchoose)
+            Console.WriteLine("Please select 1 of the options below: \n 0.EXIT. \n 1.PRODUCT.\n 2.ORDER\n 3.ORDER ITEM.");
+            menuChoose = yourChoiceInt();
+            switch ((ENTITIES)menuChoose)
             {
                 case ENTITIES.PRODUCT:
                     productCheck();
@@ -30,16 +39,19 @@ public class Program
                     orderItemCheck();
                     break;
             }
-
-        } while (menuchoose != 0);
+        } while (menuChoose != 0);
+        Console.WriteLine("\nThank you for your visit. Have a splendid day!\n");
     }
 
+    #region Entity Functions
 
-    // ------------------------------------------------- PRODUCT ENTITIE FUNCTIONS ---------------------------------------------------
+    #region PRODUCT
+
+    /// <summary>
+    /// The main caretaker: presents the 2nd menu and takes care of all options for the Product entity
+    /// </summary>
     private static void productCheck()
     {
-
-        double tempPrice = -1;
         int option;
         do
         {
@@ -51,19 +63,19 @@ public class Program
                 {
 
                     case OPTIONS.ADD:
-                        productCheckAdd(tempPrice);
+                        productCheckAdd();
                         break;
 
                     case OPTIONS.UPDATE:
-                        productCheckUpdate(tempPrice);
+                        productCheckUpdate();
                         break;
 
                     case OPTIONS.DELETE:
-                        Console.WriteLine("Enter the product ID to delete: ");
+                        Console.WriteLine("Enter the product's ID to delete: ");
                         _dalProduct.DeleteProduct(yourChoiceInt());
                         break;
                     case OPTIONS.SEARCH:
-                        Console.WriteLine("Enter the product ID to search: ");
+                        Console.WriteLine("Enter the product's ID: ");
                         Console.WriteLine(_dalProduct.SearchProduct(yourChoiceInt()));
                         break;
 
@@ -80,118 +92,122 @@ public class Program
         while (option != 0);
     }
 
-    private static void productCheckAdd(double tempPrice)
+    /// <summary>
+    /// Activates when option.ADD is selected. takes care of adding a product to the database
+    /// </summary>
+    private static void productCheckAdd()
     {
         Product newProduct = new Product();
 
-        Console.WriteLine("Please enter the product details: \nEnter the name of product: ");
+        Console.WriteLine("Please enter the product details: \nEnter the name of the product: ");
 
         newProduct.Name = Console.ReadLine();
 
-        Console.WriteLine("Enter product ID: ");
+        Console.WriteLine("Enter the product's ID: ");
         newProduct.ID = yourChoiceInt();
 
-        Console.WriteLine("Please enter the product price: ");
-        tryParseDouble(ref tempPrice);
-        newProduct.Price = tempPrice;
+        Console.WriteLine("Please enter the product's price: ");
+        newProduct.Price = yourChoiceDouble();
 
+        Console.WriteLine(@"Please choice the product's category: 
 
-        Console.WriteLine(@"Please choice the product category: 
-
-1 for GOLAN
-2 for DALTON
-3 for TEPERBERG
-4 for CARMEL
-5 for BARKAN
+0 for GOLAN
+1 for DALTON
+2 for TEPERBERG
+3 for CARMEL
+4 for BARKAN
 Enter your choice: ");
 
-        int catgory = 0;
-        do
+        int catgory = yourChoiceInt();
+        while (catgory > 4 || catgory < 0)
         {
+            Console.WriteLine("Error. Please enter a valid option: ");
             catgory = yourChoiceInt();
-        } while (catgory > 5 || catgory < 0);
+        }
 
         newProduct.Category = (WINERYS)catgory;
 
-        Console.WriteLine("Please enter the amount in stock");
+        Console.WriteLine("Please enter the amount in stock: ");
         newProduct.InStock = yourChoiceInt();
 
         _dalProduct.AddNewProduct(newProduct);
-
     }
 
-    private static void productCheckUpdate(double tempPrice)
+    /// <summary>
+    /// Activates when option.UPDATE is selected. takes care of updating a product's details in the database
+    /// </summary>
+    private static void productCheckUpdate()
     {
-        Console.WriteLine("Please enter the product ID for searching: ");
+        Console.WriteLine("Please enter the product's ID: ");
         Product productUpdate = _dalProduct.SearchProduct(yourChoiceInt());
 
-        int chengeChoice;
+        int changeChoice;
         do
         {
-            Console.WriteLine(@"Please choose what do you want to change in the product: 
-0. EXIT
-1. change name.
-2. change price.
-3. change amount.
-4. change category.       
+            Console.WriteLine(@"What details do you wish to change? 
+0. EXIT / BACK
+1. change product's name.
+2. change product's price.
+3. change product's amount.
+4. change product's category.       
 
-Enter your choice:");
-            chengeChoice = yourChoiceInt();
-            while (chengeChoice > 4 || chengeChoice < 0)
+Enter your choice: ");
+            changeChoice = yourChoiceInt();
+            while (changeChoice > 4 || changeChoice < 0)
             {
-                Console.WriteLine("ERROR please enter again");
-                chengeChoice = yourChoiceInt();
+                Console.WriteLine("Error. Please enter a valid option: ");
+                changeChoice = yourChoiceInt();
             }
 
-            switch (chengeChoice)
+            switch (changeChoice)
             {
 
                 case 1:
-                    Console.WriteLine("Enter the new name of the product:");
+                    Console.WriteLine("Enter a new name of the product: ");
                     productUpdate.Name = Console.ReadLine();
                     break;
 
                 case 2:
-                    Console.WriteLine("Enter the new price:");
-                    tryParseDouble(ref tempPrice);
-                    productUpdate.Price = tempPrice;
+                    Console.WriteLine("Enter a new price: ");
+                    productUpdate.Price = yourChoiceDouble();
                     break;
 
                 case 3:
-                    Console.WriteLine("Enter the new amount:");
+                    Console.WriteLine("Enter a new amount: ");
                     productUpdate.InStock = yourChoiceInt();
                     break;
 
                 case 4:
-                    Console.WriteLine(@"Please choice the product category: 
- 1 for GOLAN
- 2 for DALTON
- 3 for TEPERBERG
- 4 for CARMEL
- 5 for BARKAN
+                    Console.WriteLine(@"Please choose the product's category: 
+ 0 for GOLAN
+ 1 for DALTON
+ 2 for TEPERBERG
+ 3 for CARMEL
+ 4 for BARKAN
 
 Enter your choice: ");
 
-                    int catgory = 0;
-                    catgory = yourChoiceInt();
-                    while (catgory > 5 || catgory < 0)
+                    int catgory = yourChoiceInt();
+                    while (catgory > 4 || catgory < 0)
                     {
-                        Console.WriteLine("ERROR please enter again");
+                        Console.WriteLine("Error. Please enter a valid option: ");
                         catgory = yourChoiceInt();
-                    }
+                    } 
+                    productUpdate.Category = (WINERYS)catgory;
                     break;
             };
-        } while (chengeChoice != 0);
+        } while (changeChoice != 0);
 
         _dalProduct.UpdateProduct(productUpdate);
     }
 
-    // ------------------------------------------------- END OF PRODUCT ENTITIE FUNCTIONS ---------------------------------------------------
+    #endregion
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #region ORDER 
 
-    //--------------------------------------------- ORDER ENTITIE FUNCTIONS ----------------------------------------
-
+    /// <summary>
+    /// The main caretaker: presents the 2nd menu and takes care of all options for the Order entity
+    /// </summary>
     private static void orderCheck()
     {
         int option;
@@ -212,11 +228,11 @@ Enter your choice: ");
                         break;
 
                     case OPTIONS.DELETE:
-                        Console.WriteLine("Enter the order ID to delete: ");
+                        Console.WriteLine("Enter the order's ID to delete: ");
                         _dalOrder.DeleteOrder(yourChoiceInt());
                         break;
                     case OPTIONS.SEARCH:
-                        Console.WriteLine("Enter the order ID to search: ");
+                        Console.WriteLine("Enter the order's ID: ");
                         Console.WriteLine(_dalOrder.SearchOrder(yourChoiceInt()));
                         break;
 
@@ -232,11 +248,16 @@ Enter your choice: ");
         } while (option != 0);
     }
 
+    /// <summary>
+    /// Activates when option.ADD is selected. takes care of adding an order to the database
+    /// </summary>
     private static void orderCheckAdd()
     {
         Order newOrder = new Order();
-        Console.WriteLine("Please enter the order details: \n Enter order ID:  ");
-        newOrder.ID = yourChoiceInt();
+
+        Console.WriteLine("Please enter the order details: \n");
+
+        newOrder.ID = 0; // ID will be given in the AddNewOrder() method
 
         Console.WriteLine("Enter the customer full name: ");
         newOrder.CustomerName = Console.ReadLine();
@@ -247,50 +268,61 @@ Enter your choice: ");
         Console.WriteLine("Enter the customer address: ");
         newOrder.CustomerAdress = Console.ReadLine();
 
-        DateTime dateTime;
+        newOrder.OrderDate = DateTime.Now;
+        newOrder.ShipDate = DateTime.MinValue;
+        newOrder.DeliveryDate = DateTime.MinValue;
 
+        /*
+        //we don't recive input from user for the order date.
+        
         Console.WriteLine("Enter the order date: ");
         DateTime.TryParse(Console.ReadLine(), out dateTime);
         newOrder.OrderDate = dateTime;
 
-        Console.WriteLine("Enter the ship date: ");
+        //ship and delivery dates will only be later and we can't put values at the moment
+
+        Console.WriteLine("Enter the ship date: ");             
         DateTime.TryParse(Console.ReadLine(), out dateTime);
         newOrder.ShipDate = dateTime;
 
         Console.WriteLine("Enter the delivery date: ");
         DateTime.TryParse(Console.ReadLine(), out dateTime);
-        newOrder.DelveryrDate = dateTime;
+        newOrder.DeliveryDate = dateTime;*/
 
         _dalOrder.AddNewOrder(newOrder);
 
     }
 
+    /// <summary>
+    /// Activates when option.UPDATE is selected. takes care of updating an order's details in the database
+    /// </summary>
     private static void orderCheckUpdate()
     {
         DateTime dateTime;
-        int chengeChoice;
+        int changeChoice;
 
-        Console.WriteLine("Please enter the order ID for searching: ");
+        Console.WriteLine("Please enter the order's ID: ");
         Order orderUpdate = _dalOrder.SearchOrder(yourChoiceInt());
         do
         {
-            Console.WriteLine(@"Please choose what do you want to change in the order: 
- 0. EXIT
- 1. change customer name.
- 2. change customer email.
- 3. change customer address. 
- 4. change ship date.
- 5. change delivery day. 
+            Console.WriteLine(@"What details do you wish to change? 
+ 0. EXIT / BACK
+ 1. change customer's name.
+ 2. change customer's email.
+ 3. change customer's address. 
+ 4. change order's date
+ 5. change ship date.
+ 6. change delivery day. 
 
-Enter your choice:");
-            chengeChoice = yourChoiceInt();
-            while (chengeChoice > 5 || chengeChoice < 0)
+Enter your choice: ");
+            changeChoice = yourChoiceInt();
+            while (changeChoice > 6 || changeChoice < 0)
             {
-                Console.WriteLine("ERROR please enter again");
-                chengeChoice = yourChoiceInt();
+                Console.WriteLine("Error. Please enter a valid option: ");
+                changeChoice = yourChoiceInt();
             }
 
-            switch (chengeChoice)
+            switch (changeChoice)
             {
                 case 1:
                     Console.WriteLine("Enter the new customer name:");
@@ -308,28 +340,34 @@ Enter your choice:");
                     break;
 
                 case 4:
-                    Console.WriteLine("Enter the new ship date: ");
+                    Console.WriteLine("Enter the new order date in the folowing format: {DD/MM/YY HH:MM:SS}");
+                    DateTime.TryParse(Console.ReadLine(), out dateTime);
+                    orderUpdate.OrderDate = dateTime;
+                    break;
+                case 5:
+                    Console.WriteLine("Enter the new ship date in the folowing format: {DD/MM/YY HH:MM:SS}");
                     DateTime.TryParse(Console.ReadLine(), out dateTime);
                     orderUpdate.ShipDate = dateTime;
                     break;
-                case 5:
-                    Console.WriteLine("Enter the delivery date: ");
+                case 6:
+                    Console.WriteLine("Enter the delivery date in the folowing format: {DD/MM/YY HH:MM:SS}");
                     DateTime.TryParse(Console.ReadLine(), out dateTime);
-                    orderUpdate.DelveryrDate = dateTime;
+                    orderUpdate.DeliveryDate = dateTime;
                     break;
             };
         }
-        while (chengeChoice != 0);
+        while (changeChoice != 0);
 
         _dalOrder.UpdateOrder(orderUpdate);
     }
 
-    //--------------------------------------------- END OF ORDER ENTITIE FUNCTIONS ----------------------------------------
+    #endregion
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #region ORDER_ITEM
 
-    //--------------------------------------------- ORDER ITEM ENTITIE FUNCTIONS ----------------------------------------
-
+    /// <summary>
+    /// The main caretaker: presents the 2nd menu and takes care of all options for the OrderItem entity
+    /// </summary>
     private static void orderItemCheck()
     {
 
@@ -351,11 +389,11 @@ Enter your choice:");
                         break;
 
                     case OPTIONS.DELETE:
-                        Console.WriteLine("Enter the order item ID to delete: ");
+                        Console.WriteLine("Enter the order item's ID to delete: ");
                         _dalOrderItem.DeleteOrderItem(yourChoiceInt());
                         break;
                     case OPTIONS.SEARCH:
-                        Console.WriteLine("Enter the order item ID to search: ");
+                        Console.WriteLine("Enter the order item's ID to search: ");
                         Console.WriteLine(_dalOrderItem.SearchOrderItem(yourChoiceInt()));
                         break;
 
@@ -364,12 +402,12 @@ Enter your choice:");
                         break;
 
                     case OPTIONS.ORDER_ITEM_LIST:
-                        Console.WriteLine("Enter order ID: ");
+                        Console.WriteLine("Enter order's ID: ");
                         printCollection(_dalOrderItem.OrdersList(yourChoiceInt()));
                         break;
 
                     case OPTIONS.ORDER_ITEM_SEARCH:
-                        Console.WriteLine("Enter the order ID and product ID for searching: ");
+                        Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
                         Console.WriteLine(_dalOrderItem.SearchProductItem(yourChoiceInt(), yourChoiceInt()));
                         break;
                 }
@@ -381,55 +419,58 @@ Enter your choice:");
         } while (option != 0);
     }
 
+    /// <summary>
+    /// Activates when option.ADD is selected. takes care of adding an orderItem to the database
+    /// </summary>
     private static void orderItemCheckAdd()
     {
-        double tempPrice = -1;
         OrderItem newOrderItem = new OrderItem();
 
-        Console.WriteLine("Please enter the order item details: \n Enter order item ID: ");
-        newOrderItem.OrderItemID = yourChoiceInt();
+        Console.WriteLine("Please enter the order item details: \n");
 
-        Console.WriteLine("Enter product ID:");
+        newOrderItem.OrderItemID = 0; // ID will be given in AddNewOrderItem()
+
+        Console.WriteLine("Enter the product's ID:");
         newOrderItem.ProductID = yourChoiceInt();
+        
+        newOrderItem.Price = _dalProduct.SearchProduct(newOrderItem.ProductID).Price; // price is given based on the product's price in the dalProduct
 
-        Console.WriteLine("Enter order ID: ");
+        Console.WriteLine("Enter the order's ID: ");
         newOrderItem.OrderID = yourChoiceInt();    
 
-        Console.WriteLine("Enter price of the product:");
-        tryParseDouble(ref tempPrice);
-        newOrderItem.Price = tempPrice;
 
-        Console.WriteLine("Enter product amount:");
+        Console.WriteLine("Enter the product's amount: ");
         newOrderItem.Amount = yourChoiceInt();
 
         _dalOrderItem.AddNewOrderItem(newOrderItem);
     }
 
+    /// <summary>
+    /// Activates when option.UPDATE is selected. takes care of updating an orderItem's details in the database
+    /// </summary>
     private static void orderItemCheckUpdate()
     {
-        double tempPrice = -1;
-        int chengeChoice;
-        Console.WriteLine("Please enter the order item ID for searching: ");
+        int changeChoice;
+        Console.WriteLine("Please enter the order item's ID: ");
         OrderItem orderItemUpdate = _dalOrderItem.SearchOrderItem(yourChoiceInt());
         do
         {
-            Console.WriteLine(@"Please choose what do you want to change in the order item: 
- 0. EXIT / GO BACK
- 1. change product ID.
- 2. change order Id.
- 3. change price. 
- 4. change amount.
+            Console.WriteLine(@"What details do you wish to change? 
+ 0. EXIT / BACK
+ 1. change product's ID.
+ 2. change order's ID.
+ 3. change amount.
 
-Enter your choice:");
+Enter your choice: ");
 
-            chengeChoice = yourChoiceInt();
-            while (chengeChoice > 4 || chengeChoice < 0)
+            changeChoice = yourChoiceInt();
+            while (changeChoice > 3 || changeChoice < 0)
             {
-                Console.WriteLine("ERROR please enter again");
-                chengeChoice = yourChoiceInt();
+                Console.WriteLine("Error. Please enter a valid option: ");
+                changeChoice = yourChoiceInt();
             }
 
-            switch (chengeChoice)
+            switch (changeChoice)
             {
                 case 1:
                     orderItemUpdate.ProductID = yourChoiceInt();
@@ -440,26 +481,32 @@ Enter your choice:");
                     break;
 
                 case 3:
-                    tryParseDouble(ref tempPrice);
-                    orderItemUpdate.Price = tempPrice;
-                    break;
-
-                case 4:
                     orderItemUpdate.Amount = yourChoiceInt();
                     break;
             };
-        } while (chengeChoice != 0);
+        } while (changeChoice != 0);
 
         _dalOrderItem.UpdateOrderItem(orderItemUpdate);
     }
 
-    //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
+    #endregion
+
+    #endregion
+
+    #region General functions
+
+    /// <summary>
+    /// prints the second action menu
+    /// </summary>
+    /// <param name="type">
+    /// The entity we chose from the main menu
+    /// </param>
     private static void printMenu(string type)
     {
         Console.WriteLine(@$"
 Please choose on of the following options:
 
- 0. EXIT.
+ 0. EXIT / BACK
  1. Add {type}.
  2. Update {type}. 
  3. Delete {type}
@@ -467,25 +514,46 @@ Please choose on of the following options:
  5. Get List of {type}.");
 
         if (type == "Order item")
-            Console.WriteLine(@" 6. Get list of orders from order item.  
- 7. Search by order id and product id.
-");
-
-        Console.WriteLine("Enter your choice:");
-
+            Console.WriteLine(@" 6. Get list of order items in a specific order.  
+ 7. Search an order item by order id and product id.");
+        Console.WriteLine("Enter your choice: ");
     }
+
+    /// <summary>
+    /// prints all objects from a given entity's list
+    /// </summary>
+    /// <typeparam name="Item">
+    /// The entity we chose from the main menu
+    /// </typeparam>
+    /// <param name="items">
+    /// The entity's list from the dataSource
+    /// </param>
     private static void printCollection<Item>(Item[] items)
     {
         foreach (var obj in items)
             Console.WriteLine(obj);
     }
+
+    /// <summary>
+    /// recieves input for an int variable that is given by ref
+    /// </summary>
+    /// <param name="choice">
+    /// the variable that is given by ref
+    /// </param>
     private static void tryParseInt(ref int choice)
     {
         while (!(int.TryParse(Console.ReadLine(), out choice)))
         {
-            Console.WriteLine("Error please enter again");
+            Console.WriteLine("Error. please enter a valid input");
         }
-    } // CHECK OUT VS REF
+    }
+
+    /// <summary>
+    /// recieves input for a double variable that is given by ref
+    /// </summary>
+    /// <param name="choice">
+    /// the variable that is given by ref
+    /// </param>
     private static void tryParseDouble(ref double choice)
     {
         while (!(double.TryParse(Console.ReadLine(), out choice)))
@@ -493,11 +561,32 @@ Please choose on of the following options:
             Console.WriteLine("Error please enter again");
         }
     }
+
+    /// <summary>
+    /// general int input machine with checker
+    /// </summary>
+    /// <returns>
+    /// valid int input
+    /// </returns>
     private static int yourChoiceInt()
     {
         int tempChoice = -1;
         tryParseInt(ref tempChoice);
         return tempChoice;
     }
-    //--------------------------------------- GENRAL FUNCTIONS ------------------------------------
+
+    /// <summary>
+    /// general double input machine with checker
+    /// </summary>
+    /// <returns>
+    /// valid double input
+    /// </returns>
+    private static double yourChoiceDouble()
+    {
+        double tempChoice = -1;
+        tryParseDouble(ref tempChoice);
+        return tempChoice;
+    }
+
+    #endregion
 }

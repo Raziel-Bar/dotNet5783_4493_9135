@@ -1,6 +1,4 @@
 ﻿using DO;
-using System.Linq;
-using System.Collections;
 namespace Dal;
 
 /// <summary>
@@ -15,6 +13,16 @@ internal static class DataSource
     static DataSource()
     {
         s_Initialize();
+    }
+
+    /// <summary>
+    /// The empty ctor calls all entities inits
+    /// </summary>
+    private static void s_Initialize()
+    {
+        initProduct();
+        initOrder();
+        initOrderItem();
     }
 
     #region countersAndRunningNumbers
@@ -38,7 +46,7 @@ internal static class DataSource
 
     #region variablesAndArrays
 
-    private static readonly Random _random = new Random();// random nums maker
+    private static readonly Random _random = new Random();// random numbers maker
 
     /// <summary>
     /// defining arrays
@@ -67,7 +75,7 @@ internal static class DataSource
         /// <summary>
         /// list of lists! each inner list for an ENUM WINERY category accordingly.
         /// </summary>
-        List<List<string>> catgoriesAndNames = new List<List<string>>()
+        List<List<string>> categoriesAndNames = new List<List<string>>()
         {
           new List<string>() { "Gamla Cabernet Sauvignon-Merlot -  2017", "Yarden Rom - 2014", "Yarden Katzrin - 2016" },
 
@@ -80,14 +88,20 @@ internal static class DataSource
           new List<string>()  {"BarKan Platinum Merlot 2018", "Altitude 720 Petite Verdot 2015", "Barkan Superior 2017", }
         };
 
-        int countCatgories = catgoriesAndNames.Count();
+        int countCatgories = categoriesAndNames.Count();
+
+        int counterOfInitialAmount = 0;
+        for (int i = 0; i < countCatgories; i++) // we count how many products are to be made in the initial list
+        {
+            counterOfInitialAmount += categoriesAndNames[i].Count();
+        }
+        int fivePercent = (int)(counterOfInitialAmount * 0.05) == 0 ? 1 : (int)(counterOfInitialAmount * 0.05); // 5% of the products shall have 0 in stock (in case 5% is less then 1, at least 1 product will have 0 amount)
 
         int myIdNumber;
         for (int i = 0; i < countCatgories; i++)
         {
-            int fivePercent = (int)(catgoriesAndNames[i].Count() * 0.05); // 5% of the products shall have 0 in stock
 
-            foreach (var name in catgoriesAndNames[i])
+            foreach (var name in categoriesAndNames[i])
             {
                 Product newProduct = new Product();
 
@@ -124,7 +138,7 @@ internal static class DataSource
     private static void initOrder()
     {
         /// <summary>
-        /// list of lists! all synchronized
+        /// list of lists! all synchronized. Meaning: the Nth cell in each list contains a piece of information about the Nth person
         /// </summary>
         List<List<string>> customerDetails = new List<List<string>>()
         {
@@ -138,7 +152,7 @@ internal static class DataSource
                              "Ethelbert Lodin","Cristen Bevans","Genia Prydie","Langston Landes","Melanie Attwoul"},
 
          // Email Address
-         new List<string>(){ "uhaffner0@google.com.hk", "cmclay2@zdnet.com","bmesnard3@theatlantic.com","tkiggel5@1688.com",  // email
+         new List<string>(){ "uhaffner0@google.com.hk", "cmclay2@zdnet.com","bmesnard3@theatlantic.com","tkiggel5@1688.com",
 
                     "mcanniffe6@cocolog-nifty.com","aokynsillaghe7@edublogs.org","bhamments8@ocn.ne.jp", "msemor9@canalblog.com",
 
@@ -149,7 +163,7 @@ internal static class DataSource
                               "gprydiei@goo.gl", "llandesj@meetup.com", "mattwoulk@dailymotion.com","jclareu@mozilla.com"},
 
          // Address 
-          new List<string>()  { "2983 Gerald Alley",  "8498 Havey Avenue", "4380 Arapahoe Lane", "5 Warrior Lane ",   // address
+          new List<string>()  { "2983 Gerald Alley",  "8498 Havey Avenue", "4380 Arapahoe Lane", "5 Warrior Lane ",
 
                             "5882 Northridge Lane", "9 Northridge Park","59 Mandrake Pass","0449 Norway Maple Place",
 
@@ -168,7 +182,7 @@ internal static class DataSource
         {
             Order newOrder = new Order();
 
-            int randomOrder = _random.Next(0, countCustomerDetails);
+            int randomOrder = _random.Next(0, countCustomerDetails); // we roll the person who made the order. (same person can create several orders...)
 
             newOrder.ID = getRunNumberOrderID;
 
@@ -186,16 +200,17 @@ internal static class DataSource
 
                 if (i < (countCustomerDetails * 8 / 10) * 6 / 10) // 60% of orders THAT HAS BEEN SHIPPED has a delivery date
                 {
-                    newOrder.DelveryrDate = newOrder.ShipDate + new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 2)); // Delivery date is at most 2 days after shipping date. Thus, the latest delivery date is at least 3 days ago!
+                    newOrder.DeliveryDate = newOrder.ShipDate + new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 2)); // Delivery date is at most 2 days after shipping date. Thus, the latest delivery date is at least 3 days ago!
                 }
                 else
                 {
-                    newOrder.DelveryrDate = DateTime.MinValue;
+                    newOrder.DeliveryDate = DateTime.MinValue;
                 }
             }
             else
             {
                 newOrder.ShipDate = DateTime.MinValue;
+                newOrder.DeliveryDate = DateTime.MinValue;
             }
             addOrder(newOrder); // Order's ready! adding to database
         }
@@ -207,7 +222,7 @@ internal static class DataSource
     private static void initOrderItem()
     {
 
-        for (int j = 0; j < _orderCounter; ++j)
+        for (int j = 0; j < _orderCounter; ++j) // running over orders
         {
 
             for (int i = 0; i < _random.Next(1, 5); ++i) // up to 4 items in an order
@@ -228,25 +243,13 @@ internal static class DataSource
 
                 item.ProductID = product.ID;
 
-                item.Amount = _random.Next(1, (int)((product.InStock) / 5) + 1);
+                item.Amount = _random.Next(1, (int)((product.InStock) / 5) + 1); // in order to make sure our stock is not being emptied...
 
-                item.Price = product.Price;  //(double)(product.Price * item.Amount);
+                item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
 
                 addOrderItem(item); // Order item's ready! Adding to database...
             }
         }
-
-
     }
     #endregion
-
-    /// <summary>
-    /// The empty ctor calls all entities inits
-    /// </summary>
-    private static void s_Initialize()
-    {
-        initProduct();
-        initOrder();
-        initOrderItem();
-    }
 }

@@ -36,15 +36,15 @@ public struct Order
     /// <summary>
     /// The date on which the order is to be delivered to the customer
     /// </summary>
-    public DateTime DelveryrDate { get; set; }
+    public DateTime DeliveryDate { get; set; }
 
     public override string ToString() => $@"
        Order ID: {ID}
        Customer name: {CustomerName} 
        Customer email: {CustomerEmail}
        Customer address: {CustomerAdress}
-       Time of the order:{OrderDate} 
+       Time of the order: {OrderDate} 
        Time of ship: {ShipDate}
-       Time of delivering: {DelveryrDate}
+       Time of delivering: {DeliveryDate}
        ";
 }

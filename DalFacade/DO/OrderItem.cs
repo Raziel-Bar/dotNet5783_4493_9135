@@ -17,15 +17,13 @@ public struct OrderItem
     /// </summary>
     public int OrderID { get; set; }
     /// <summary>
-    /// The Price of 1 product unit  (== Price attribute from the Product entity
+    /// The Price of 1 product unit  (== Price attribute from the Product entity)
     /// </summary>
     public double Price { get; set; }
     /// <summary>
     /// The amount of product units in the order
     /// </summary>
     public int Amount { get; set; }
-
-   
 
     public override string ToString() => $@"
        Order item ID: {OrderItemID}

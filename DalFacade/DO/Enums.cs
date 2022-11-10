@@ -1,6 +1,6 @@
 ﻿namespace DO;
 /// <summary>
-/// Here we have all the enums that are needed for our entities
+/// Here we have all the enums that are needed for our Dal
 /// </summary>
 
 
@@ -26,5 +26,12 @@ public enum WINERYS
     // ELSE
 }
 
-public enum ENTITIES { EXIT = 0, PRODUCT, ORDER, ORDER_ITEM };
-public  enum OPTIONS { EXIT = 0, ADD = 1, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };
+/// <summary>
+/// enum for the first menu in DalTest\Program.cs
+/// </summary>
+public enum ENTITIES { EXIT, PRODUCT, ORDER, ORDER_ITEM };
+
+/// <summary>
+/// enum for the second menu for each selction from menu_1 in DalTest\Program.cs
+/// </summary>
+public enum OPTIONS { EXIT = 0, ADD = 1, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };
