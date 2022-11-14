@@ -1,7 +1,8 @@
-﻿using DO;
+﻿using DalApi;
+using DO;
 namespace Dal;
 
-public class DalProduct
+internal class DalProduct : IProduct
 {
     /// <summary>
     /// adds a new product to the products list
@@ -15,10 +16,13 @@ public class DalProduct
     /// <exception cref="Exception">
     /// In case the product already exists in the list
     /// </exception>
-    public int AddNewProduct(Product newProduct)
+    //public int AddNewProduct(Product newProduct) &&
+    public void Add(Product newProduct)
     {
-        if (Array.Exists(DataSource._products, p => p.ID == newProduct.ID))
-            throw new Exception("The product you wish to add already exists");
+        //if (Array.Exists(DataSource._products, p => p.ID == newProduct.ID)) &&
+        if (DataSource._products.Exists(p => p.ID == newProduct.ID))
+            throw new Exception("The product you wish to add already exists"); // %%%
+            //throw new NotFound()
 
         DataSource._products[DataSource._productCounter++] = newProduct;
 

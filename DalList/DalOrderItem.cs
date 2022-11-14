@@ -64,7 +64,7 @@ public class DalOrderItem
     {
         int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
         if (index == -1)
-            throw new Exception("The order item you want is not exist");
+            throw new Exception("The order item you search for does not exist");
 
         return DataSource._orderItems[index];
     }
@@ -112,7 +112,7 @@ public class DalOrderItem
         int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
 
         if (index == -1)
-            throw new Exception("The order item you want to delete is not exist");
+            throw new Exception("The order item you wish to delete does not exist");
 
         int last = (--DataSource._orderItemCounter);
 

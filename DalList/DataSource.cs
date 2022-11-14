@@ -20,7 +20,7 @@ internal static class DataSource
     /// </summary>
     private static void s_Initialize()
     {
-        initProduct();
+        InitProduct();
         initOrder();
         initOrderItem();
     }
@@ -29,11 +29,10 @@ internal static class DataSource
 
     //internal static class Config // TO BE IGNORED ATM BASED ON INSTRUCTIONS GIVEN BY DAN ZILBERSTEIN
     //{
-    internal static int _productCounter = 0;
 
-    internal static int _orderCounter = 0;
-
-    internal static int _orderItemCounter = 0;
+    //internal static int _productCounter = 0;  &&
+    //internal static int _orderCounter = 0;  &&
+    //internal static int _orderItemCounter = 0;  &&
 
     private static int runNumberOrderID = 1;
 
@@ -49,19 +48,24 @@ internal static class DataSource
     private static readonly Random _random = new Random();// random numbers maker
 
     /// <summary>
-    /// defining arrays
+    /// defining lists // Arrays &&
     /// </summary>
-    internal static Product[] _products = new Product[50];
-    internal static Order[] _orders = new Order[100];
-    internal static OrderItem[] _orderItems = new OrderItem[200];
+    //internal static Product[] _products = new Product[50]; &&
+    //internal static Order[] _orders = new Order[100]; &&
+    //internal static OrderItem[] _orderItems = new OrderItem[200]; &&
+
+    internal static List<Product> _products = new List<Product>();
+    internal static List<Order> _orders = new List<Order>();
+    internal static List<OrderItem> _orderItems = new List<OrderItem>();
+
 
 
     /// <summary>
     /// defining the adding basic methods. adds a new entity object to its appropriate list (objects will be made in the inits)
     /// </summary>
-    private static void addProduct(Product product) => _products[_productCounter++] = product;
-    private static void addOrder(Order order) => _orders[_orderCounter++] = order;
-    private static void addOrderItem(OrderItem orderItem) => _orderItems[_orderItemCounter++] = orderItem;
+    private static void AddProduct(Product product) => _products.Add(product); /*_products[_productCounter++] = product;  && */
+    private static void AddOrder(Order order) => _orders.Add(order); /*_orders[_orderCounter++] = order;  && */
+    private static void AddOrderItem(OrderItem orderItem) => _orderItems.Add(orderItem); /*_orderItems[_orderItemCounter++] = orderItem;  && */ 
 
     #endregion
 
@@ -70,7 +74,7 @@ internal static class DataSource
     /// <summary>
     /// The maker of the default database of products - wines of 5 different winerys
     /// </summary>
-    private static void initProduct()
+    private static void InitProduct()
     {
         /// <summary>
         /// list of lists! each inner list for an ENUM WINERY category accordingly.
@@ -106,7 +110,9 @@ internal static class DataSource
                 Product newProduct = new Product();
 
                 myIdNumber = _random.Next(100000, 1000000);
-                while (Array.Exists(_products, p => p.ID == myIdNumber))
+
+                //while (Array.Exists(_products, p => p.ID == myIdNumber)) &&
+                while(_products.Exists(p => p.ID == myIdNumber))  
                     myIdNumber = _random.Next(100000, 1000000);
 
                 newProduct.ID = myIdNumber;
@@ -127,7 +133,7 @@ internal static class DataSource
                     _ => 0,// null option. program is not supposed to ever get here.
                 };
 
-                addProduct(newProduct); // Product's ready! adding to database
+                AddProduct(newProduct); // Product's ready! adding to database
             }
         }
     }
@@ -212,7 +218,7 @@ internal static class DataSource
                 newOrder.ShipDate = DateTime.MinValue;
                 newOrder.DeliveryDate = DateTime.MinValue;
             }
-            addOrder(newOrder); // Order's ready! adding to database
+            AddOrder(newOrder); // Order's ready! adding to database
         }
     }
 
@@ -222,17 +228,17 @@ internal static class DataSource
     private static void initOrderItem()
     {
 
-        for (int j = 0; j < _orderCounter; ++j) // running over orders
+        for (int j = 0; j < _orders.Count /*_orderCounter  && */; ++j) // running over orders
         {
 
             for (int i = 0; i < _random.Next(1, 5); ++i) // up to 4 items in an order
             {
 
-                Product product = _products[_random.Next(0, _products.Length)];
+                Product product = _products[_random.Next(0, _products.Count/*Length &&*/)];
 
                 while (product.InStock == 0) // In case we randomly took a product with 0 quantity
                 {
-                    product = _products[_random.Next(0, _products.Length)];
+                    product = _products[_random.Next(0, _products.Count/*Length &&*/)];
                 }
 
                 OrderItem item = new OrderItem();
@@ -247,7 +253,7 @@ internal static class DataSource
 
                 item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
 
-                addOrderItem(item); // Order item's ready! Adding to database...
+                AddOrderItem(item); // Order item's ready! Adding to database...
             }
         }
     }
