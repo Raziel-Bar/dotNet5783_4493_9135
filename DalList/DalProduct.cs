@@ -1,9 +1,12 @@
 ﻿using DalApi;
 using DO;
+using static Dal.DataSource;
 namespace Dal;
 
 internal class DalProduct : IProduct
 {
+
+
     /// <summary>
     /// adds a new product to the products list
     /// </summary>
@@ -17,16 +20,25 @@ internal class DalProduct : IProduct
     /// In case the product already exists in the list
     /// </exception>
     //public int AddNewProduct(Product newProduct) &&
-    public void Add(Product newProduct)
+    public int Add(Product newProduct)
     {
-        //if (Array.Exists(DataSource._products, p => p.ID == newProduct.ID)) &&
-        if (DataSource._products.Exists(p => p.ID == newProduct.ID))
-            throw new Exception("The product you wish to add already exists"); // %%%
-            //throw new NotFound()
+        Product? product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
 
-        DataSource._products[DataSource._productCounter++] = newProduct;
+        if (product == null)
+            ExceptionFunctionThrow.NotFoundException("product");/////
 
-        return newProduct.ID;
+        _products.Add(newProduct);
+        return product.Value.ID;
+
+
+        ////if (Array.Exists(DataSource._products, p => p.ID == newProduct.ID)) &&
+        //if (DataSource._products.Exists(p => p.ID == newProduct.ID))
+        //    throw new Exception("The product you wish to add already exists"); // %%%
+        //    //throw new NotFound()
+
+        //DataSource._products[DataSource._productCounter++] = newProduct;
+
+        //return newProduct.ID;
     }
 
     /// <summary>
@@ -41,14 +53,22 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public Product SearchProduct(int productId)
+    public Product Get(int productId)
     {
-        int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
+        Product? product = _products.FirstOrDefault(product => product.ID == productId);
 
-        if (index == -1)
-            throw new Exception("The product you search for does not exist");
+        if (product == null)
+            ExceptionFunctionThrow.NotFoundException("product");
 
-        return DataSource._products[index];
+        return product.Value;
+
+
+        //int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
+
+        //if (index == -1)
+        //    throw new Exception("The product you search for does not exist");
+
+        //return DataSource._products[index];
     }
 
     /// <summary>
@@ -57,14 +77,14 @@ internal class DalProduct : IProduct
     /// <returns>
     /// The new array
     /// </returns>
-    public Product[] ListOfProducts()
-    {
-        Product[] newProductlist = new Product[DataSource._productCounter];
-        for (int i = 0; i < newProductlist.Length; ++i)
-            newProductlist[i] = DataSource._products[i];
+    public IEnumerable<Product> GetList() => _products.Select(product => product);
 
-        return newProductlist;
-    }
+    //Product[] newProductlist = new Product[DataSource._productCounter];
+    //for (int i = 0; i < newProductlist.Length; ++i)
+    //    newProductlist[i] = DataSource._products[i];
+
+    //return newProductlist;
+
 
     /// <summary>
     /// deletes a product from the list
@@ -75,19 +95,19 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public void DeleteProduct(int productId)
-    {
-        int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
+    public void Delete(int productId) => _products.Remove(Get(productId));// אם לא מצאנו גט זורק חריגה 
 
-        if (index == -1)
-            throw new Exception("The product you wish to delete does not exist");
+    //int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
 
-        int last = (--DataSource._productCounter);
+    //if (index == -1)
+    //    throw new Exception("The product you wish to delete does not exist");
 
-        DataSource._products[index] = DataSource._products[last]; // moving last product's details into the deleted order's cell, running over it
+    //int last = (--DataSource._productCounter);
 
-        Array.Clear(DataSource._products, last, last); // last cell is no longer needed. cleaning...
-    }
+    //DataSource._products[index] = DataSource._products[last]; // moving last product's details into the deleted order's cell, running over it
+
+    //Array.Clear(DataSource._products, last, last); // last cell is no longer needed. cleaning...
+
 
     /// <summary>
     /// updates a product's details
@@ -98,13 +118,15 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public void UpdateProduct(Product uppdateProduct)
+    public void Update(Product updateProduct)
     {
-        int index = Array.FindIndex(DataSource._products, p => p.ID == uppdateProduct.ID);
+        Delete(updateProduct.ID);
+        _products.Add(updateProduct);  // stay with the same key
+        //int index = Array.FindIndex(DataSource._products, p => p.ID == uppdateProduct.ID);
 
-        if (index == -1)
-            throw new Exception("The product you wish to update does not exist");
+        //if (index == -1)
+        //    throw new Exception("The product you wish to update does not exist");
 
-        DataSource._products[index] = uppdateProduct;
+        //DataSource._products[index] = uppdateProduct;
     }
 }

@@ -1,7 +1,11 @@
 ﻿using DO;
+using DalApi;
+using static Dal.DataSource;
 
 namespace Dal;
-public class DalOrderItem
+
+
+public class DalOrderItem : IOrderItem
 {
     /// <summary>
     /// Adds a new order item to the order item's list
@@ -15,12 +19,10 @@ public class DalOrderItem
     /// <exception cref="Exception">
     /// In case the order item already exists in the list
     /// </exception>
-    public int AddNewOrderItem(OrderItem newOrderItem)
+    public int Add(OrderItem newOrderItem)
     {
-        newOrderItem.OrderItemID = DataSource.getRunNumberOrderItemID; // ID is given here
-
-        DataSource._orderItems[DataSource._orderItemCounter++] = newOrderItem;
-
+        newOrderItem.OrderItemID = getRunNumberOrderItemID; // ID is given here
+        _orderItems.Add(newOrderItem);
         return newOrderItem.OrderItemID;
     }
 
@@ -39,13 +41,16 @@ public class DalOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the given order, or, of course, if the whole order doesn't exist
     /// </exception>
-    public OrderItem SearchProductItem(int orderId, int productId)
+    public OrderItem GetByOrderAndProcuctIDs(int orderId, int productId)
     {
-        int index = Array.FindIndex(DataSource._orderItems, p => p.OrderID == orderId && p.ProductID == productId);
-        if (index == -1)
-            throw new Exception("The item product you search for either does not exist or the order does not.");
+        OrderItem? orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderID == orderId && orderItem.ProductID == productId);
 
-        return DataSource._orderItems[index];
+        if (orderItem == null)
+        {
+            ExceptionFunctionThrow.NotFoundException("product");
+        }
+
+        return orderItem.Value;
     }
 
     /// <summary>
@@ -60,13 +65,15 @@ public class DalOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the list
     /// </exception>
-    public OrderItem SearchOrderItem(int orderItemId)
+    public OrderItem Get(int orderItemId)
     {
-        int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
-        if (index == -1)
-            throw new Exception("The order item you search for does not exist");
+        OrderItem? orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderItemID == orderItemId);
+        if (orderItem == null)
+            ExceptionFunctionThrow.NotFoundException("order item"); // לבדוק הודעות מתאימות
 
-        return DataSource._orderItems[index];
+        return orderItem.Value;
+
+        //   throw new Exception("The order item you search for does not exist");
     }
 
     /// <summary>
@@ -78,11 +85,11 @@ public class DalOrderItem
     /// <returns>
     /// The made list
     /// </returns>
-    public OrderItem[] OrdersList(int orderId) 
-    {
-        OrderItem[] newlist = Array.FindAll(DataSource._orderItems, p => p.OrderID == orderId);
-        return newlist;
-    }
+    public IEnumerable<OrderItem> GetItemsInOrder(int orderId) => _orderItems.Where(orderItem => orderItem.OrderID == orderId);
+
+        //OrderItem[] newlist = Array.FindAll(DataSource._orderItems, p => p.OrderID == orderId);
+        //return newlist;
+    
 
     /// <summary>
     /// copies the order item's list into a new array
@@ -90,13 +97,12 @@ public class DalOrderItem
     /// <returns>
     /// The new array
     /// </returns>
-    public OrderItem[] OrderItemsList()
-    {
-        OrderItem[] newOrderItemlist = new OrderItem[DataSource._orderItemCounter];
-        for (int i = 0; i < newOrderItemlist.Length; ++i)
-            newOrderItemlist[i] = DataSource._orderItems[i];
-        return newOrderItemlist;
-    }
+    public IEnumerable<OrderItem> GetList() => _orderItems.Select(orderItem => orderItem);
+        //    OrderItem[] newOrderItemlist = new OrderItem[DataSource._orderItemCounter];
+        //    for (int i = 0; i < newOrderItemlist.Length; ++i)
+        //        newOrderItemlist[i] = DataSource._orderItems[i];
+        //    return newOrderItemlist;
+    
 
     /// <summary>
     /// deletes an order item from the list
@@ -107,20 +113,20 @@ public class DalOrderItem
     /// <exception cref="Exception">
     /// In case the order item does not exist in the list
     /// </exception>
-    public void DeleteOrderItem(int orderItemId)
-    {
-        int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
+    public void Delete(int orderItemId) => _orderItems.Remove(Get(orderItemId));  // אם לא מצאנו גט זורק חריגה 
 
-        if (index == -1)
-            throw new Exception("The order item you wish to delete does not exist");
+        //int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
 
-        int last = (--DataSource._orderItemCounter);
+        //if (index == -1)
+        //    throw new Exception("The order item you wish to delete does not exist");
 
-        DataSource._orderItems[index] = DataSource._orderItems[last]; // moving last orderItem's details into the deleted orderItem's cell, running over it
+        //int last = (--DataSource._orderItemCounter);
 
-        Array.Clear(DataSource._orderItems, last, last); // last cell is no longer needed. cleaning...
+        //DataSource._orderItems[index] = DataSource._orderItems[last]; // moving last orderItem's details into the deleted orderItem's cell, running over it
 
-    }
+        //Array.Clear(DataSource._orderItems, last, last); // last cell is no longer needed. cleaning...
+
+    
 
     /// <summary>
     /// Updates a specific order item's details
@@ -131,13 +137,16 @@ public class DalOrderItem
     /// <exception cref="Exception">
     /// In case the order item does not exist
     /// </exception>
-    public void UpdateOrderItem(OrderItem updateOrderItem)
+    public void Update(OrderItem updateOrderItem)
     {
-        int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == updateOrderItem.OrderItemID);
+        Delete(updateOrderItem.OrderItemID);
+        _orderItems.Add(updateOrderItem);  // stay with the same key
 
-        if (index == -1)
-            throw new Exception("The order item you wish to update does not exist");
+        //int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == updateOrderItem.OrderItemID);
 
-        DataSource._orderItems[index] = updateOrderItem;
+        //if (index == -1)
+        //    throw new Exception("The order item you wish to update does not exist");
+
+        //DataSource._orderItems[index] = updateOrderItem;
     }
 }

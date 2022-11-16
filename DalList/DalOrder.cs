@@ -1,7 +1,8 @@
 ﻿using DO;
-
+using DalApi;
+using static Dal.DataSource;
 namespace Dal;
-public class DalOrder
+public class DalOrder : IOrder
 {
     /// <summary>
     /// Adds a new order to the _orders array
@@ -15,13 +16,18 @@ public class DalOrder
     /// <exception cref="Exception">
     /// in case the order already exists in the _orders array
     /// </exception>
-    public int AddNewOrder(Order newOrder)
+    public int Add(Order newOrder)
     {
-        newOrder.ID = DataSource.getRunNumberOrderID; // ID is given here
-
-        DataSource._orders[DataSource._orderCounter++] = newOrder;
-
+        newOrder.ID = getRunNumberOrderID; // ID is given here
+        _orders.Add(newOrder);
         return newOrder.ID;
+
+        //@@
+        //newOrder.ID = DataSource.getRunNumberOrderID; // ID is given here
+
+        //DataSource._orders[DataSource._orderCounter++] = newOrder;
+
+        //return newOrder.ID;
     }
 
     /// <summary>
@@ -36,14 +42,19 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order SearchOrder(int orderId)
+    public Order Get(int orderId)
     {
-        int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
+        Order? order = _orders.FirstOrDefault(order => order.ID == orderId);
+        if (order == null)
+            ExceptionFunctionThrow.NotFoundException("order");// לבדוק הודעות מתאימות
+        return order.Value;
 
-        if (index == -1)
-            throw new Exception("The order you search for does not exist");
+        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
 
-        return DataSource._orders[index];
+        //if (index == -1)
+        //    throw new Exception("The order you search for does not exist");
+
+        //return DataSource._orders[index];
     }
 
     /// <summary>
@@ -52,14 +63,16 @@ public class DalOrder
     /// <returns>
     /// The new array
     /// </returns>
-    public Order[] ListOfOrders()
+    public IEnumerable<Order> GetList()
     {
-        Order[] newOrderlist = new Order[DataSource._orderCounter];
-        for (int i = 0; i < newOrderlist.Length; ++i)
-            newOrderlist[i] = DataSource._orders[i];
-        return newOrderlist;
+        return _orders.Select(order => order);
+
+        //Order[] newOrderlist = new Order[DataSource._orderCounter];
+        //for (int i = 0; i < newOrderlist.Length; ++i)
+        //    newOrderlist[i] = DataSource._orders[i];
+        //return newOrderlist;
     }
-    
+
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -69,18 +82,20 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void DeleteOrder(int orderId)
+    public void Delete(int orderId)
     {
-        int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
+        _orders.Remove(Get(orderId));  // אם לא מצאנו גט זורק חריגה 
 
-        if (index == -1)
-            throw new Exception("The order you wish to delete does not exist");
+        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
 
-        int last = (--DataSource._orderCounter);
+        //if (index == -1)
+        //    throw new Exception("The order you wish to delete does not exist");
 
-        DataSource._orders[index] = DataSource._orders[last]; // moving last order's details into the deleted order's cell, running over it
+        //int last = (--DataSource._orderCounter);
 
-        Array.Clear(DataSource._orders, last, last); // last cell is no longer needed. cleaning...
+        //DataSource._orders[index] = DataSource._orders[last]; // moving last order's details into the deleted order's cell, running over it
+
+        //Array.Clear(DataSource._orders, last, last); // last cell is no longer needed. cleaning...
     }
 
     /// <summary>
@@ -92,13 +107,17 @@ public class DalOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public void UpdateOrder(Order orderUpdate)
+    public void Update(Order orderUpdate)
     {
-        int index = Array.FindIndex(DataSource._orders, p => p.ID == orderUpdate.ID);
+   
+        Delete(orderUpdate.ID);
+        _orders.Add(orderUpdate);  // stay with the same key
 
-        if (index == -1)
-            throw new Exception("The order you wish to update does not exist");
+        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderUpdate.ID);
 
-        DataSource._orders[index] = orderUpdate;
+        //if (index == -1)
+        //    throw new Exception("The order you wish to update does not exist");
+
+        //DataSource._orders[index] = orderUpdate;
     }
 }

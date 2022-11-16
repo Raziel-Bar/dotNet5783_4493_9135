@@ -1,11 +1,15 @@
 ﻿using DO;
 namespace DalApi;
 
-public interface ICrud <T>
+
+// when the interface is public so its default for the שדות is public
+
+
+public interface ICrud<T>
 {
-    public bool Add(T t);
-    public bool Delete(T t);
-    public bool Update(T t);
-    public T Get(int ID);
-    public IEnumerable<T> PrintList();
+    int Add(T t);
+    void Delete(int id);
+    void Update(T t);
+    T Get(int id);
+    IEnumerable<T> GetList();
 }
