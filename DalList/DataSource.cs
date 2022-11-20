@@ -30,9 +30,7 @@ internal static class DataSource
     //internal static class Config // TO BE IGNORED ATM BASED ON INSTRUCTIONS GIVEN BY DAN ZILBERSTEIN
     //{
 
-    //internal static int _productCounter = 0;  &&
-    //internal static int _orderCounter = 0;  &&
-    //internal static int _orderItemCounter = 0;  &&
+   
 
     private static int runNumberOrderID = 1;
 
@@ -51,10 +49,6 @@ internal static class DataSource
     /// defining lists // Arrays &&
     /// </summary>
     
-
-    //internal static Product[] _products = new Product[50]; &&
-    //internal static Order[] _orders = new Order[100]; &&
-    //internal static OrderItem[] _orderItems = new OrderItem[200]; &&
 
     internal static List<Product> _products = new List<Product>();
     internal static List<Order> _orders = new List<Order>();

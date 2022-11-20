@@ -4,7 +4,7 @@ using static Dal.DataSource;
 
 namespace Dal;
 
-//public @@@
+
 internal class DalOrderItem : IOrderItem
 {
     /// <summary>
@@ -43,12 +43,12 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public OrderItem GetByOrderAndProcuctIDs(int orderId, int productId)
     {
-        OrderItem? orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderID == orderId && orderItem.ProductID == productId);
+        OrderItem orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderID == orderId && orderItem.ProductID == productId);
 
-        if (orderItem == null)
-            throw new NotFoundException("order item", "search by order ID and Order ID");
+        if (orderItem.OrderItemID == 0)
+            throw new NotFoundException("order item");
 
-        return orderItem.Value;
+        return orderItem;
     }
 
     /// <summary>
@@ -65,13 +65,11 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public OrderItem Get(int orderItemId)
     {
-        OrderItem? orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderItemID == orderItemId);
-        if (orderItem == null)
-            throw new NotFoundException("Order item", "search");
+        OrderItem orderItem = _orderItems.FirstOrDefault(orderItem => orderItem.OrderItemID == orderItemId);
+        if (orderItem.OrderItemID == 0)
+            throw new NotFoundException("Order item");
 
-        return orderItem.Value;
-
-        //   throw new Exception("The order item you search for does not exist");
+        return orderItem;
     }
 
     /// <summary>
@@ -85,9 +83,6 @@ internal class DalOrderItem : IOrderItem
     /// </returns>
     public IEnumerable<OrderItem> GetItemsInOrder(int orderId) => _orderItems.Where(orderItem => orderItem.OrderID == orderId);
 
-    //OrderItem[] newlist = Array.FindAll(DataSource._orderItems, p => p.OrderID == orderId);
-    //return newlist;
-
 
     /// <summary>
     /// copies the order item's list into a new array
@@ -96,10 +91,7 @@ internal class DalOrderItem : IOrderItem
     /// The new array
     /// </returns>
     public IEnumerable<OrderItem> GetList() => _orderItems.Select(orderItem => orderItem);
-    //    OrderItem[] newOrderItemlist = new OrderItem[DataSource._orderItemCounter];
-    //    for (int i = 0; i < newOrderItemlist.Length; ++i)
-    //        newOrderItemlist[i] = DataSource._orderItems[i];
-    //    return newOrderItemlist;
+
 
 
     /// <summary>
@@ -112,18 +104,7 @@ internal class DalOrderItem : IOrderItem
     /// In case the order item does not exist in the list
     /// </exception>
     public void Delete(int orderItemId) => _orderItems.Remove(Get(orderItemId));  
-
-    //int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == orderItemId);
-
-    //if (index == -1)
-    //    throw new Exception("The order item you wish to delete does not exist");
-
-    //int last = (--DataSource._orderItemCounter);
-
-    //DataSource._orderItems[index] = DataSource._orderItems[last]; // moving last orderItem's details into the deleted orderItem's cell, running over it
-
-    //Array.Clear(DataSource._orderItems, last, last); // last cell is no longer needed. cleaning...
-
+ 
 
 
     /// <summary>
@@ -138,13 +119,6 @@ internal class DalOrderItem : IOrderItem
     public void Update(OrderItem updateOrderItem)
     {
         Delete(updateOrderItem.OrderItemID);
-        _orderItems.Add(updateOrderItem);  // stay with the same key
-
-        //int index = Array.FindIndex(DataSource._orderItems, p => p.OrderItemID == updateOrderItem.OrderItemID);
-
-        //if (index == -1)
-        //    throw new Exception("The order item you wish to update does not exist");
-
-        //DataSource._orderItems[index] = updateOrderItem;
+        _orderItems.Add(updateOrderItem);  
     }
 }

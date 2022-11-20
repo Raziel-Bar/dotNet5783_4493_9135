@@ -18,27 +18,17 @@ internal class DalProduct : IProduct
     /// </returns>
     /// <exception cref="Exception">
     /// In case the product already exists in the list
-    /// </exception>
-    //public int AddNewProduct(Product newProduct) &&
+    /// </exception> 
     public int Add(Product newProduct)
     {
-        Product? product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
+        Product product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
 
-        if (product == null)
-            throw new AlreadyExistException("product", "add");
+        if (product.ID == 0)
+            throw new AlreadyExistException("product");
 
         _products.Add(newProduct);
-        return product.Value.ID;
+        return product.ID;
 
-
-        ////if (Array.Exists(DataSource._products, p => p.ID == newProduct.ID)) &&
-        //if (DataSource._products.Exists(p => p.ID == newProduct.ID))
-        //    throw new Exception("The product you wish to add already exists"); // %%%
-        //    //throw new NotFound()
-
-        //DataSource._products[DataSource._productCounter++] = newProduct;
-
-        //return newProduct.ID;
     }
 
     /// <summary>
@@ -55,20 +45,12 @@ internal class DalProduct : IProduct
     /// </exception>
     public Product Get(int productId)
     {
-        Product? product = _products.FirstOrDefault(product => product.ID == productId);
+        Product product = _products.FirstOrDefault(product => product.ID == productId);
 
-        if (product == null)
-            throw new NotFoundException("product", "search");
+        if (product.ID == 0)
+            throw new NotFoundException("product");
 
-        return product.Value;
-
-
-        //int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
-
-        //if (index == -1)
-        //    throw new Exception("The product you search for does not exist");
-
-        //return DataSource._products[index];
+        return product;
     }
 
     /// <summary>
@@ -79,13 +61,6 @@ internal class DalProduct : IProduct
     /// </returns>
     public IEnumerable<Product> GetList() => _products.Select(product => product);
 
-    //Product[] newProductlist = new Product[DataSource._productCounter];
-    //for (int i = 0; i < newProductlist.Length; ++i)
-    //    newProductlist[i] = DataSource._products[i];
-
-    //return newProductlist;
-
-
     /// <summary>
     /// deletes a product from the list
     /// </summary>
@@ -95,18 +70,7 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public void Delete(int productId) => _products.Remove(Get(productId));// אם לא מצאנו גט זורק חריגה 
-
-    //int index = Array.FindIndex(DataSource._products, p => p.ID == productId);
-
-    //if (index == -1)
-    //    throw new Exception("The product you wish to delete does not exist");
-
-    //int last = (--DataSource._productCounter);
-
-    //DataSource._products[index] = DataSource._products[last]; // moving last product's details into the deleted order's cell, running over it
-
-    //Array.Clear(DataSource._products, last, last); // last cell is no longer needed. cleaning...
+    public void Delete(int productId) => _products.Remove(Get(productId));
 
 
     /// <summary>
@@ -121,12 +85,6 @@ internal class DalProduct : IProduct
     public void Update(Product updateProduct)
     {
         Delete(updateProduct.ID);
-        _products.Add(updateProduct);  // stay with the same key
-        //int index = Array.FindIndex(DataSource._products, p => p.ID == uppdateProduct.ID);
-
-        //if (index == -1)
-        //    throw new Exception("The product you wish to update does not exist");
-
-        //DataSource._products[index] = uppdateProduct;
+        _products.Add(updateProduct);
     }
 }

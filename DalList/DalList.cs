@@ -2,7 +2,7 @@
 namespace Dal;
 
 
-//@@@@@@@@@@@@@
+
 sealed public class DalList : IDal
 {
     public IProduct Product => new DalProduct();

@@ -4,7 +4,6 @@ using static Dal.DataSource;
 namespace Dal;
 
 
-//public @@@
 internal class DalOrder : IOrder
 {
     /// <summary>
@@ -25,12 +24,6 @@ internal class DalOrder : IOrder
         _orders.Add(newOrder);
         return newOrder.ID;
 
-        //@@
-        //newOrder.ID = DataSource.getRunNumberOrderID; // ID is given here
-
-        //DataSource._orders[DataSource._orderCounter++] = newOrder;
-
-        //return newOrder.ID;
     }
 
     /// <summary>
@@ -47,17 +40,11 @@ internal class DalOrder : IOrder
     /// </exception>
     public Order Get(int orderId)
     {
-        Order? order = _orders.FirstOrDefault(order => order.ID == orderId);
-        if (order == null)
-            throw new NotFoundException("order","search");// לבדוק הודעות מתאימות
-        return order.Value;
+        Order order = _orders.FirstOrDefault(order => order.ID == orderId);
+        if (order.ID == 0)
+            throw new NotFoundException("order");
+        return order;
 
-        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
-
-        //if (index == -1)
-        //    throw new Exception("The order you search for does not exist");
-
-        //return DataSource._orders[index];
     }
 
     /// <summary>
@@ -67,13 +54,7 @@ internal class DalOrder : IOrder
     /// The new array
     /// </returns>
     public IEnumerable<Order> GetList() => _orders.Select(order => order);
-    //{
-        
-        //Order[] newOrderlist = new Order[DataSource._orderCounter];
-        //for (int i = 0; i < newOrderlist.Length; ++i)
-        //    newOrderlist[i] = DataSource._orders[i];
-        //return newOrderlist;
-  //  }
+
 
     /// <summary>
     /// deletes an order from the _orders array
@@ -84,21 +65,8 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void Delete(int orderId) => _orders.Remove(Get(orderId));  // אם לא מצאנו גט זורק חריגה 
-    //{
-       
+    public void Delete(int orderId) => _orders.Remove(Get(orderId)); 
 
-        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
-
-        //if (index == -1)
-        //    throw new Exception("The order you wish to delete does not exist");
-
-        //int last = (--DataSource._orderCounter);
-
-        //DataSource._orders[index] = DataSource._orders[last]; // moving last order's details into the deleted order's cell, running over it
-
-        //Array.Clear(DataSource._orders, last, last); // last cell is no longer needed. cleaning...
-    //}
 
     /// <summary>
     /// updates an existing order
@@ -111,15 +79,8 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Update(Order orderUpdate)
     {
-   
+
         Delete(orderUpdate.ID);
-        _orders.Add(orderUpdate);  // stay with the same key
-
-        //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderUpdate.ID);
-
-        //if (index == -1)
-        //    throw new Exception("The order you wish to update does not exist");
-
-        //DataSource._orders[index] = orderUpdate;
+        _orders.Add(orderUpdate);
     }
 }

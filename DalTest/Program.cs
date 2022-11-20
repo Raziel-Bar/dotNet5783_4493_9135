@@ -12,9 +12,7 @@ public class Program
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
-    //private static DalProduct _dalProduct = new DalProduct();@@@@@@@@@@@@
-    //private static DalOrder _dalOrder = new DalOrder();
-    //private static DalOrderItem _dalOrderItem = new DalOrderItem();
+  
 
     /// <summary>
     /// main program. presents the Main menu.
@@ -76,19 +74,18 @@ public class Program
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the product's ID to delete: ");
                         dal.Product.Delete(yourChoiceInt());
-                        //   _dalProduct.DeleteProduct(yourChoiceInt()); @@@
+                        
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the product's ID: ");
 
                         Console.WriteLine(dal.Product.Get(yourChoiceInt()));
 
-                        //@@@   Console.WriteLine(_dalProduct.SearchProduct(yourChoiceInt()));
+                      
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.Product.GetList()); //////////////////////////////////////////////////////
-                                                                //printCollection(_dalProduct.ListOfProducts()); @@@
+                        printCollection(dal.Product.GetList()); 
                         break;
                 }
             }
@@ -310,7 +307,7 @@ Enter your choice: ");
 
         dal.Order.Add(newOrder);
 
-        //_dalOrder.AddNewOrder(newOrder); @@
+        
 
     }
 
@@ -325,8 +322,7 @@ Enter your choice: ");
         Console.WriteLine("Please enter the order's ID: ");
 
         Order orderUpdate = dal.Order.Get(yourChoiceInt());
-
-        // Order orderUpdate = _dalOrder.SearchOrder(yourChoiceInt()); @@    
+       
         do
         {
             Console.WriteLine(@"What details do you wish to change? 
