@@ -8,7 +8,7 @@ namespace Test;
 /// </summary>
 public class Program
 {
-    private static IDal dal = new DalList();  
+    private static IDal dal = new DalList();
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
@@ -22,7 +22,7 @@ public class Program
     /// <param name="args"></param>
     static void Main(string[] args)
     {
-      //  dal.OrderItem.Add
+
         int menuChoose;
         do
         {
@@ -75,19 +75,28 @@ public class Program
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the product's ID to delete: ");
-                        _dalProduct.DeleteProduct(yourChoiceInt());
+                        dal.Product.Delete(yourChoiceInt());
+                        //   _dalProduct.DeleteProduct(yourChoiceInt()); @@@
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the product's ID: ");
-                        Console.WriteLine(_dalProduct.SearchProduct(yourChoiceInt()));
+
+                        Console.WriteLine(dal.Product.Get(yourChoiceInt()));
+
+                        //@@@   Console.WriteLine(_dalProduct.SearchProduct(yourChoiceInt()));
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(_dalProduct.ListOfProducts());
+                        printCollection(dal.Product.GetList()); //////////////////////////////////////////////////////
+                                                                //printCollection(_dalProduct.ListOfProducts()); @@@
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (AlreadyExistException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -133,7 +142,9 @@ Enter your choice: ");
         Console.WriteLine("Please enter the amount in stock: ");
         newProduct.InStock = yourChoiceInt();
 
-        _dalProduct.AddNewProduct(newProduct);
+        dal.Product.Add(newProduct);
+
+        // _dalproduct.AddnewProduct(newproduct) @@@@
     }
 
     /// <summary>
@@ -142,7 +153,8 @@ Enter your choice: ");
     private static void productCheckUpdate()
     {
         Console.WriteLine("Please enter the product's ID: ");
-        Product productUpdate = _dalProduct.SearchProduct(yourChoiceInt());
+        Product productUpdate = dal.Product.Get(yourChoiceInt());
+        //Product productUpdate = _dalProduct.SearchProduct(yourChoiceInt()); @@@@@@@
 
         int changeChoice;
         do
@@ -195,13 +207,14 @@ Enter your choice: ");
                     {
                         Console.WriteLine("Error. Please enter a valid option: ");
                         catgory = yourChoiceInt();
-                    } 
+                    }
                     productUpdate.Category = (WINERYS)catgory;
                     break;
             };
         } while (changeChoice != 0);
 
-        _dalProduct.UpdateProduct(productUpdate);
+        dal.Product.Update(productUpdate);
+        //_dalProduct.UpdateProduct(productUpdate)@@@@@@@@@
     }
 
     #endregion
@@ -232,19 +245,22 @@ Enter your choice: ");
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order's ID to delete: ");
-                        _dalOrder.DeleteOrder(yourChoiceInt());
+                        dal.Order.Delete(yourChoiceInt());
+                        //_dalOrder.DeleteOrder(yourChoiceInt()); @@@
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order's ID: ");
-                        Console.WriteLine(_dalOrder.SearchOrder(yourChoiceInt()));
+                        Console.WriteLine(dal.Order.Get(yourChoiceInt()));
+                        //  Console.WriteLine(_dalOrder.SearchOrder(yourChoiceInt())); @@
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(_dalOrder.ListOfOrders());
+                        printCollection(dal.Order.GetList());
+                        //   printCollection(_dalOrder.ListOfOrders());@@
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -292,7 +308,9 @@ Enter your choice: ");
         DateTime.TryParse(Console.ReadLine(), out dateTime);
         newOrder.DeliveryDate = dateTime;*/
 
-        _dalOrder.AddNewOrder(newOrder);
+        dal.Order.Add(newOrder);
+
+        //_dalOrder.AddNewOrder(newOrder); @@
 
     }
 
@@ -305,7 +323,10 @@ Enter your choice: ");
         int changeChoice;
 
         Console.WriteLine("Please enter the order's ID: ");
-        Order orderUpdate = _dalOrder.SearchOrder(yourChoiceInt());
+
+        Order orderUpdate = dal.Order.Get(yourChoiceInt());
+
+        // Order orderUpdate = _dalOrder.SearchOrder(yourChoiceInt()); @@    
         do
         {
             Console.WriteLine(@"What details do you wish to change? 
@@ -361,7 +382,8 @@ Enter your choice: ");
         }
         while (changeChoice != 0);
 
-        _dalOrder.UpdateOrder(orderUpdate);
+        dal.Order.Update(orderUpdate);
+        //_dalOrder.UpdateOrder(orderUpdate); @@@@@@@@
     }
 
     #endregion
@@ -393,29 +415,33 @@ Enter your choice: ");
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order item's ID to delete: ");
-                        _dalOrderItem.Delete(yourChoiceInt());
+                        dal.OrderItem.Delete(yourChoiceInt());
+                        //_dalOrderItem.Delete(yourChoiceInt());
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order item's ID to search: ");
-                        Console.WriteLine(_dalOrderItem.Get(yourChoiceInt()));
+
+                        Console.WriteLine(dal.OrderItem.Get(yourChoiceInt()));
+
+                        //Console.WriteLine(_dalOrderItem.Get(yourChoiceInt()));
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(_dalOrderItem.GetList());
+                        printCollection(dal.OrderItem.GetList());
                         break;
 
                     case OPTIONS.ORDER_ITEM_LIST:
                         Console.WriteLine("Enter order's ID: ");
-                        printCollection(_dalOrderItem.GetItemsInOrder(yourChoiceInt()));
+                        printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
                         break;
 
                     case OPTIONS.ORDER_ITEM_SEARCH:
                         Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
-                        Console.WriteLine(_dalOrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
+                        Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -435,17 +461,17 @@ Enter your choice: ");
 
         Console.WriteLine("Enter the product's ID:");
         newOrderItem.ProductID = yourChoiceInt();
-        
-        newOrderItem.Price = _dalProduct.SearchProduct(newOrderItem.ProductID).Price; // price is given based on the product's price in the dalProduct
+
+        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID).Price; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");
-        newOrderItem.OrderID = yourChoiceInt();    
+        newOrderItem.OrderID = yourChoiceInt();
 
 
         Console.WriteLine("Enter the product's amount: ");
         newOrderItem.Amount = yourChoiceInt();
 
-        _dalOrderItem.Add(newOrderItem);
+        dal.OrderItem.Add(newOrderItem);
     }
 
     /// <summary>
@@ -455,7 +481,7 @@ Enter your choice: ");
     {
         int changeChoice;
         Console.WriteLine("Please enter the order item's ID: ");
-        OrderItem orderItemUpdate = _dalOrderItem.Get(yourChoiceInt());
+        OrderItem orderItemUpdate = dal.OrderItem.Get(yourChoiceInt());
         do
         {
             Console.WriteLine(@"What details do you wish to change? 
@@ -489,7 +515,7 @@ Enter your choice: ");
             };
         } while (changeChoice != 0);
 
-        _dalOrderItem.Update(orderItemUpdate);
+        dal.OrderItem.Update(orderItemUpdate);
     }
 
     #endregion
@@ -531,8 +557,11 @@ Please choose on of the following options:
     /// <param name="items">
     /// The entity's list from the dataSource
     /// </param>
-    private static void printCollection<Item>(Item[] items)
+    private static void printCollection<list>(IEnumerable<list> items)
     {
+        if (items == null)
+            return;
+
         foreach (var obj in items)
             Console.WriteLine(obj);
     }

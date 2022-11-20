@@ -2,7 +2,10 @@
 using DalApi;
 using static Dal.DataSource;
 namespace Dal;
-public class DalOrder : IOrder
+
+
+//public @@@
+internal class DalOrder : IOrder
 {
     /// <summary>
     /// Adds a new order to the _orders array
@@ -46,7 +49,7 @@ public class DalOrder : IOrder
     {
         Order? order = _orders.FirstOrDefault(order => order.ID == orderId);
         if (order == null)
-            ExceptionFunctionThrow.NotFoundException("order");// לבדוק הודעות מתאימות
+            throw new NotFoundException("order","search");// לבדוק הודעות מתאימות
         return order.Value;
 
         //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
@@ -63,15 +66,14 @@ public class DalOrder : IOrder
     /// <returns>
     /// The new array
     /// </returns>
-    public IEnumerable<Order> GetList()
-    {
-        return _orders.Select(order => order);
-
+    public IEnumerable<Order> GetList() => _orders.Select(order => order);
+    //{
+        
         //Order[] newOrderlist = new Order[DataSource._orderCounter];
         //for (int i = 0; i < newOrderlist.Length; ++i)
         //    newOrderlist[i] = DataSource._orders[i];
         //return newOrderlist;
-    }
+  //  }
 
     /// <summary>
     /// deletes an order from the _orders array
@@ -82,9 +84,9 @@ public class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void Delete(int orderId)
-    {
-        _orders.Remove(Get(orderId));  // אם לא מצאנו גט זורק חריגה 
+    public void Delete(int orderId) => _orders.Remove(Get(orderId));  // אם לא מצאנו גט זורק חריגה 
+    //{
+       
 
         //int index = Array.FindIndex(DataSource._orders, p => p.ID == orderId);
 
@@ -96,7 +98,7 @@ public class DalOrder : IOrder
         //DataSource._orders[index] = DataSource._orders[last]; // moving last order's details into the deleted order's cell, running over it
 
         //Array.Clear(DataSource._orders, last, last); // last cell is no longer needed. cleaning...
-    }
+    //}
 
     /// <summary>
     /// updates an existing order

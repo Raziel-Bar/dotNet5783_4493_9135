@@ -25,7 +25,7 @@ internal class DalProduct : IProduct
         Product? product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
 
         if (product == null)
-            ExceptionFunctionThrow.NotFoundException("product");/////
+            throw new AlreadyExistException("product", "add");
 
         _products.Add(newProduct);
         return product.Value.ID;
@@ -58,7 +58,7 @@ internal class DalProduct : IProduct
         Product? product = _products.FirstOrDefault(product => product.ID == productId);
 
         if (product == null)
-            ExceptionFunctionThrow.NotFoundException("product");
+            throw new NotFoundException("product", "search");
 
         return product.Value;
 

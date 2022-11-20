@@ -1,5 +1,7 @@
 ﻿using DO;
-namespace DalApi;
+using System;
+
+namespace DO;
 
 
 //public class ExceptionFunctionThrow
@@ -22,16 +24,16 @@ namespace DalApi;
 
 
 
-public class NotFoundException: Exception
+public class NotFoundException : Exception
 {
-    public  NotFoundException(string message) : base(message) { }
+    public NotFoundException(string type,string action) : base($"The {type} you wanted too {action} is not found") { }
     //public void throwNotFound(string type) { throw new Exception($"ERROR dotNet5783_01: The {type} Does not exist"); } // is this right?
 }
 
-public class AlreadyExistException: Exception
-{
-    public AlreadyExistException(string message) : base(message) { }
+public class AlreadyExistException : Exception
+{ 
+    public AlreadyExistException(string type, string action) : base($"The {type} you wanted too {action} is already exist") { }
 
-    public void throwAlreadyExist(string type) { throw new Exception($"ERROR dotNet5783_02: The {type} Already exists"); } // is this right?
+    //public void throwAlreadyExist(string type) { throw new Exception($"ERROR dotNet5783_02: The {type} Already exists"); } // is this right?
 }
 
