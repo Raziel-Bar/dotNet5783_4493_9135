@@ -39,5 +39,4 @@ public class ProductItem
         Price per unit: {Price}
         Available: {(Available == Available.NotAvailable ? "No" : "Yes")}
         Amount in cart: {Amount}";
-
 }

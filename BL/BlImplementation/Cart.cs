@@ -18,8 +18,6 @@ public class Cart : ICart
     {
         DO.Product product = dal.Product.Get(idProduct);
 
-
-
         if (product.InStock > 0)
         {
             OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);

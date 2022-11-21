@@ -22,42 +22,13 @@ public class OrderForList
     /// </summary>
     public double TotalPrice { get; set; }
 
-    public override string ToString() //////@@@@@@@@@@@@@@
-    {
-        string toString = $@"
+    public override string ToString() => $@"
         Order ID: {ID}
-        Customer name: {CustomerName}  Status: {Status}";
-
-        toString += $@"
+        Customer name: {CustomerName} 
+        Status: {Status}
         Amount of items: {AmountOfItems}
         Total: {TotalPrice}";
-        return toString;
-    }
-    //public override string ToString()
-    //{
-    //    string toString = $@"
-    //    Order ID: {ID}
-    //    Customer name: {CustomerName}";
-    //    switch (Status)
-    //    {
-    //        case ORDER_STATUS.PENDING:
-    //            toString += @"
-    //    Status: Pending";
-    //            break;
-    //        case ORDER_STATUS.SHIPPED:
-    //            toString += @"
-    //    Status: Shipped";
-    //            break;
-    //        case ORDER_STATUS.DELIVERED:
-    //            toString += @"
-    //    Status: Delivered";
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //    toString += $@"
-    //    Amount of items: {AmountOfItems}
-    //    Total: {TotalPrice}";
-    //    return toString;
-    //}
+
+
+
 }
