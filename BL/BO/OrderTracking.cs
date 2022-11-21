@@ -1,10 +1,12 @@
-﻿namespace BO;
-internal class OrderTracking
+﻿using DO;
+
+namespace BO;
+public class OrderTracking
 {
     /// <summary>
     /// The order's unique ID (like "barcode")
     /// </summary>
-    public int? ID { get; set; }
+    public int ID { get; set; }
     /// <summary>
     /// The current status of an existing order
     /// </summary>
@@ -13,7 +15,10 @@ internal class OrderTracking
     /// <summary>
     /// a tracking journey. list of dates that tracks the order's process
     /// </summary>
-    public List<Tuple<DateTime, string>>? Tracker { get; set; } // SOOOO unsure of it XD
+    public List<Tuple<DateTime, ORDER_STATUS>> Tracker { get; set; }
 
-    // to string
+
+    public override string ToString() => $@"
+
+      ";
 }

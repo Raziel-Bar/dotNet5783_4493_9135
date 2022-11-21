@@ -1,10 +1,10 @@
 ﻿namespace BO;
-internal class ProductForList
+public class ProductForList
 {
     /// <summary>
     /// The product's ID
     /// </summary>
-    public int? ID { get; set; }
+    public int ID { get; set; }
 
     /// <summary>
     /// The product's name
@@ -14,7 +14,7 @@ internal class ProductForList
     /// <summary>
     /// The product's price
     /// </summary>
-    public double? Price { get; set; }
+    public double Price { get; set; }
 
     /// <summary>
     /// The product's category

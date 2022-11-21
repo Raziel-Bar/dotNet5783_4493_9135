@@ -1,10 +1,11 @@
 ﻿namespace BO;
-internal class Order
+
+public class Order //
 {
     /// <summary>
     /// The order's unique ID (like "barcode")
     /// </summary>
-    public int? ID { get; set; }
+    public int ID { get; set; }
     /// <summary>
     /// The name of the customer who placed the order.
     /// </summary>
@@ -36,11 +37,12 @@ internal class Order
     /// <summary>
     /// List of all the items in the order
     /// </summary>
-    public List<OrderItem>? ListOfItems { get; set; } // ?
+    public List<OrderItem> ListOfItems { get; set; } 
+
     /// <summary>
     /// The final price to pay for the whole order
     /// </summary>
-    public double? TotalPrice { get; set; }
+    public double TotalPrice { get; set; }
 
     public override string ToString() => $@"
        Order ID: {ID}

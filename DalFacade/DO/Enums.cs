@@ -29,9 +29,9 @@ public enum WINERYS
 /// <summary>
 /// enum for the first menu in DalTest\Program.cs
 /// </summary>
-public enum ENTITIES { EXIT, PRODUCT, ORDER, ORDER_ITEM, CART,  };
+public enum ENTITIES { EXIT, PRODUCT, ORDER, ORDER_ITEM, CART, };
 
 /// <summary>
 /// enum for the second menu for each selction from menu_1 in DalTest\Program.cs
 /// </summary>
-public enum OPTIONS { EXIT = 0, ADD = 1, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };
+public enum OPTIONS { EXIT, ADD, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };

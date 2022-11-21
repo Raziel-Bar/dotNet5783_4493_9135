@@ -1,12 +1,12 @@
 ﻿using DO;
 
 namespace BO;
-internal class ProductItem
+public class ProductItem
 {
     /// <summary>
     /// The product's ID
     /// </summary>
-    public int? ID { get; set; }
+    public int ID { get; set; }
 
     /// <summary>
     /// The product's name
@@ -16,7 +16,7 @@ internal class ProductItem
     /// <summary>
     /// The product's price per unit
     /// </summary>
-    public double? Price { get; set; }
+    public double Price { get; set; }
 
     /// <summary>
     /// The product's category
@@ -26,26 +26,18 @@ internal class ProductItem
     /// <summary>
     /// checker to know whether the product's amount in stock is empty or not
     /// </summary>
-    public bool? Available { get; set; }
+    public Available Available { get; set; }// שיננתי מ BOOL
 
     /// <summary>
     /// The amount of product units currently in the cart
     /// </summary>
-    public int? Amount { get; set; }
+    public int Amount { get; set; }
 
-    public override string ToString()
-    {
-        string toString = $@"
+    public override string ToString() => $@"
         Product ID: {ID} : {Name}
         Category: {Category}
-        Price per unit: {Price}";
-        if (Available != null)
-        {
-            toString += $@"
-        Available: {(Available == false ? "No" : "Yes")}";
-        }
-        toString += $@"
+        Price per unit: {Price}
+        Available: {(Available == Available.NotAvailable ? "No" : "Yes")}
         Amount in cart: {Amount}";
-        return toString;
-    }
+
 }

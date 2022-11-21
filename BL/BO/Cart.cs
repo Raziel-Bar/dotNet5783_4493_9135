@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 
 namespace BO;
-internal class Cart
+public class Cart
 {
     /// <summary>
     /// Customer details:
@@ -20,12 +20,12 @@ internal class Cart
     /// <summary>
     /// The list of items in order
     /// </summary>
-    public List<OrderItem>? ListOfItems { get; set; } // ?
+    public List<OrderItem> ListOfItems { get; set; } 
 
     /// <summary>
     /// The final price to pay for the order
     /// </summary>
-    public double? TotalPrice { get; set; }
+    public double TotalPrice { get; set; }
 
     public override string ToString() => $@"
            --Your Cart--
@@ -35,7 +35,7 @@ internal class Cart
     	Adress: {CustomerAdress}
 
     	Order details:
-        {ListOfItems}
+        {string.Join(Environment.NewLine, ListOfItems)}
 
         Total: {TotalPrice}
         ";

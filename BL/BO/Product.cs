@@ -4,7 +4,7 @@ public class Product
     /// <summary>
     /// The product's unique ID (like "barcode")
     /// </summary>
-    public int? ID { get; set; }
+    public int ID { get; set; }
 
     /// <summary>
     /// The product's name - should include the winery, vintage year and the grape species included in the bottle.
@@ -16,7 +16,7 @@ public class Product
     /// <summary>
     /// The price of the product (X1 unit)
     /// </summary>
-    public double? Price { get; set; }
+    public double Price { get; set; }
 
     /// <summary>
     /// The catergory that shows which winery is the product from (or either we discuss a feature product. category: ELSE)
@@ -26,7 +26,7 @@ public class Product
     /// <summary>
     /// The product's quantity in the stock
     /// </summary>
-    public int? InStock { get; set; }
+    public int InStock { get; set; }
 
     public override string ToString() => $@"
         Product ID: {ID}: {Name}

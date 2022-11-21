@@ -24,7 +24,7 @@ internal class DalProduct : IProduct
         Product product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
 
         if (product.ID == 0)
-            throw new AlreadyExistException("product");
+            throw new AlreadyExistException("product" , );
 
         _products.Add(newProduct);
         return product.ID;
