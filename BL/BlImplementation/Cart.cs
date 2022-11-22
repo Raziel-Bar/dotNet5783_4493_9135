@@ -14,9 +14,9 @@ public class Cart : ICart
     /// </summary>
     /// <param name="idProduct"></param>
     /// <param name="cart"></param>
-    public void AddCart(int idProduct, BO.Cart cart)
+    public void AddToCart(int productID, BO.Cart cart)
     {
-        DO.Product product = dal.Product.Get(idProduct);
+        DO.Product product = dal.Product.Get(productID);
 
         if (product.InStock > 0)
         {

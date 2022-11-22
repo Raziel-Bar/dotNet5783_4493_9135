@@ -14,7 +14,6 @@ internal static class DataSource
     {
         s_Initialize();
     }
-
     /// <summary>
     /// The empty ctor calls all entities inits
     /// </summary>
@@ -26,47 +25,32 @@ internal static class DataSource
     }
 
     #region countersAndRunningNumbers
-
     //internal static class Config // TO BE IGNORED ATM BASED ON INSTRUCTIONS GIVEN BY DAN ZILBERSTEIN
     //{
-
-   
-
     private static int runNumberOrderID = 1;
-
     private static int runNumberOrderItemID = 1;
-
     internal static int getRunNumberOrderID => runNumberOrderID++;
     internal static int getRunNumberOrderItemID => runNumberOrderItemID++;
     //}
     #endregion
 
     #region variablesAndArrays
-
     private static readonly Random _random = new Random();// random numbers maker
-
     /// <summary>
-    /// defining lists // Arrays &&
+    /// defining lists
     /// </summary>
-    
-
     internal static List<Product> _products = new List<Product>();
     internal static List<Order> _orders = new List<Order>();
     internal static List<OrderItem> _orderItems = new List<OrderItem>();
-
-
-
     /// <summary>
     /// defining the adding basic methods. adds a new entity object to its appropriate list (objects will be made in the inits)
     /// </summary>
-    private static void AddProduct(Product product) => _products.Add(product); /*_products[_productCounter++] = product;  && */
-    private static void AddOrder(Order order) => _orders.Add(order); /*_orders[_orderCounter++] = order;  && */
-    private static void AddOrderItem(OrderItem orderItem) => _orderItems.Add(orderItem); /*_orderItems[_orderItemCounter++] = orderItem;  && */ 
-
+    private static void AddProduct(Product product) => _products.Add(product);
+    private static void AddOrder(Order order) => _orders.Add(order);
+    private static void AddOrderItem(OrderItem orderItem) => _orderItems.Add(orderItem);
     #endregion
 
     #region init entities
-
     /// <summary>
     /// The maker of the default database of products - wines of 5 different winerys
     /// </summary>
@@ -107,7 +91,6 @@ internal static class DataSource
 
                 myIdNumber = _random.Next(100000, 1000000);
 
-                //while (Array.Exists(_products, p => p.ID == myIdNumber)) &&
                 while(_products.Exists(p => p.ID == myIdNumber))  
                     myIdNumber = _random.Next(100000, 1000000);
 
@@ -133,7 +116,6 @@ internal static class DataSource
             }
         }
     }
-
     /// <summary>
     /// The maker of the default database of orders list
     /// </summary>
@@ -217,24 +199,23 @@ internal static class DataSource
             AddOrder(newOrder); // Order's ready! adding to database
         }
     }
-
     /// <summary>
     /// The maker of the default database of order items list
     /// </summary>
     private static void initOrderItem()
     {
 
-        for (int j = 0; j < _orders.Count /*_orderCounter  && */; ++j) // running over orders
+        for (int j = 0; j < _orders.Count; ++j) // running over orders
         {
 
             for (int i = 0; i < _random.Next(1, 5); ++i) // up to 4 items in an order
             {
 
-                Product product = _products[_random.Next(0, _products.Count/*Length &&*/)];
+                Product product = _products[_random.Next(0, _products.Count)];
 
                 while (product.InStock == 0) // In case we randomly took a product with 0 quantity
                 {
-                    product = _products[_random.Next(0, _products.Count/*Length &&*/)];
+                    product = _products[_random.Next(0, _products.Count)];
                 }
 
                 OrderItem item = new OrderItem();

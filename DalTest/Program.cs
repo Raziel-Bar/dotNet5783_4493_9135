@@ -7,11 +7,11 @@ namespace Test;
 /// tester for the DAL
 /// </summary>
 public class Program
-{
-    private static IDal dal = new DalList();
+{    
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
+    private static IDal dal = new DalList();
   
 
     /// <summary>

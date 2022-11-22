@@ -1,13 +1,14 @@
-﻿using System.Xml.Linq;
+﻿namespace DO;
 
-namespace DO;
+/// <summary>
+/// Structure for a given item-in-order in database.
+/// </summary>
 public struct OrderItem
 {
     /// <summary>
     /// The orderItem's ID (== ID attribute from the orderItem entity)
     /// </summary>
     public int OrderItemID { get; set; }
-
     /// <summary>
     /// The product's ID (== ID attribute from the Product entity)
     /// </summary>
@@ -24,7 +25,6 @@ public struct OrderItem
     /// The amount of product units in the order
     /// </summary>
     public int Amount { get; set; }
-
     public override string ToString() => $@"
        Order item ID: {OrderItemID}
        Order ID: {OrderID}

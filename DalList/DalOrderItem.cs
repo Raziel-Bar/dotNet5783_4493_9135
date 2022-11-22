@@ -1,10 +1,11 @@
 ﻿using DO;
 using DalApi;
 using static Dal.DataSource;
-
 namespace Dal;
 
-
+/// <summary>
+/// Implementation for DalApi.IOrderItem
+/// </summary>
 internal class DalOrderItem : IOrderItem
 {
     /// <summary>
@@ -25,7 +26,6 @@ internal class DalOrderItem : IOrderItem
         _orderItems.Add(newOrderItem);
         return newOrderItem.OrderItemID;
     }
-
     /// <summary>
     /// Search for an order item based on the orderID and the productID
     /// </summary>
@@ -50,7 +50,6 @@ internal class DalOrderItem : IOrderItem
 
         return orderItem;
     }
-
     /// <summary>
     /// Global search if the given item exists in any order at all
     /// </summary>
@@ -71,7 +70,6 @@ internal class DalOrderItem : IOrderItem
 
         return orderItem;
     }
-
     /// <summary>
     /// makes a list of all order items that are included in a specific order 
     /// </summary>
@@ -82,8 +80,6 @@ internal class DalOrderItem : IOrderItem
     /// The made list
     /// </returns>
     public IEnumerable<OrderItem> GetItemsInOrder(int orderId) => _orderItems.Where(orderItem => orderItem.OrderID == orderId);
-
-
     /// <summary>
     /// copies the order item's list into a new array
     /// </summary>
@@ -91,9 +87,6 @@ internal class DalOrderItem : IOrderItem
     /// The new array
     /// </returns>
     public IEnumerable<OrderItem> GetList() => _orderItems.Select(orderItem => orderItem);
-
-
-
     /// <summary>
     /// deletes an order item from the list
     /// </summary>
@@ -104,9 +97,6 @@ internal class DalOrderItem : IOrderItem
     /// In case the order item does not exist in the list
     /// </exception>
     public void Delete(int orderItemId) => _orderItems.Remove(Get(orderItemId));  
- 
-
-
     /// <summary>
     /// Updates a specific order item's details
     /// </summary>

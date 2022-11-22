@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
+﻿namespace DO;
 
-namespace DO;
 /// <summary>
-/// Structure for a given order
+/// Structure for a given order in database
 /// </summary>
 public struct Order
 {
@@ -22,22 +21,18 @@ public struct Order
     /// His real address (for delivery)
     /// </summary>
     public string CustomerAdress { get; set; }
-
     /// <summary>
     /// The date on which the order was placed
     /// </summary>
     public DateTime OrderDate { get; set; }
-
     /// <summary>
     /// The date on which the order is to be shipped to the customer
     /// </summary>
     public DateTime ShipDate { get; set; }
-
     /// <summary>
     /// The date on which the order is to be delivered to the customer
     /// </summary>
     public DateTime DeliveryDate { get; set; }
-
     public override string ToString() => $@"
        Order ID: {ID}
        Customer name: {CustomerName} 

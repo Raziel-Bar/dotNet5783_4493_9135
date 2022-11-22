@@ -1,20 +1,19 @@
-﻿using DO;
-using System;
+﻿namespace DO;
+/// <summary>
+/// DAL exceptions. Here we gather all possible errors that can happen when accessing the DAL
+/// </summary>
 
-namespace DO;
-
-
-
+/// <summary>
+/// Exception for cases when an object from a given entity is not found in the database
+/// </summary>
 public class NotFoundException : Exception
 {
-    public NotFoundException(string type) : base($"{type} was not found") { }
-    //public void throwNotFound(string type) { throw new Exception($"ERROR dotNet5783_01: The {type} Does not exist"); } // is this right?
+    public NotFoundException(string type) : base($"ERROR dotNet5783_DAL_ERROR_01: {type} not found") { }
 }
-
+/// <summary>
+/// Exception for cases when an object from a given entity already exists in the database when it's not suppose to
+/// </summary>
 public class AlreadyExistException : Exception
 {
-    public AlreadyExistException(string type) : base($"{type} already exists") { }
-
-    //public void throwAlreadyExist(string type) { throw new Exception($"ERROR dotNet5783_02: The {type} Already exists"); } // is this right?
+    public AlreadyExistException(string type) : base($"ERROR dotNet5783_DAL_ERROR_02:{type} already exists") { }
 }
-

@@ -1,10 +1,12 @@
 ﻿using DO;
 namespace DalApi;
 
-
-// when the interface is public so its default for the שדות is public
-
-
+/// <summary>
+/// Genreric CRUD interface for our entities' databases
+/// </summary>
+/// <typeparam name="T">
+/// will present entities
+/// </typeparam>
 public interface ICrud<T>
 {
     int Add(T t);

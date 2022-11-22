@@ -1,6 +1,9 @@
 ﻿namespace BO;
 
-public class Order //@@@@@@@@@@@@@@@@@@@@@@@
+/// <summary>
+/// Presents an order's details for administrator
+/// </summary>
+public class Order 
 {
     /// <summary>
     /// The order's unique ID (like "barcode")
@@ -37,20 +40,19 @@ public class Order //@@@@@@@@@@@@@@@@@@@@@@@
     /// <summary>
     /// List of all the items in the order
     /// </summary>
-    public List<OrderItem> ListOfItems { get; set; } 
-
+    public List<OrderItem> ListOfItems { get; set; } // '?' missing?
     /// <summary>
     /// The final price to pay for the whole order
     /// </summary>
     public double TotalPrice { get; set; }
-
     public override string ToString() => $@"
-       Order ID: {ID}
-       Customer name: {CustomerName} 
-       Customer email: {CustomerEmail}
-       Customer address: {CustomerAdress}
-       Time of the order: {OrderDate} 
-       Time of ship: {ShipDate}
-       Time of delivering: {DeliveryDate}
-       ";
+        Order ID: {ID}
+        Customer name: {CustomerName} 
+        Customer email: {CustomerEmail}
+        Customer address: {CustomerAdress}
+        Time of the order: {OrderDate} 
+        Time of ship: {ShipDate}
+        Time of delivering: {DeliveryDate}
+            Items:
+            {string.Join(Environment.NewLine, ListOfItems)}";
 }

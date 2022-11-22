@@ -1,4 +1,8 @@
 ﻿namespace BO;
+
+/// <summary>
+/// Presents an order's details for LIST
+/// </summary>
 public class OrderForList
 {
     /// <summary>
@@ -21,14 +25,10 @@ public class OrderForList
     /// The final price to pay for the whole order
     /// </summary>
     public double TotalPrice { get; set; }
-
     public override string ToString() => $@"
         Order ID: {ID}
         Customer name: {CustomerName} 
         Status: {Status}
         Amount of items: {AmountOfItems}
         Total: {TotalPrice}";
-
-
-
 }

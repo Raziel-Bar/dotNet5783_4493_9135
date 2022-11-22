@@ -3,11 +3,9 @@
 /// Here we have all the enums that are needed for our Dal
 /// </summary>
 
-
 /// <summary>
 /// The category of the product, in our case, wine - which winery is the product from.
-/// </summary>
-/// 
+/// </summary> 
 public enum WINERYS
 {
     GOLAN,
@@ -25,12 +23,10 @@ public enum WINERYS
     /// </summary>
     // ELSE
 }
-
 /// <summary>
 /// enum for the first menu in DalTest\Program.cs
 /// </summary>
 public enum ENTITIES { EXIT, PRODUCT, ORDER, ORDER_ITEM, CART, };
-
 /// <summary>
 /// enum for the second menu for each selction from menu_1 in DalTest\Program.cs
 /// </summary>

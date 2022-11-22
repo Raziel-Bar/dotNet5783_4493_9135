@@ -3,7 +3,9 @@ using DalApi;
 using static Dal.DataSource;
 namespace Dal;
 
-
+/// <summary>
+/// Implementation for DalApi.Iorder
+/// </summary>
 internal class DalOrder : IOrder
 {
     /// <summary>
@@ -25,7 +27,6 @@ internal class DalOrder : IOrder
         return newOrder.ID;
 
     }
-
     /// <summary>
     /// search for a specific order based on its ID
     /// </summary>
@@ -46,7 +47,6 @@ internal class DalOrder : IOrder
         return order;
 
     }
-
     /// <summary>
     /// copies all _orders' RELEVANT cells into a new array
     /// </summary>
@@ -54,8 +54,6 @@ internal class DalOrder : IOrder
     /// The new array
     /// </returns>
     public IEnumerable<Order> GetList() => _orders.Select(order => order);
-
-
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -66,8 +64,6 @@ internal class DalOrder : IOrder
     /// In case the order does not exist in the array
     /// </exception>
     public void Delete(int orderId) => _orders.Remove(Get(orderId)); 
-
-
     /// <summary>
     /// updates an existing order
     /// </summary>

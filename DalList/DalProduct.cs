@@ -3,10 +3,11 @@ using DO;
 using static Dal.DataSource;
 namespace Dal;
 
+/// <summary>
+/// Implementation for DalApi.IProduct
+/// </summary>
 internal class DalProduct : IProduct
 {
-
-
     /// <summary>
     /// adds a new product to the products list
     /// </summary>
@@ -30,7 +31,6 @@ internal class DalProduct : IProduct
         return product.ID;
 
     }
-
     /// <summary>
     /// searches for a sepecific product accoding to its ID
     /// </summary>
@@ -52,7 +52,6 @@ internal class DalProduct : IProduct
 
         return product;
     }
-
     /// <summary>
     /// copies all products from the list into a NEW Array
     /// </summary>
@@ -60,7 +59,6 @@ internal class DalProduct : IProduct
     /// The new array
     /// </returns>
     public IEnumerable<Product> GetList() => _products.Select(product => product);
-
     /// <summary>
     /// deletes a product from the list
     /// </summary>
@@ -71,8 +69,6 @@ internal class DalProduct : IProduct
     /// In case the product does not exist in the list
     /// </exception>
     public void Delete(int productId) => _products.Remove(Get(productId));
-
-
     /// <summary>
     /// updates a product's details
     /// </summary>
