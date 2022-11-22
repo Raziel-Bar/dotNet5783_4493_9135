@@ -1,11 +1,11 @@
 ﻿
 using BlApi;
-using BO;
+//using BO;//  רשום שאסורe 1 בדף הוראות 2 עמוד 10 סעיף 
 using Dal;
 
 namespace BlImplementation;
 
-public class Cart : ICart
+internal class Cart : ICart
 {
     private DalApi.IDal dal = new DalList();
 
@@ -20,7 +20,7 @@ public class Cart : ICart
 
         if (product.InStock > 0)
         {
-            OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);
+           BO.OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);
 
             if (orderItem is null)
             {

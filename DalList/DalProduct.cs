@@ -32,7 +32,7 @@ internal class DalProduct : IProduct
 
     }
     /// <summary>
-    /// searches for a sepecific product accoding to its ID
+    /// searches for a specific product according to its ID
     /// </summary>
     /// <param name="productId">
     /// The ID of the product we are looking for
@@ -53,7 +53,7 @@ internal class DalProduct : IProduct
         return product;
     }
     /// <summary>
-    /// copies all products from the list into a NEW Array
+    /// copies all products from the list into a NEW List
     /// </summary>
     /// <returns>
     /// The new array

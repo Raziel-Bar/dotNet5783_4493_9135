@@ -10,6 +10,7 @@ public class NotFoundInDalException : Exception
 {
     public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
 }
+
 /// <summary>
 /// Exception for cases when an object from a given entity already exists in the database when it's not suppose to
 /// </summary>
@@ -17,6 +18,7 @@ public class AlreadyExistInDalException : Exception
 {
     public AlreadyExistInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_02: {type} already exists in data") { }
 }
+
 /// <summary>
 /// Exception for cases when an object's input data (ID and stuff) is either invalid or incorrect when compared to the data in Dal
 /// </summary>

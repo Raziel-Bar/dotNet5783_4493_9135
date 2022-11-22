@@ -23,7 +23,7 @@ public interface IProduct
     /// the product (if exists)
     /// </returns>
     /// <exception cref="NotFoundInDalException">The Product doesn't exist in the Dal</exception>
-    public Product RequestProductDetailsAdmin(int productID);
+    public BO.Product RequestProductDetailsAdmin(int productID);
     /// <summary>
     /// Makes a request to Dal for getting a product's details for customer's use (cart)
     /// </summary>
@@ -34,7 +34,7 @@ public interface IProduct
     /// the product (if exists)
     /// </returns>
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
-    public Product RequestProductDetailsCart(int productID, Cart cart);
+    public Product RequestProductDetailsCart(int productID, BO.Cart cart);
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -43,7 +43,7 @@ public interface IProduct
     /// </param>
     /// <exception cref="InvalidDataException">If the product's details are invalid</exception>
     /// <exception cref="AlreadyExistInDalException">If the Product already exists in the Dal</exception>
-    public void AddProductAdmin(Product product);
+    public void AddProductAdmin(BO.Product product);
     /// <summary>
     /// Removes a Product from the database in the Dal if all conditions are met
     /// </summary>
@@ -61,5 +61,5 @@ public interface IProduct
     /// </param>
     /// <exception cref="NotFoundInDalException">If the product doesn't exist in the Dal</exception>
     /// <exception cref="InvalidDataException">If the product's details are invalid</exception>
-    public void UpdateProductAdmin(Product product);
+    public void UpdateProductAdmin(BO.Product product);
 }

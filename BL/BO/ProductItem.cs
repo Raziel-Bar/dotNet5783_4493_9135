@@ -33,6 +33,6 @@ public class ProductItem
         Product ID: {ID} : {Name}
         Category: {Category}
         Price per unit: {Price}
-        Available: {(Available == Available.NotAvailable ? "No" : "Yes")}
+        Available: {(Available == Available.Unavailable ? "No" : "Yes")}
         Amount in cart: {Amount}";
 }
