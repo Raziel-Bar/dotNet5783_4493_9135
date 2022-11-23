@@ -1,6 +1,5 @@
 ﻿
 using BlApi;
-//using BO;//  רשום שאסורe 1 בדף הוראות 2 עמוד 10 סעיף 
 using Dal;
 
 namespace BlImplementation;
@@ -14,29 +13,40 @@ internal class Cart : ICart
     /// </summary>
     /// <param name="idProduct"></param>
     /// <param name="cart"></param>
-   
+
     void ICart.AddProductToCart(int productID, BO.Cart cart)
     {
-        DO.Product product = dal.Product.Get(productID);
-
-        if (product.InStock > 0)
+        try
         {
-            BO.OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);
+            DO.Product dataProduct = dal.Product.Get(productID);
 
-            if (orderItem is null)
+            if (dataProduct.InStock > 0)
             {
-                cart.ListOfItems.Add(new BO.OrderItem
-                {
-                    ProductID = product.ID,
-                    PricePerUnit = product.Price,
-                    ProductName = product.Name,
-                    Amount = 1
-                });
-            }
-            else
-                orderItem.Amount += 1;
+                BO.OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == dataProduct.ID);
 
-            cart.TotalPrice += product.Price;
+                if (orderItem is null)
+                {
+                    cart.ListOfItems.Add(new BO.OrderItem
+                    {
+                        ProductID = dataProduct.ID,
+                        PricePerUnit = dataProduct.Price,
+                        ProductName = dataProduct.Name,
+                        Amount = 1
+                    });
+                }
+                else
+                    orderItem.Amount += 1;
+
+
+                cart.TotalPrice += dataProduct.Price;
+            }
+            //else
+              //  throw;
+        }
+        catch (Exception)
+        {
+
+            throw;
         }
     }
 

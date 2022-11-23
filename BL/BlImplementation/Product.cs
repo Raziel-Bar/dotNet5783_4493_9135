@@ -1,9 +1,5 @@
 ﻿using BlApi;
-//using BO;
-//using BO;
-//using BO; //  רשום שאסורe 1 בדף הוראות 2 עמוד 10 סעיף 
 using Dal;
-//using DO;
 
 namespace BlImplementation;
 
@@ -12,7 +8,7 @@ namespace BlImplementation;
 /// </summary>
 internal class Product : IProduct
 {
-    private DalApi.IDal dal = new DalList(); // new DalList for each implementation!? won't it make multiple databases!?
+    private DalApi.IDal dal = new DalList();
 
     public IEnumerable<BO.ProductForList> RequestProducts()
     {
@@ -26,13 +22,15 @@ internal class Product : IProduct
             Price = product.Price,
         });
     }
-    public BO.Product RequestProductDetailsAdmin(int productID)// התחלתי עם מימוש הפונקצי הזו
+
+    public BO.Product RequestProductDetailsAdmin(int productID)
     {
         if (productID >= 100000)
         {
             try
             {
                 DO.Product product = dal.Product.Get(productID);
+
                 return new BO.Product
                 {
                     ID = product.ID,
@@ -46,9 +44,10 @@ internal class Product : IProduct
             {
                 throw;
             }
+
         }
         else
-            throw new BO.InvalidDataException("RequestProductDetailsAdmin");// ??  @@@@ נראה לך שזו החריגה המתאימה
+            throw new BO.InvalidDataException("Product");// ??  @@@@ נראה לך שזו החריגה המתאימה
     }
 
     public BO.ProductItem RequestProductDetailsCart(int productID, BO.Cart cart)
@@ -59,33 +58,20 @@ internal class Product : IProduct
             {
                 DO.Product product = dal.Product.Get(productID);
 
-                int amount = 0;
-                foreach (var item in cart.ListOfItems)
-                    if (item.ProductID == productID)
-                        amount++;
+                BO.OrderItem? orderItem = cart.ListOfItems.Find(item => item.ProductID == productID);
 
-                if (amount == 0)
+                if (orderItem is null)
                     throw new BO.ProductNotFoundInCartException();
 
-                BO.ProductItem productItem = new BO.ProductItem
+                return new BO.ProductItem
                 {
-                    ID = product.ID,
-                    Name = product.Name,
-                    Price = product.Price,
+                    ID = orderItem.ProductID,
+                    Name = orderItem.ProductName,
+                    Price = orderItem.PricePerUnit,
+                    Category = (BO.WINERYS)product.Category,
+                    Amount = orderItem.Amount,
+                    Available = product.InStock >= orderItem.Amount ? BO.Available.Available : BO.Available.Unavailable
                 };
-
-                productItem.Amount = amount;
-
-                if (product.InStock - amount >= 0)
-                {
-                    productItem.Available = BO.Available.Available;
-                    product.InStock = product.InStock - amount;
-                    dal.Product.Update(product);
-                }
-                else
-                    productItem.Available = BO.Available.Unavailable;
-
-                return productItem;
             }
             catch (DO.NotFoundException massege)// משכבת הנתונים
             {
@@ -93,23 +79,24 @@ internal class Product : IProduct
             }
         }
         else
-            throw new BO.InvalidDataException(" RequestProductDetailsCart");// ??  @@@@ נראה לך שזו החריגה המתאימה
+            throw new BO.InvalidDataException("Product");
     }
 
     public void AddProductAdmin(BO.Product product)
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
+            DO.Product product1 = new DO.Product
+            {
+                ID = product.ID,
+                Name = product.Name,
+                InStock = product.InStock,
+                Category = (DO.WINERYS)product.Category,
+                Price = product.Price,
+            };
+
             try
             {
-                DO.Product product1 = new DO.Product
-                {
-                    ID = product.ID,
-                    Name = product.Name,
-                    InStock = product.InStock,
-                    Category = (DO.WINERYS)product.Category,
-                    Price = product.Price,
-                };
                 dal.Product.Add(product1);
             }
             catch (DO.AlreadyExistException massege)
@@ -119,35 +106,47 @@ internal class Product : IProduct
             }
         }
         else
-
-            throw new BO.InvalidDataException("AddProductAdmin");
+            throw new BO.InvalidDataException("Product");
     }
 
     public void RemoveProductAdmin(int productID)
     {
-        IEnumerable<DO.OrderItem> orderItem = dal.OrderItem.GetList();
 
-        if (orderItem.Any(orderItem => orderItem.ProductID == productID))
-            throw new BO.RemoveProductThatIsInOrdersException();
-
-        try
+        if (productID >= 100000)
         {
-            dal.Product.Delete(productID);
-        }
-        catch (DO.NotFoundException massege)
-        {
-            throw massege;
-        }
+            IEnumerable<DO.OrderItem> orderItem = dal.OrderItem.GetList();
 
+            if (orderItem.Any(orderItem => orderItem.ProductID == productID))
+                throw new BO.RemoveProductThatIsInOrdersException();
+
+            try
+            {
+                dal.Product.Delete(productID);
+            }
+            catch (DO.NotFoundException massege)
+            {
+                throw massege;
+            }
+        }
+        else
+            throw new BO.InvalidDataException("Product");
     }
 
     public void UpdateProductAdmin(BO.Product product)
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
+            DO.Product dataProduct = new DO.Product
+            {
+                ID = product.ID,
+                InStock = product.InStock,
+                Category = (DO.WINERYS)product.Category,
+                Name = product.Name,
+                Price = product.Price,
+            };
+
             try
             {
-                DO.Product dataProduct = dal.Product.Get(product.ID);
                 dal.Product.Update(dataProduct);
             }
             catch (Exception)
@@ -156,8 +155,7 @@ internal class Product : IProduct
                 throw;
             }
         }
-
-        throw new BO.InvalidDataException("UpdateProductAdmin");
-
+        else
+            throw new BO.InvalidDataException("Product");
     }
 }

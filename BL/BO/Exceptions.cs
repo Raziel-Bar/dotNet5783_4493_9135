@@ -9,10 +9,8 @@
 
 public class NotFoundInDalException : Exception
 {
-    public NotFoundInDalException(Exception ex) : base(ex) { }
-
-
-    //public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
+   // public NotFoundInDalException(Exception ex) : base(ex) { }
+    public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
 }
 
 /// <summary>
