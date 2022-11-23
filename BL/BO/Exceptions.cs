@@ -6,9 +6,13 @@
 /// <summary>
 /// Exception for cases when an object from a given entity is not found in the database
 /// </summary>
+
 public class NotFoundInDalException : Exception
 {
-    public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
+    public NotFoundInDalException(Exception ex) : base(ex) { }
+
+
+    //public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
 }
 
 /// <summary>
@@ -32,7 +36,7 @@ public class RemoveProductThatIsInOrdersException : Exception
     public RemoveProductThatIsInOrdersException() : base("ERROR dotNet5783_BL_ERROR_04: Cannot remove a product from data because there are orders that includes that product!") { }
 }
 
-public class StockNotEnoughtOrEmptyException : Exception
+public class StockNotEnoughtOrEmptyException : Exception // לא חושב שצריך מאחר ויש סטטוס של לא זמין
 {
     public StockNotEnoughtOrEmptyException() : base("ERROR dotNet5783_BL_ERROR_05: Not enough amount in stock") { }
 }

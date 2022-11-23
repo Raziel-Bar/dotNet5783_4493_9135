@@ -15,7 +15,7 @@ public struct Product
     /// This is, of course, only in case of wine bottles products...
     /// Features will carry their name only :D
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } 
     /// <summary>
     /// The price of the product (X1 unit)
     /// </summary>

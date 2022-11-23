@@ -14,13 +14,14 @@ internal class Cart : ICart
     /// </summary>
     /// <param name="idProduct"></param>
     /// <param name="cart"></param>
-    public void AddToCart(int productID, BO.Cart cart)
+   
+    void ICart.AddProductToCart(int productID, BO.Cart cart)
     {
         DO.Product product = dal.Product.Get(productID);
 
         if (product.InStock > 0)
         {
-           BO.OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);
+            BO.OrderItem orderItem = cart.ListOfItems.First(orderItem => orderItem.OrderItemID == product.ID);
 
             if (orderItem is null)
             {
@@ -37,6 +38,15 @@ internal class Cart : ICart
 
             cart.TotalPrice += product.Price;
         }
+    }
 
+    void ICart.ConfirmOrder(BO.Cart cart, string name, string email, string address)
+    {
+        throw new NotImplementedException();
+    }
+
+    void ICart.UpdateProductInCart(int productID, BO.Cart cart, int newAmount)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -34,7 +34,7 @@ public interface IProduct
     /// the product (if exists)
     /// </returns>
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
-    public Product RequestProductDetailsCart(int productID, BO.Cart cart);
+    public ProductItem RequestProductDetailsCart(int productID, BO.Cart cart);
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>
