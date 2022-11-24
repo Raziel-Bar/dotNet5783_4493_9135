@@ -101,10 +101,6 @@ internal class Product : IProduct
             {
                 throw new BO.NotFoundInDalException("Product", ex);
             }
-            catch (BO.ProductNotFoundInCartException ex)
-            {
-                throw ex;
-            }
         }
         else
             throw new BO.InvalidDataException("Product");

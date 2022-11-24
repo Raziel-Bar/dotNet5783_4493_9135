@@ -9,7 +9,7 @@
 
 public class NotFoundInDalException : Exception
 {
-   // public NotFoundInDalException(Exception ex) : base(ex) { }
+    // public NotFoundInDalException(Exception ex) : base(ex) { }
     public NotFoundInDalException(string type, Exception ex) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data", ex) { }
 }
 

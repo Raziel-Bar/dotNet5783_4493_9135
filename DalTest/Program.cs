@@ -7,12 +7,12 @@ namespace Test;
 /// tester for the DAL
 /// </summary>
 public class Program
-{    
+{
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
     private static IDal dal = new DalList();
-  
+
 
     /// <summary>
     /// main program. presents the Main menu.
@@ -74,18 +74,18 @@ public class Program
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the product's ID to delete: ");
                         dal.Product.Delete(yourChoiceInt());
-                        
+
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the product's ID: ");
 
                         Console.WriteLine(dal.Product.Get(yourChoiceInt()));
 
-                      
+
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.Product.GetList()); 
+                        printCollection(dal.Product.GetList());
                         break;
                 }
             }
@@ -140,8 +140,6 @@ Enter your choice: ");
         newProduct.InStock = yourChoiceInt();
 
         dal.Product.Add(newProduct);
-
-        // _dalproduct.AddnewProduct(newproduct) @@@@
     }
 
     /// <summary>
@@ -307,7 +305,7 @@ Enter your choice: ");
 
         dal.Order.Add(newOrder);
 
-        
+
 
     }
 
@@ -322,7 +320,7 @@ Enter your choice: ");
         Console.WriteLine("Please enter the order's ID: ");
 
         Order orderUpdate = dal.Order.Get(yourChoiceInt());
-       
+
         do
         {
             Console.WriteLine(@"What details do you wish to change? 
