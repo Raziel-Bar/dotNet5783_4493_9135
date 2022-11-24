@@ -9,7 +9,6 @@
 
 public class NotFoundInDalException : Exception
 {
-    // public NotFoundInDalException(Exception ex) : base(ex) { }
     public NotFoundInDalException(string type, Exception ex) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data", ex) { }
 }
 
@@ -41,4 +40,14 @@ public class StockNotEnoughtOrEmptyException : Exception // לא חושב שצר
 public class ProductNotFoundInCartException : Exception
 {
     public ProductNotFoundInCartException() : base("ERROR dotNet5783_BL_ERROR_06: Product is not in cart") { }
+}
+
+public class DateException : Exception
+{
+    public DateException() : base($"ERROR dotNet5783_BL_ERROR_07: your order's tracking dates conflicts your actions") { }
+}
+
+public class UnexpectedException : Exception
+{
+    public UnexpectedException() : base("ALERT UNEXPECTED ECEPTION!!!!") { }
 }

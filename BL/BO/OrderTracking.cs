@@ -16,7 +16,7 @@ public class OrderTracking
     /// <summary>
     /// a tracking journey. list of dates that tracks the order's process
     /// </summary>
-    public List<Tuple<DateTime, ORDER_STATUS>> Tracker { get; set; } // '?' missing?
+    public List<(DateTime? date, string? description)>? Tracker { get; set; } // '?' missing?
     public override string ToString() => $@"
         Order Number: {ID}
         Status: {Status}
