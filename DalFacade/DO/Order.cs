@@ -24,15 +24,15 @@ public struct Order
     /// <summary>
     /// The date on which the order was placed
     /// </summary>
-    public DateTime OrderDate { get; set; }
+    public DateTime? OrderDate { get; set; }
     /// <summary>
     /// The date on which the order is to be shipped to the customer
     /// </summary>
-    public DateTime ShipDate { get; set; }
+    public DateTime? ShipDate { get; set; }
     /// <summary>
     /// The date on which the order is to be delivered to the customer
     /// </summary>
-    public DateTime DeliveryDate { get; set; }
+    public DateTime? DeliveryDate { get; set; }
     public override string ToString() => $@"
        Order ID: {ID}
        Customer name: {CustomerName} 

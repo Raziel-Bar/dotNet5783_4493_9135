@@ -15,9 +15,10 @@ public interface ICart
     /// <param name="cart">
     /// The user's current cart
     /// </param>
+    /// <returns>The new Updated cart</returns>
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
-    void AddProductToCart(int productID, Cart cart);
+    Cart AddProductToCart(int productID, Cart cart);
     /// <summary>
     /// Updates the amount of a product in the cart
     /// </summary>
@@ -30,10 +31,11 @@ public interface ICart
     /// <param name="newAmount">
     /// The new product's amount in the cart
     /// </param>
-    /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
-    /// <exception cref="StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
-    /// <exception cref="ProductNotFoundInCartException">If the product is not in the cart at all</exception>
-    void UpdateProductInCart(int productID, Cart cart, int newAmount);
+    /// <returns>The new Updated cart</returns>
+    /// <exception cref="BO.NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
+    /// <exception cref="BO.StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
+    /// <exception cref="BO.ProductNotFoundInCartException">If the product is not in the cart at all</exception>
+    Cart UpdateProductInCart(int productID, Cart cart, int newAmount);
     /// <summary>
     /// Makes an order once a cart is finished and updates all related data in the Dal
     /// </summary>
@@ -49,8 +51,8 @@ public interface ICart
     /// <param name="address">
     /// The user's address
     /// </param>
-    /// <exception cref="NotFoundInDalException">If one of the Product doesn't exist in the Dal</exception>
-    /// <exception cref="StockNotEnoughtOrEmptyException">If one of the product's stock is empty so we can't add it to the cart</exception>
-    /// <exception cref="InvalidDataException">If one of the customer's or product's details is invalid</exception>
-    void ConfirmOrder(Cart cart, string name, string email, string address);
+    /// <exception cref="BO.NotFoundInDalException">If one of the Product doesn't exist in the Dal</exception>
+    /// <exception cref="BO.StockNotEnoughtOrEmptyException">If one of the product's stock is empty so we can't add it to the cart</exception>
+    /// <exception cref="BO.InvalidDataException">If one of the customer's or product's details is invalid</exception>
+    void ConfirmOrder(Cart cart);
 }

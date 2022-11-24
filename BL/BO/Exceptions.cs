@@ -10,7 +10,7 @@
 public class NotFoundInDalException : Exception
 {
    // public NotFoundInDalException(Exception ex) : base(ex) { }
-    public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { }
+    public NotFoundInDalException(string type, Exception ex) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data", ex) { }
 }
 
 /// <summary>
@@ -18,7 +18,7 @@ public class NotFoundInDalException : Exception
 /// </summary>
 public class AlreadyExistInDalException : Exception
 {
-    public AlreadyExistInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_02: {type} already exists in data") { }
+    public AlreadyExistInDalException(string type, Exception ex) : base($"ERROR dotNet5783_BL_ERROR_02: {type} already exists in data", ex) { }
 }
 
 /// <summary>
