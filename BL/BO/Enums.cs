@@ -36,6 +36,7 @@ public enum ENTITIES { EXIT, PRODUCT, ORDER, CART }; // to be check if used! */
 /// enum for the second menu for each selction from menu_1 in DalTest\Program.cs
 /// </summary>
 public enum OPTIONS { EXIT, ADD, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH }; // to be checked when BlTest is built if used */
+
 /// <summary>
 /// enum for an order's status
 /// </summary>

@@ -56,17 +56,9 @@ internal class Cart : ICart
             cart.TotalPrice += dataProduct.Price; // we only added the item once in any case
             return cart;
         }
-        catch (BO.InvalidDataException ex)
-        {
-            throw ex;
-        }
         catch (DO.NotFoundException ex)
         {
             throw new BO.NotFoundInDalException("Product", ex);
-        }
-        catch (BO.StockNotEnoughtOrEmptyException ex)
-        {
-            throw ex;
         }
     }
     /// <summary>
@@ -113,24 +105,11 @@ internal class Cart : ICart
             {
                 cart.TotalPrice -= _orderItem.TotalPrice;
             }
-
             return cart;
-        }
-        catch (BO.InvalidDataException ex)
-        {
-            throw ex;
         }
         catch (DO.NotFoundException ex)
         {
             throw new BO.NotFoundInDalException("Product", ex);
-        }
-        catch (BO.ProductNotFoundInCartException ex)
-        {
-            throw ex;
-        }
-        catch (BO.StockNotEnoughtOrEmptyException ex)
-        {
-            throw ex;
         }
     }
     /// <summary>
@@ -167,10 +146,7 @@ internal class Cart : ICart
         {
             throw new BO.NotFoundInDalException("Product", ex);
         }
-        catch (BO.StockNotEnoughtOrEmptyException ex)
-        {
-            throw ex;
-        }
+
         DO.Order order = new DO.Order{              // making a new Order for the Dal
             CustomerAdress = cart.CustomerAdress,
             CustomerEmail = cart.CustomerEmail,
@@ -178,6 +154,7 @@ internal class Cart : ICart
             OrderDate = DateTime.Now,
             DeliveryDate = null,
             ShipDate = null};
+
         int id = dal.Order.Add(order);
 
 

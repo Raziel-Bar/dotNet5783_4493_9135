@@ -188,13 +188,13 @@ internal static class DataSource
                 }
                 else
                 {
-                    newOrder.DeliveryDate = DateTime.MinValue;
+                    newOrder.DeliveryDate = null;
                 }
             }
             else
             {
-                newOrder.ShipDate = DateTime.MinValue;
-                newOrder.DeliveryDate = DateTime.MinValue;
+                newOrder.ShipDate = null;
+                newOrder.DeliveryDate = null;
             }
             AddOrder(newOrder); // Order's ready! adding to database
         }
