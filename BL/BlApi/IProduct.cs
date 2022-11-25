@@ -36,7 +36,7 @@ public interface IProduct
     /// </returns>
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
-    public ProductItem RequestProductDetailsCart(int productID, Cart cart);
+    public ProductItem RequestProductDetailsUser(int productID, Cart cart);
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>

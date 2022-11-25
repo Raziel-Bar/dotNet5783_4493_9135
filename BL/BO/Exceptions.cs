@@ -44,7 +44,7 @@ public class ProductNotFoundInCartException : Exception
 
 public class DateException : Exception
 {
-    public DateException() : base($"ERROR dotNet5783_BL_ERROR_07: your order's tracking dates conflicts your action - action failed!") { }
+    public DateException(string description) : base($"ERROR dotNet5783_BL_ERROR_07: {description}") { }
 }
 
 public class UnexpectedException : Exception

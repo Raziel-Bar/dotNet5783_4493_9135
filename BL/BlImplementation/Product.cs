@@ -75,7 +75,7 @@ internal class Product : IProduct
     /// </returns>
     /// <exception cref="BO.NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="BO.InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
-    public BO.ProductItem RequestProductDetailsCart(int productID, BO.Cart cart)
+    public BO.ProductItem RequestProductDetailsUser(int productID, BO.Cart cart)
     {
         if (productID >= 100000)
         {
@@ -83,19 +83,20 @@ internal class Product : IProduct
             {
                 DO.Product product = dal.Product.Get(productID);
                 cart.ListOfItems ??= new List<BO.OrderItem>();
-                BO.OrderItem? orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
-
-                if (orderItem is null)
-                    throw new BO.ProductNotFoundInCartException();
-
+                int amountInCart = 0;
+                if (cart.ListOfItems.Exists(item => item.ProductID == productID))
+                {
+                    BO.OrderItem? orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
+                    amountInCart = orderItem.Amount;
+                }
                 return new BO.ProductItem
                 {
-                    ID = orderItem.ProductID,
-                    Name = orderItem.ProductName,
-                    Price = orderItem.PricePerUnit,
+                    ID = product.ID,
+                    Name = product.Name,
+                    Price = product.Price,
                     Category = (BO.WINERYS)product.Category,
-                    Amount = orderItem.Amount,
-                    Available = product.InStock >= orderItem.Amount ? BO.Available.Available : BO.Available.Unavailable
+                    Amount = amountInCart,
+                    Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable
                 };
             }
             catch (DO.NotFoundException ex)

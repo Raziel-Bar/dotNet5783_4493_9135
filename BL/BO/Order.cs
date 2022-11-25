@@ -20,7 +20,7 @@ public class Order
     /// <summary>
     /// His real address (for delivery)
     /// </summary>
-    public string? CustomerAdress { get; set; }
+    public string? CustomerAddress { get; set; }
     /// <summary>
     /// The current status of an existing order
     /// </summary>
@@ -49,7 +49,7 @@ public class Order
         Order ID: {ID}
         Customer name: {CustomerName} 
         Customer email: {CustomerEmail}
-        Customer address: {CustomerAdress}
+        Customer address: {CustomerAddress}
         Time of the order: {OrderDate} 
         Time of ship: {ShipDate}
         Time of delivering: {DeliveryDate}

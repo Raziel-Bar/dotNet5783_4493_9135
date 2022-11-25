@@ -280,7 +280,7 @@ Enter your choice: ");
         newOrder.CustomerEmail = Console.ReadLine();
 
         Console.WriteLine("Enter the customer address: ");
-        newOrder.CustomerAdress = Console.ReadLine();
+        newOrder.CustomerAddress = Console.ReadLine();
 
         newOrder.OrderDate = DateTime.Now;
         newOrder.ShipDate = DateTime.MinValue;
@@ -354,7 +354,7 @@ Enter your choice: ");
 
                 case 3:
                     Console.WriteLine("Enter the new customer address");
-                    orderUpdate.CustomerAdress = Console.ReadLine();
+                    orderUpdate.CustomerAddress = Console.ReadLine();
                     break;
 
                 case 4:

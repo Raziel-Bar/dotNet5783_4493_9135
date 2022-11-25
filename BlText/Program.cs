@@ -7,18 +7,22 @@ namespace BlText;
 internal class Program
 {
     private enum ENTITIES { EXIT, PRODUCT, ORDER, CART };
-
-    private enum PTODUCT { EXIT, GET_LIST, PRODUCT_DETAILS, ADMIN_PRODUCT_DETAILS, ADD, DELETE, UPDATE };
-
-    private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, CONFIRM }
-
+    private enum PRODUCT { EXIT, GET_LIST, PRODUCT_DETAILS_CART, ADMIN_PRODUCT_DETAILS, ADD_ADMIN, DELETE_ADMIN, UPDATE_ADMIN };
+    private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, DISPLAY, CONFIRM }
     private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN }
 
     private static IBl ibl = new Bl();
 
-    private static Cart cart = new Cart();
+    private static Cart cart = new Cart
+    {
+        CustomerAddress = "<empty>",
+        CustomerEmail = "<empty>",
+        CustomerName = "<empty>",
+        TotalPrice = 0,
+        ListOfItems = new List<OrderItem>()
+    };
 
-    private static int option;//
+    private static int option;
     static void Main(string[] args)
     {
         int menuChoose;
@@ -47,10 +51,12 @@ internal class Program
             catch (NotFoundInDalException ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException);
             }
             catch (AlreadyExistInDalException ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException);
             }
             catch (BO.InvalidDataException ex)
             {
@@ -68,7 +74,7 @@ internal class Program
             {
                 Console.WriteLine(ex.Message);
             }
-            catch(UnexpectedException ex)
+            catch (UnexpectedException ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -76,9 +82,10 @@ internal class Program
             {
                 Console.WriteLine(ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
 
         } while (menuChoose != 0);
@@ -94,50 +101,49 @@ internal class Program
         //int option;//////
         do
         {
-            
+
             Console.WriteLine(@"
 Please chose one of the fowling options:
 
- 0. EXIT / BACK.
- 1. Get product list.
- 2. Product details. 
- 3. Product admin details.
- 4. Add product.
- 5. Delete product.
- 6. Update product.
+ 0. EXIT / BACK
+ 1. Get product list
+ 2. Product details (user)
+ 3. Product details (admin)
+ 4. Add product (admin)
+ 5. Delete product (admin)
+ 6. Update product (admin)
 ");
-            
+
 
             option = yourChoiceInt();
 
-            switch ((PTODUCT)option)
+            switch ((PRODUCT)option)
             {
-                case PTODUCT.GET_LIST:
+                case PRODUCT.GET_LIST:
                     printCollection(ibl.Product.RequestProducts());
                     break;
 
-                case PTODUCT.PRODUCT_DETAILS:
+                case PRODUCT.PRODUCT_DETAILS_CART:
                     Console.WriteLine("Enter product ID:");
-                    Console.WriteLine(ibl.Product.RequestProductDetailsCart(yourChoiceInt(), cart));
+                    Console.WriteLine(ibl.Product.RequestProductDetailsUser(yourChoiceInt(), cart));
                     break;
 
-                case PTODUCT.ADMIN_PRODUCT_DETAILS:
+                case PRODUCT.ADMIN_PRODUCT_DETAILS:
                     Console.WriteLine("Enter product ID:");
                     Console.WriteLine(ibl.Product.RequestProductDetailsAdmin(yourChoiceInt()));
                     break;
 
-                case PTODUCT.ADD:
-                    productCheckAdd();
+                case PRODUCT.ADD_ADMIN:
+                    productCheckAddOrUpdate(PRODUCT.ADD_ADMIN);
                     break;
 
-                case PTODUCT.DELETE:
+                case PRODUCT.DELETE_ADMIN:
                     Console.WriteLine("Enter product ID to remove: ");
                     ibl.Product.RemoveProductAdmin(yourChoiceInt());
                     break;
 
-                case PTODUCT.UPDATE:
-                    Console.WriteLine("Enter product ID to update: ");
-                    ibl.Product.UpdateProductAdmin(ibl.Product.RequestProductDetailsAdmin(yourChoiceInt()));
+                case PRODUCT.UPDATE_ADMIN:
+                    productCheckAddOrUpdate(PRODUCT.UPDATE_ADMIN);
                     break;
             }
         }
@@ -148,17 +154,25 @@ Please chose one of the fowling options:
     /// <summary>
     /// Activates when option.ADD is selected. takes care of adding a product 
     /// </summary>
-    private static void productCheckAdd()
+    private static void productCheckAddOrUpdate(PRODUCT action)
     {
 
         Product newProduct = new Product();
+        if (action == PRODUCT.UPDATE_ADMIN)// checker if prod exist so we won't recieve update input for nothing
+        {
+            Console.WriteLine("Enter product ID to update: ");
+            newProduct.ID = yourChoiceInt();
+            ibl.Product.UpdateProductAdmin(ibl.Product.RequestProductDetailsAdmin(newProduct.ID)); 
+        }
 
         Console.WriteLine("Please enter the product details: \nEnter the name of the product: ");
-
         newProduct.Name = Console.ReadLine();
 
-        Console.WriteLine("Enter the product's ID: ");
-        newProduct.ID = yourChoiceInt();
+        if (action == PRODUCT.ADD_ADMIN)
+        {
+            Console.WriteLine("Enter the product's ID: ");
+            newProduct.ID = yourChoiceInt();
+        }
 
         Console.WriteLine("Please enter the product's price: ");
         newProduct.Price = yourChoiceDouble();
@@ -183,8 +197,10 @@ Enter your choice: ");
 
         Console.WriteLine("Please enter the amount in stock: ");
         newProduct.InStock = yourChoiceInt();
+        if (action == PRODUCT.ADD_ADMIN) ibl.Product.AddProductAdmin(newProduct);
+        else ibl.Product.UpdateProductAdmin(newProduct);
 
-        ibl.Product.AddProductAdmin(newProduct);
+
     }
 
     private static void cartCheck()
@@ -197,14 +213,15 @@ Please chose one of the fowling options:
  0.EXIT / BACK.
  1.Add product.
  2.Update product.
- 3.Finel confirm  
+ 3.Display cart
+ 4.Final confirm  
 ");
             option = yourChoiceInt();
 
             switch ((CART)option)
             {
                 case CART.ADD_PRODUCT:
-                    Console.WriteLine("Please choose the product you want to add:");
+                    Console.WriteLine("Catalog:");
                     printCollection(ibl.Product.RequestProducts());
                     Console.WriteLine("Enter product ID");
                     cart = ibl.Cart.AddProductToCart(yourChoiceInt(), cart);
@@ -214,8 +231,16 @@ Please chose one of the fowling options:
                     Console.WriteLine("Please enter the product ID and the new amount");
                     cart = ibl.Cart.UpdateProductInCart(yourChoiceInt(), cart, yourChoiceInt());
                     break;
-
+                case CART.DISPLAY:
+                    Console.WriteLine(cart);
+                    break;
                 case CART.CONFIRM:
+                    Console.Write("Please enter your details:\nName: ");
+                    cart.CustomerName = Console.ReadLine();
+                    Console.Write("Email: ");
+                    cart.CustomerEmail = Console.ReadLine();
+                    Console.Write("Address: ");
+                    cart.CustomerAddress = Console.ReadLine();
                     Console.WriteLine(cart);
                     Console.WriteLine("For a final confirm please enter 1:");
                     if (yourChoiceInt() == 1)
@@ -227,10 +252,6 @@ Please chose one of the fowling options:
 
     private static void orderCheck()
     {
-
-
-
-
         do
         {
             Console.WriteLine(@"

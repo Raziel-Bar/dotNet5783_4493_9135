@@ -174,7 +174,7 @@ internal static class DataSource
 
             newOrder.CustomerEmail = customerDetails[1][randomOrder];
 
-            newOrder.CustomerAdress = customerDetails[2][randomOrder];
+            newOrder.CustomerAddress = customerDetails[2][randomOrder];
 
             newOrder.OrderDate = DateTime.Now - new TimeSpan(_random.NextInt64(TimeSpan.TicksPerDay * 10, TimeSpan.TicksPerDay * 1000)); // latest order is at least 10 days ago
 

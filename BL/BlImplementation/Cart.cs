@@ -140,7 +140,7 @@ internal class Cart : ICart
     /// <exception cref="BO.InvalidDataException">If one of the customer's or product's details is invalid</exception>
     void ICart.ConfirmOrder(BO.Cart cart)
     {
-        if (cart.CustomerName == null || cart.CustomerAdress == null || cart.CustomerEmail == null) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
+        if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
         cart.ListOfItems ??= new List<BO.OrderItem>();
         DO.Product dataProduct;
         try
@@ -159,7 +159,7 @@ internal class Cart : ICart
 
         DO.Order order = new DO.Order
         {              // making a new Order for the Dal
-            CustomerAdress = cart.CustomerAdress,
+            CustomerAddress = cart.CustomerAddress,
             CustomerEmail = cart.CustomerEmail,
             CustomerName = cart.CustomerName,
             OrderDate = DateTime.Now,

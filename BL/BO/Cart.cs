@@ -12,7 +12,7 @@ public class Cart
     // Email
     public string? CustomerEmail { get; set; }
     // Adress
-    public string? CustomerAdress { get; set; }
+    public string? CustomerAddress { get; set; }
     /// <summary>
     /// The list of items in order
     /// </summary>
@@ -26,9 +26,10 @@ public class Cart
         Customer details:
         Name: {CustomerName}
         Email: {CustomerEmail}
-    	Address: {CustomerAdress}
+    	Address: {CustomerAddress}
     	Items:
             {string.Join(Environment.NewLine, ListOfItems)}
-        Total: {TotalPrice}
+        
+        --Price in total--: {TotalPrice}
         ";
 }
