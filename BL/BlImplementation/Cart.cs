@@ -74,7 +74,7 @@ internal class Cart : ICart
     /// The new product's amount in the cart
     /// </param>
     /// <returns>The new Updated cart</returns>
-    /// <exception cref="BO.InvalidDataException">productID is invalid</exception>
+    /// <exception cref="BO.InvalidDataException">productID is invalid or the amount is negative</exception>
     /// <exception cref="BO.NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="BO.StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
     /// <exception cref="BO.ProductNotFoundInCartException">If the product is not in the cart at all</exception>
@@ -83,6 +83,7 @@ internal class Cart : ICart
         try
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
+            if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
 
             DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
 
