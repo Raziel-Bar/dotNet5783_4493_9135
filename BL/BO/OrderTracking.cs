@@ -21,5 +21,5 @@ public class OrderTracking
         Order Number: {ID}
         Status: {Status}
         Tracking journey: 
-            {string.Join(Environment.NewLine, Tracker)}"; // needed? if yes - NEEDS TESTING!!!!!!!!!!!!!!!!!!!!!
+{string.Join(Environment.NewLine, Tracker)}"; // needed? if yes - NEEDS TESTING!!!!!!!!!!!!!!!!!!!!!
 }

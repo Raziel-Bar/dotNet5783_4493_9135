@@ -16,7 +16,7 @@ public class Cart
     /// <summary>
     /// The list of items in order
     /// </summary>
-    public List<OrderItem> ListOfItems { get; set; } // '?' missing?
+    public List<OrderItem>? ListOfItems { get; set; } // '?' missing?
     /// <summary>
     /// The final price to pay for the order
     /// </summary>

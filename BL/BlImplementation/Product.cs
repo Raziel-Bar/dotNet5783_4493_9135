@@ -82,7 +82,7 @@ internal class Product : IProduct
             {
                 DO.Product product = dal.Product.Get(productID);
 
-                BO.OrderItem? orderItem = cart.ListOfItems.Find(item => item.ProductID == productID);
+                BO.OrderItem? orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
 
                 if (orderItem is null)
                     throw new BO.ProductNotFoundInCartException();

@@ -21,6 +21,7 @@ internal class Order : IOrder
         {
             amountSum = 0;
             boOrder = RequestOrderDetails(item.ID);  // transforming DO order into BO order
+            boOrder.ListOfItems ??= new List<BO.OrderItem>();
             foreach (var orderItem in boOrder.ListOfItems) // counting items...
             {
                 amountSum += orderItem.Amount;
@@ -60,6 +61,7 @@ internal class Order : IOrder
                 OrderDate = doOrder.OrderDate,
                 ShipDate = doOrder.ShipDate,
                 DeliveryDate = doOrder.DeliveryDate,
+                ListOfItems = new List<BO.OrderItem>()
             };
             double totalPriceOrder = 0; // sum for the total price
             foreach (var item in doOrderItems) // running over the order items
@@ -161,9 +163,9 @@ internal class Order : IOrder
                 Status = boOrder.Status,
                 Tracker = new List<(DateTime? date, string? description)>()
             };
-            boOrderTrack.Tracker.Add((boOrder.OrderDate, "Order created"));
-            if (boOrder.ShipDate != null) boOrderTrack.Tracker.Add((boOrder.ShipDate, "Order shipped"));
-            if (boOrder.DeliveryDate != null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, "Order Delivered"));
+            boOrderTrack.Tracker.Add((boOrder.OrderDate, "          Order created"));
+            if (boOrder.ShipDate != null) boOrderTrack.Tracker.Add((boOrder.ShipDate, "         Order shipped"));
+            if (boOrder.DeliveryDate != null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, "         Order Delivered"));
             return boOrderTrack;
         }
         catch (DO.NotFoundException ex)
@@ -199,6 +201,7 @@ internal class Order : IOrder
         try
         {
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
+            boOrder.ListOfItems ??= new List<BO.OrderItem>();
             DO.Order doOrder = dal.Order.Get(orderID);
             DO.Product dataProduct = dal.Product.Get(productID);
             if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check

@@ -46,35 +46,39 @@ internal class Program
 
             catch (NotFoundInDalException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (AlreadyExistInDalException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (BO.InvalidDataException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (RemoveProductThatIsInOrdersException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (ProductNotFoundInCartException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (StockNotEnoughtOrEmptyException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch(UnexpectedException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             catch (DateException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
         } while (menuChoose != 0);
@@ -200,7 +204,7 @@ Please chose one of the fowling options:
             switch ((CART)option)
             {
                 case CART.ADD_PRODUCT:
-                    Console.WriteLine("Please chose the product you want to add:");
+                    Console.WriteLine("Please choose the product you want to add:");
                     printCollection(ibl.Product.RequestProducts());
                     Console.WriteLine("Enter product ID");
                     cart = ibl.Cart.AddProductToCart(yourChoiceInt(), cart);
@@ -243,27 +247,27 @@ Please chose one of the fowling options:
             switch ((ORDER)option)
             {
                 case ORDER.GET_LIST:
-                    printCollection(ibl.Ordeer.RequestOrdersListAdmin());
+                    printCollection(ibl.Order.RequestOrdersListAdmin());
                     break;
 
                 case ORDER.GET_ORDER:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Ordeer.RequestOrderDetails(yourChoiceInt()));
+                    Console.WriteLine(ibl.Order.RequestOrderDetails(yourChoiceInt()));
                     break;
 
                 case ORDER.UPDATE_SHIP:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Ordeer.UpdateOrderShipDateAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl.Order.UpdateOrderShipDateAdmin(yourChoiceInt()));
                     break;
 
                 case ORDER.UPDATE_DELIVERY:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Ordeer.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl.Order.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
                     break;
 
                 case ORDER.ORDER_TRACKING:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Ordeer.OrderTrackingAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl.Order.OrderTrackingAdmin(yourChoiceInt()));
 
                     break;
 

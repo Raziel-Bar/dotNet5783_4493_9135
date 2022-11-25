@@ -28,8 +28,8 @@ internal class Cart : ICart
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
             DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
-
-            BO.OrderItem _orderItem = cart.ListOfItems.First(item => item.ProductID == dataProduct.ID);
+            cart.ListOfItems ??= new List<BO.OrderItem>();
+            BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item.ProductID == dataProduct.ID);
 
             if (_orderItem is null) // adding the item for the 1st time
             {
@@ -84,12 +84,12 @@ internal class Cart : ICart
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
             if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
-
+            cart.ListOfItems ??= new List<BO.OrderItem>();
             DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
 
             if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
-            BO.OrderItem _orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
+            BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item.ProductID == productID);
 
             if (_orderItem is null) throw new BO.ProductNotFoundInCartException(); // product exist in cart check
 
@@ -141,6 +141,7 @@ internal class Cart : ICart
     void ICart.ConfirmOrder(BO.Cart cart)
     {
         if (cart.CustomerName == null || cart.CustomerAdress == null || cart.CustomerEmail == null) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
+        cart.ListOfItems ??= new List<BO.OrderItem>();
         DO.Product dataProduct;
         try
         {
