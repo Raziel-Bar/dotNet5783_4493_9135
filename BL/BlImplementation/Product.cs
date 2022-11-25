@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using Dal;
 
 namespace BlImplementation;
@@ -81,7 +82,7 @@ internal class Product : IProduct
             try
             {
                 DO.Product product = dal.Product.Get(productID);
-
+                cart.ListOfItems ??= new List<BO.OrderItem>();
                 BO.OrderItem? orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
 
                 if (orderItem is null)
