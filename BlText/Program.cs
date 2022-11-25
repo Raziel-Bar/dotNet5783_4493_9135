@@ -12,11 +12,13 @@ internal class Program
 
     private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, CONFIRM }
 
+    private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN }
+
     private static IBl ibl = new Bl();
 
     private static Cart cart = new Cart();
 
-    private static int option;//////
+    private static int option;//
     static void Main(string[] args)
     {
         int menuChoose;
@@ -33,7 +35,7 @@ internal class Program
                         break;
 
                     case ENTITIES.ORDER:
-
+                        orderCheck();
                         break;
 
                     case ENTITIES.CART:
@@ -50,7 +52,7 @@ internal class Program
             {
                 Console.WriteLine(ex);
             }
-            catch (BO.InvalidDataException ex)////???BO
+            catch (BO.InvalidDataException ex)
             {
                 Console.WriteLine(ex);
             }
@@ -66,6 +68,15 @@ internal class Program
             {
                 Console.WriteLine(ex);
             }
+            catch(UnexpectedException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (DateException ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         } while (menuChoose != 0);
         Console.WriteLine("\nThank you for your visit. Have a splendid day!\n");
     }
@@ -79,25 +90,19 @@ internal class Program
         //int option;//////
         do
         {
-            Console.WriteLine("Enter 1 for admin options. and any number for user options: ");
-            option = yourChoiceInt();
-
+            
             Console.WriteLine(@"
+Please chose one of the fowling options:
+
  0. EXIT / BACK.
  1. Get product list.
  2. Product details. 
-
-");
-            if (option == 1)
-                Console.WriteLine(@"
- 3.Product admin details.
+ 3. Product admin details.
  4. Add product.
  5. Delete product.
  6. Update product.
-
 ");
-
-            Console.WriteLine("Enter your choice: ");
+            
 
             option = yourChoiceInt();
 
@@ -178,8 +183,6 @@ Enter your choice: ");
         ibl.Product.AddProductAdmin(newProduct);
     }
 
-
-
     private static void cartCheck()
     {
         do
@@ -218,7 +221,57 @@ Please chose one of the fowling options:
         } while (option != 0);
     }
 
+    private static void orderCheck()
+    {
 
+
+
+
+        do
+        {
+            Console.WriteLine(@"
+Please chose one of the fowling options:
+
+ 0.EXIT / BACK.
+ 1.Get order list.
+ 2.Get order
+ 3.Update order ship date.
+ 4.update order delivery date.
+ 5.order tracking information.
+");
+            option = yourChoiceInt();
+            switch ((ORDER)option)
+            {
+                case ORDER.GET_LIST:
+                    printCollection(ibl.Ordeer.RequestOrdersListAdmin());
+                    break;
+
+                case ORDER.GET_ORDER:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Ordeer.RequestOrderDetails(yourChoiceInt()));
+                    break;
+
+                case ORDER.UPDATE_SHIP:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Ordeer.UpdateOrderShipDateAdmin(yourChoiceInt()));
+                    break;
+
+                case ORDER.UPDATE_DELIVERY:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Ordeer.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
+                    break;
+
+                case ORDER.ORDER_TRACKING:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Ordeer.OrderTrackingAdmin(yourChoiceInt()));
+
+                    break;
+
+            }
+
+        } while (option != 0);
+
+    }
 
 
     /// <summary>
