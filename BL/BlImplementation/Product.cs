@@ -29,6 +29,8 @@ internal class Product : IProduct
             Price = product.Price,
         });
     }
+
+
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
     /// </summary>
@@ -64,6 +66,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Makes a request to Dal for getting a product's details for customer's use (cart)
     /// </summary>
@@ -107,6 +111,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -139,6 +145,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Removes a Product from the database in the Dal if all conditions are met
     /// </summary>
@@ -170,6 +178,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -192,7 +202,10 @@ internal class Product : IProduct
             };
             try
             {
-                dal.Product.Update(dataProduct);
+                // before we update the changes we need to remove the old and add the update one  but we still need to check the product is not in any order  
+                RemoveProductAdmin(product.ID);
+                //   dal.Product.Update(dataProduct);
+                dal.Product.Add(dataProduct);
             }
             catch (DO.NotFoundException ex)
             {

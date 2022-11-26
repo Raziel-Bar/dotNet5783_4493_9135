@@ -11,7 +11,7 @@ public class Cart
     public string? CustomerName { get; set; }
     // Email
     public string? CustomerEmail { get; set; }
-    // Adress
+    // Address
     public string? CustomerAddress { get; set; }
     /// <summary>
     /// The list of items in order

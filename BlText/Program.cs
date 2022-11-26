@@ -15,9 +15,9 @@ internal class Program
 
     private static Cart cart = new Cart
     {
-        CustomerAddress = "<empty>",
-        CustomerEmail = "<empty>",
-        CustomerName = "<empty>",
+        CustomerAddress = null,
+        CustomerEmail = null,
+        CustomerName = null,
         TotalPrice = 0,
         ListOfItems = new List<OrderItem>()
     };
@@ -26,8 +26,24 @@ internal class Program
     static void Main(string[] args)
     {
         int menuChoose;
+        Console.Write("Please enter your details:\nName: ");
+        cart.CustomerName = yourChoiceString();
+        Console.Write("Email: ");
+        cart.CustomerEmail = yourChoiceString();
+        Console.Write("Address: ");
+        cart.CustomerAddress = yourChoiceString();
         do
         {
+            if (cart.CustomerName == null) // if we did a confirm in the order so here we will create a new cart 
+            {
+                Console.Write("Please enter your details:\nName: ");
+                cart.CustomerName = Console.ReadLine();
+                Console.Write("Email: ");
+                cart.CustomerEmail = Console.ReadLine();
+                Console.Write("Address: ");
+                cart.CustomerAddress = Console.ReadLine();
+            }
+
             Console.WriteLine("Please select 1 of the options below: \n 0.EXIT. \n 1.PRODUCT.\n 2.ORDER\n 3.CART.");
             menuChoose = yourChoiceInt();
             try
@@ -51,12 +67,12 @@ internal class Program
             catch (NotFoundInDalException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException);
+                //Console.WriteLine(ex.InnerException);
             }
             catch (AlreadyExistInDalException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException);
+                // Console.WriteLine(ex.InnerException);
             }
             catch (BO.InvalidDataException ex)
             {
@@ -85,7 +101,7 @@ internal class Program
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                // Console.WriteLine(ex.StackTrace);
             }
 
         } while (menuChoose != 0);
@@ -98,10 +114,8 @@ internal class Program
     /// </summary>
     private static void productCheck()
     {
-        //int option;//////
         do
         {
-
             Console.WriteLine(@"
 Please chose one of the fowling options:
 
@@ -152,7 +166,7 @@ Please chose one of the fowling options:
     }
 
     /// <summary>
-    /// Activates when option.ADD is selected. takes care of adding a product 
+    /// Activates when option.ADD  or UPDATE is selected. takes care of adding/update a product 
     /// </summary>
     private static void productCheckAddOrUpdate(PRODUCT action)
     {
@@ -162,11 +176,11 @@ Please chose one of the fowling options:
         {
             Console.WriteLine("Enter product ID to update: ");
             newProduct.ID = yourChoiceInt();
-            ibl.Product.UpdateProductAdmin(ibl.Product.RequestProductDetailsAdmin(newProduct.ID)); 
+            ibl.Product.UpdateProductAdmin(ibl.Product.RequestProductDetailsAdmin(newProduct.ID));
         }
 
         Console.WriteLine("Please enter the product details: \nEnter the name of the product: ");
-        newProduct.Name = Console.ReadLine();
+        newProduct.Name = yourChoiceString();
 
         if (action == PRODUCT.ADD_ADMIN)
         {
@@ -196,13 +210,72 @@ Enter your choice: ");
         newProduct.Category = (WINERYS)catgory;
 
         Console.WriteLine("Please enter the amount in stock: ");
+
         newProduct.InStock = yourChoiceInt();
+
         if (action == PRODUCT.ADD_ADMIN) ibl.Product.AddProductAdmin(newProduct);
+
         else ibl.Product.UpdateProductAdmin(newProduct);
-
-
     }
 
+
+    /// <summary>
+    /// The main caretaker: presents the 3nd menu and takes care of all options for the Order entity
+    /// </summary>
+    private static void orderCheck()
+    {
+        do
+        {
+            Console.WriteLine(@"
+Please chose one of the fowling options:
+
+ 0.EXIT / BACK.
+ 1.Get order list.
+ 2.Get order
+ 3.Update order ship date.
+ 4.update order delivery date.
+ 5.order tracking information.
+ 6.Update order information (admin)
+");
+            option = yourChoiceInt();
+            switch ((ORDER)option)
+            {
+                case ORDER.GET_LIST:
+                    printCollection(ibl.Order.RequestOrdersListAdmin());
+                    break;
+
+                case ORDER.GET_ORDER:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Order.RequestOrderDetails(yourChoiceInt()));
+                    break;
+
+                case ORDER.UPDATE_SHIP:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Order.UpdateOrderShipDateAdmin(yourChoiceInt()));
+                    break;
+
+                case ORDER.UPDATE_DELIVERY:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Order.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
+                    break;
+
+                case ORDER.ORDER_TRACKING:
+                    Console.WriteLine("Please enter the order ID:");
+                    Console.WriteLine(ibl.Order.OrderTrackingAdmin(yourChoiceInt()));
+                    break;
+
+                case ORDER.UPDATE_ORDER_ADMIN:
+
+                    break;
+
+            }
+        } while (option != 0);
+    }
+
+
+    /// <summary>
+    /// The main caretaker: presents the 4nd menu and takes care of all options for the Cart entity
+    /// </summary>
     private static void cartCheck()
     {
         do
@@ -235,79 +308,34 @@ Please chose one of the fowling options:
                     Console.WriteLine(cart);
                     break;
                 case CART.CONFIRM:
-                    Console.Write("Please enter your details:\nName: ");
-                    cart.CustomerName = Console.ReadLine();
-                    Console.Write("Email: ");
-                    cart.CustomerEmail = Console.ReadLine();
-                    Console.Write("Address: ");
-                    cart.CustomerAddress = Console.ReadLine();
                     Console.WriteLine(cart);
                     Console.WriteLine("For a final confirm please enter 1:");
                     if (yourChoiceInt() == 1)
                         ibl.Cart.ConfirmOrder(cart);
+
+                    cart.CustomerName = null;
+                    cart.CustomerEmail = null;
+                    cart.CustomerAddress = null;
+                    cart.ListOfItems.Clear();
+                    cart.TotalPrice = 0;
                     break;
             }
         } while (option != 0);
     }
 
-    private static void orderCheck()
-    {
-        do
-        {
-            Console.WriteLine(@"
-Please chose one of the fowling options:
 
- 0.EXIT / BACK.
- 1.Get order list.
- 2.Get order
- 3.Update order ship date.
- 4.update order delivery date.
- 5.order tracking information.
-");
-            option = yourChoiceInt();
-            switch ((ORDER)option)
-            {
-                case ORDER.GET_LIST:
-                    printCollection(ibl.Order.RequestOrdersListAdmin());
-                    break;
 
-                case ORDER.GET_ORDER:
-                    Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.RequestOrderDetails(yourChoiceInt()));
-                    break;
 
-                case ORDER.UPDATE_SHIP:
-                    Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.UpdateOrderShipDateAdmin(yourChoiceInt()));
-                    break;
 
-                case ORDER.UPDATE_DELIVERY:
-                    Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
-                    break;
-
-                case ORDER.ORDER_TRACKING:
-                    Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.OrderTrackingAdmin(yourChoiceInt()));
-
-                    break;
-
-            }
-
-        } while (option != 0);
-
-    }
 
 
     /// <summary>
-    /// prints all objects from a given entity's list
+    /// prints all objects from a given entity's IEnumerable<>
     /// </summary>
-    /// <typeparam name="Item">
-    /// The entity we chose from the main menu
-    /// </typeparam>
-    /// <param name="items">
-    /// The entity's list from the dataSource
-    /// </param>
+    /// <typeparam name="list"></typeparam>
+    /// the IEnumerable<> type
+    /// <param name="items"></param>
+    /// name of the container 
     private static void printCollection<list>(IEnumerable<list> items)
     {
         if (items == null)
@@ -317,19 +345,7 @@ Please chose one of the fowling options:
             Console.WriteLine(obj);
     }
 
-    /// <summary>
-    /// recieves input for a double variable that is given by ref
-    /// </summary>
-    /// <param name="choice">
-    /// the variable that is given by ref
-    /// </param>
-    private static void tryParseDouble(ref double choice)
-    {
-        while (!(double.TryParse(Console.ReadLine(), out choice)))
-        {
-            Console.WriteLine("Error please enter again");
-        }
-    }
+
     /// <summary>
     /// general double input machine with checker
     /// </summary>
@@ -339,9 +355,13 @@ Please chose one of the fowling options:
     private static double yourChoiceDouble()
     {
         double tempChoice = -1;
-        tryParseDouble(ref tempChoice);
+        while (!(double.TryParse(Console.ReadLine(), out tempChoice)))
+        {
+            Console.WriteLine("Error please enter again");
+        }
         return tempChoice;
     }
+
 
     /// <summary>
     /// general int input machine with checker
@@ -352,21 +372,27 @@ Please chose one of the fowling options:
     private static int yourChoiceInt()
     {
         int tempChoice = -1;
-        tryParseInt(ref tempChoice);
-        return tempChoice;
-    }
-
-    /// <summary>
-    /// receives input for an int variable that is given by ref
-    /// </summary>
-    /// <param name="choice">
-    /// the variable that is given by ref
-    /// </param>
-    private static void tryParseInt(ref int choice)
-    {
-        while (!(int.TryParse(Console.ReadLine(), out choice)))
+        while (!(int.TryParse(Console.ReadLine(), out tempChoice)))
         {
             Console.WriteLine("Error. please enter a valid input");
         }
+        return tempChoice;
+    }
+
+
+    /// <summary>
+    /// general string input machine with checker
+    /// </summary>
+    /// <returns></returns>
+    private static string yourChoiceString()
+    {
+        string tempChoice = Console.ReadLine();
+        int notInt = 0;
+        while (string.IsNullOrEmpty(tempChoice) || string.IsNullOrWhiteSpace(tempChoice) || int.TryParse(tempChoice, out notInt))
+        {
+            Console.WriteLine("Error. please enter a valid input");
+            tempChoice = Console.ReadLine();
+        }
+        return tempChoice;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using BlApi;
 using Dal;
+using System.ComponentModel.DataAnnotations;
+
 namespace BlImplementation;
 
 /// <summary>
@@ -27,8 +29,11 @@ internal class Cart : ICart
         try
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
+
             DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
+ 
             cart.ListOfItems ??= new List<BO.OrderItem>();
+
             BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item.ProductID == dataProduct.ID);
 
             if (_orderItem is null) // adding the item for the 1st time
@@ -36,12 +41,12 @@ internal class Cart : ICart
                 if (dataProduct.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
                 //else
                 cart.ListOfItems.Add(new BO.OrderItem
-                {
+                {     
                     ProductID = dataProduct.ID,
                     PricePerUnit = dataProduct.Price,
                     ProductName = dataProduct.Name,
                     Amount = 1,
-                    TotalPrice = dataProduct.Price
+                    TotalPrice = dataProduct.Price  
                 });
             }
             else // adding +1 to the item's amount
@@ -140,7 +145,10 @@ internal class Cart : ICart
     /// <exception cref="BO.InvalidDataException">If one of the customer's or product's details is invalid</exception>
     void ICart.ConfirmOrder(BO.Cart cart)
     {
-        if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
+        if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null ||
+            !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
+
+
         cart.ListOfItems ??= new List<BO.OrderItem>();
         DO.Product dataProduct;
         try
@@ -151,7 +159,6 @@ internal class Cart : ICart
                 if (dataProduct.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
             }
         }
-
         catch (DO.NotFoundException ex)
         {
             throw new BO.NotFoundInDalException("Product", ex);
@@ -179,7 +186,7 @@ internal class Cart : ICart
                 ProductID = item.ProductID,
                 OrderID = id,
                 Price = item.PricePerUnit,
-                Amount = item.Amount
+                Amount = item.Amount  
             };
             dal.OrderItem.Add(orderItem);
         }

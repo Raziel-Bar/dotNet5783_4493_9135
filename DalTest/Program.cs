@@ -241,17 +241,17 @@ Enter your choice: ");
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order's ID to delete: ");
                         dal.Order.Delete(yourChoiceInt());
-                        //_dalOrder.DeleteOrder(yourChoiceInt()); @@@
+                       
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order's ID: ");
                         Console.WriteLine(dal.Order.Get(yourChoiceInt()));
-                        //  Console.WriteLine(_dalOrder.SearchOrder(yourChoiceInt())); @@
+                       
                         break;
 
                     case OPTIONS.GET_LIST:
                         printCollection(dal.Order.GetList());
-                        //   printCollection(_dalOrder.ListOfOrders());@@
+                        
                         break;
                 }
             }

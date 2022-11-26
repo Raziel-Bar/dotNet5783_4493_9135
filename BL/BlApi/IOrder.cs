@@ -6,11 +6,43 @@ namespace BlApi;
 /// </summary>
 public interface IOrder
 {
+    /// <summary>
+    /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
+    /// </summary>
+    /// <returns></returns>
     IEnumerable<OrderForList> RequestOrdersListAdmin();
+
+    /// <summary>
+    /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
+    /// </summary>
+    /// <param name="orderID">The ID of the order</param>
+    /// <returns></returns>
     Order RequestOrderDetails(int orderID);
+
+
+    /// <summary>
+    /// sets a shipping date for an existing pending order
+    /// </summary>
+    /// <param name="orderID">The order's ID</param>
+    /// <returns>an Updated BO order</returns>
+    /// <returns></returns>
     Order UpdateOrderShipDateAdmin(int orderID);
+
+    /// <summary>
+    /// sets a delivery date for an existing already shipped order
+    /// </summary>
+    /// <param name="orderID"></param>
+    /// <returns></returns>
     Order UpdateOrderDeliveryDateAdmin(int orderID);
+
+    /// <summary>
+    /// makes an orderTracking for an existing order.
+    /// </summary>
+    /// <param name="orderID">The order's ID</param>
+    /// <returns>a tracking list of the order, incuding dates of creation and shipment/delivery (if exist) : type OrderTracking
+    /// <returns></returns>
     OrderTracking OrderTrackingAdmin(int orderID);
+
 
     /// <summary>
     /// updates an already confirmed order's orderItem's details

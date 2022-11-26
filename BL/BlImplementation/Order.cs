@@ -8,6 +8,8 @@ namespace BlImplementation;
 internal class Order : IOrder
 {
     private DalApi.IDal dal = new DalList();
+
+
     /// <summary>
     /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
     /// </summary>
@@ -39,6 +41,8 @@ internal class Order : IOrder
         IEnumerable<BO.OrderForList> boOrdersListRet = boOrdersList;
         return boOrdersListRet;
     }
+
+
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
     /// </summary>
@@ -98,6 +102,8 @@ internal class Order : IOrder
             throw new BO.UnexpectedException();
         }
     }
+
+
     /// <summary>
     /// sets a shipping date for an existing pending order
     /// </summary>
@@ -128,6 +134,8 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
+
+
     /// <summary>
     /// sets a delivery date for an existing already shipped order
     /// </summary>
@@ -159,6 +167,8 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
+
+
     /// <summary>
     /// makes an orderTracking for an existing order.
     /// </summary>
@@ -178,8 +188,11 @@ internal class Order : IOrder
                 Status = boOrder.Status,
                 Tracker = new List<(DateTime? date, string? description)>()
             };
+
             boOrderTrack.Tracker.Add((boOrder.OrderDate, " Order created"));
+
             if (boOrder.ShipDate != null) boOrderTrack.Tracker.Add((boOrder.ShipDate, " Order shipped"));
+
             if (boOrder.DeliveryDate != null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, " Order Delivered"));
             return boOrderTrack;
         }
@@ -188,6 +201,8 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
+
+
     /// <summary>
     /// updates an already confirmed order's orderItem's details
     /// </summary>
@@ -216,11 +231,17 @@ internal class Order : IOrder
         try
         {
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
+
             boOrder.ListOfItems ??= new List<BO.OrderItem>();
+
             DO.Order doOrder = dal.Order.Get(orderID);
+
             DO.Product dataProduct = dal.Product.Get(productID);
+
             if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
+
             if (boOrder.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
+
             DO.OrderItem orderItem = new DO.OrderItem
             { // new OrderItems make
                 ProductID = productID,
@@ -228,9 +249,11 @@ internal class Order : IOrder
                 Price = dataProduct.Price,
                 Amount = newAmount
             };
+
             if (boOrder.ListOfItems.Find(item => item.ProductID == productID) == null) // new add
             {
                 double total = dataProduct.Price * newAmount;
+
                 boOrder.ListOfItems.Add(new BO.OrderItem
                 {
                     ProductID = dataProduct.ID,
@@ -239,16 +262,19 @@ internal class Order : IOrder
                     Amount = newAmount,
                     TotalPrice = total
                 });
-                dataProduct.InStock -= newAmount;   
+                dataProduct.InStock -= newAmount;
                 dal.OrderItem.Add(orderItem);
             }
             else
             {
                 BO.OrderItem _orderItem = boOrder.ListOfItems.First(item => item.ProductID == productID);
+
                 int difference = _orderItem.Amount - newAmount; // we save the difference in the amounts
 
                 boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item.ProductID == productID)); // removing old item
+
                 int temp = _orderItem.Amount;
+
                 _orderItem.Amount = newAmount; //setting new amount
 
                 if (difference != 0) // changing amount in boOrder
