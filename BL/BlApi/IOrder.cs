@@ -11,15 +11,12 @@ public interface IOrder
     /// </summary>
     /// <returns></returns>
     IEnumerable<OrderForList> RequestOrdersListAdmin();
-
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
     /// </summary>
     /// <param name="orderID">The ID of the order</param>
     /// <returns></returns>
     Order RequestOrderDetails(int orderID);
-
-
     /// <summary>
     /// sets a shipping date for an existing pending order
     /// </summary>
@@ -27,14 +24,12 @@ public interface IOrder
     /// <returns>an Updated BO order</returns>
     /// <returns></returns>
     Order UpdateOrderShipDateAdmin(int orderID);
-
     /// <summary>
     /// sets a delivery date for an existing already shipped order
     /// </summary>
     /// <param name="orderID"></param>
     /// <returns></returns>
     Order UpdateOrderDeliveryDateAdmin(int orderID);
-
     /// <summary>
     /// makes an orderTracking for an existing order.
     /// </summary>
@@ -42,12 +37,11 @@ public interface IOrder
     /// <returns>a tracking list of the order, incuding dates of creation and shipment/delivery (if exist) : type OrderTracking
     /// <returns></returns>
     OrderTracking OrderTrackingAdmin(int orderID);
-
-
     /// <summary>
     /// updates an already confirmed order's orderItem's details
     /// </summary>
     /// <param name="orderID">The order's ID</param>
+    /// <param name="productID">The product ID</param>
     /// <param name="orderItemID">The orderItem's ID</param>
     /// <param name="newAmount">The orderItem's new amount</param>
     /// <exception cref="BO.InvalidDataException">any ID is invalid or the amount is negative</exception>
@@ -64,5 +58,5 @@ public interface IOrder
     /// In case The Order has already been shipped or delivered, the method will throw an appropriate exception stating the update failed 
     /// NOTE: FOR THE TIME BEING, this method will be void. In the future it might turn into either DO or BO order...
     /// </BONUS_METHOD_explanation>
-    void UpdateOrderAdmin(int orderID, int orderItemID, int newAmount);
+    void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount);
 }

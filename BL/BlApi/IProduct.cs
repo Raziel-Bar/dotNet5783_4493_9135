@@ -13,8 +13,6 @@ public interface IProduct
     /// list of products : type Ienumerable
     /// </returns>
     public IEnumerable<ProductForList> RequestProducts();
-
-
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
     /// </summary>
@@ -27,8 +25,6 @@ public interface IProduct
     /// <exception cref="NotFoundInDalException">The Product doesn't exist in the Dal</exception>
     /// <exception cref="InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
     public Product RequestProductDetailsAdmin(int productID);
-
-
     /// <summary>
     /// Makes a request to Dal for getting a product's details for customer's use (cart)
     /// </summary>
@@ -41,8 +37,6 @@ public interface IProduct
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
     public ProductItem RequestProductDetailsUser(int productID, Cart cart);
-
-
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -52,8 +46,6 @@ public interface IProduct
     /// <exception cref="InvalidDataException">If the product's details are invalid</exception>
     /// <exception cref="AlreadyExistInDalException">If the Product already exists in the Dal</exception>
     public void AddProductAdmin(Product product);
-
-
     /// <summary>
     /// Removes a Product from the database in the Dal if all conditions are met
     /// </summary>
@@ -64,8 +56,6 @@ public interface IProduct
     /// <exception cref="NotFoundInDalException">If the product doesn't exist in the Dal</exception>
     /// <exception cref="InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
     public void RemoveProductAdmin(int productID);
-
-
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
     /// </summary>

@@ -40,7 +40,7 @@ public class Order
     /// <summary>
     /// List of all the items in the order
     /// </summary>
-    public List<OrderItem>? ListOfItems { get; set; } // '?' missing?
+    public List<OrderItem>? ListOfItems { get; set; }
     /// <summary>
     /// The final price to pay for the whole order
     /// </summary>
@@ -50,9 +50,13 @@ public class Order
         Customer name: {CustomerName} 
         Customer email: {CustomerEmail}
         Customer address: {CustomerAddress}
+        Status: {Status}
         Time of the order: {OrderDate} 
         Time of ship: {ShipDate}
         Time of delivering: {DeliveryDate}
   Items:
-{string.Join(Environment.NewLine, ListOfItems)}";
+{string.Join(Environment.NewLine, ListOfItems)}
+
+        --TOTAL: {TotalPrice}--
+";
 }

@@ -19,8 +19,6 @@ public interface ICart
     /// <exception cref="NotFoundInDalException">If the Product doesn't exist in the Dal</exception>
     /// <exception cref="StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
     Cart AddProductToCart(int productID, Cart cart);
-
-
     /// <summary>
     /// Updates the amount of a product in the cart
     /// </summary>
@@ -38,8 +36,6 @@ public interface ICart
     /// <exception cref="StockNotEnoughtOrEmptyException">If the product's stock is empty so we can't add it to the cart</exception>
     /// <exception cref="ProductNotFoundInCartException">If the product is not in the cart at all</exception>
     Cart UpdateProductInCart(int productID, Cart cart, int newAmount);
-
-
     /// <summary>
     /// Makes an order once a cart is finished and updates all related data in the Dal
     /// </summary>

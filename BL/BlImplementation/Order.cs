@@ -3,13 +3,12 @@ using BO;
 using Dal;
 using DO;
 using System;
+using System.Diagnostics;
 
 namespace BlImplementation;
 internal class Order : IOrder
 {
     private DalApi.IDal dal = new DalList();
-
-
     /// <summary>
     /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
     /// </summary>
@@ -41,8 +40,6 @@ internal class Order : IOrder
         IEnumerable<BO.OrderForList> boOrdersListRet = boOrdersList;
         return boOrdersListRet;
     }
-
-
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
     /// </summary>
@@ -102,8 +99,6 @@ internal class Order : IOrder
             throw new BO.UnexpectedException();
         }
     }
-
-
     /// <summary>
     /// sets a shipping date for an existing pending order
     /// </summary>
@@ -134,8 +129,6 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
-
-
     /// <summary>
     /// sets a delivery date for an existing already shipped order
     /// </summary>
@@ -167,8 +160,6 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
-
-
     /// <summary>
     /// makes an orderTracking for an existing order.
     /// </summary>
@@ -201,8 +192,6 @@ internal class Order : IOrder
             throw new BO.NotFoundInDalException("Order", ex);
         }
     }
-
-
     /// <summary>
     /// updates an already confirmed order's orderItem's details
     /// </summary>
@@ -223,7 +212,7 @@ internal class Order : IOrder
     /// In case The Order has already been shipped or delivered, the method will throw an appropriate exception stating the update failed 
     /// NOTE: FOR THE TIME BEING, this method will be void. In the future it might turn into either DO or BO order...
     /// </BONUS_METHOD_explanation>
-    public void UpdateOrderAdmin(int orderID, int productID, int newAmount)
+    public void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount)
     {
         if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
@@ -238,61 +227,75 @@ internal class Order : IOrder
 
             DO.Product dataProduct = dal.Product.Get(productID);
 
+            if (orderItemID != 0)
+            {
+                DO.OrderItem orderItem = dal.OrderItem.Get(orderItemID);
+
+                if (orderItem.ProductID != productID || orderItem.OrderID != orderID) throw new BO.InvalidDataException("ID");
+            }
             if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
 
             if (boOrder.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
 
-            DO.OrderItem orderItem = new DO.OrderItem
-            { // new OrderItems make
-                ProductID = productID,
-                OrderID = orderID,
-                Price = dataProduct.Price,
-                Amount = newAmount
-            };
 
-            if (boOrder.ListOfItems.Find(item => item.ProductID == productID) == null) // new add
+            if (boOrder.ListOfItems.Find(item => item.OrderItemID == orderItemID) == null) // new add
             {
-                double total = dataProduct.Price * newAmount;
-
                 boOrder.ListOfItems.Add(new BO.OrderItem
                 {
                     ProductID = dataProduct.ID,
                     PricePerUnit = dataProduct.Price,
                     ProductName = dataProduct.Name,
                     Amount = newAmount,
-                    TotalPrice = total
+                    TotalPrice = dataProduct.Price * newAmount
                 });
                 dataProduct.InStock -= newAmount;
-                dal.OrderItem.Add(orderItem);
-            }
-            else
-            {
-                BO.OrderItem _orderItem = boOrder.ListOfItems.First(item => item.ProductID == productID);
-
-                int difference = _orderItem.Amount - newAmount; // we save the difference in the amounts
-
-                boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item.ProductID == productID)); // removing old item
-
-                int temp = _orderItem.Amount;
-
-                _orderItem.Amount = newAmount; //setting new amount
-
-                if (difference != 0) // changing amount in boOrder
+                dal.OrderItem.Add(new DO.OrderItem
                 {
-                    // In case difference is positive => we decrease the amount in the boOrder, so we use -= regulary
-                    // In case it's negative => we INCREASE the amount in the boOrder, so using -= will actually ADD the new change in price because -(difference * <positive const>) > 0
-                    _orderItem.TotalPrice -= difference * _orderItem.PricePerUnit;
-                    boOrder.TotalPrice -= difference * _orderItem.PricePerUnit;
-                    boOrder.ListOfItems.Add(_orderItem);
-                    dataProduct.InStock += difference;
+                    Amount = newAmount,
+                    OrderID = orderID,
+                    OrderItemID = 0, // will be added in the dalOrderItem method
+                    Price = dataProduct.Price,
+                    ProductID = dataProduct.ID
+                });
+            }
+            else // caretake of an existing item
+            {
+                BO.OrderItem _orderItem = boOrder.ListOfItems.First(item => item.OrderItemID == orderItemID); // copying old item
+
+                boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item.OrderItemID == orderItemID)); // removing old item
+
+                if (boOrder.ListOfItems.Count == 0 && newAmount == 0)//delete an intire order
+                {
+                    dataProduct.InStock += _orderItem.Amount;
+                    dal.Order.Delete(orderID);
+                    dal.OrderItem.Delete(_orderItem.OrderItemID);
                 }
-                else // removing the item entirely
+                else if (newAmount == 0)// removing the item entirely
                 {
                     boOrder.TotalPrice -= _orderItem.TotalPrice;
-                    dataProduct.InStock += temp;
+                    dataProduct.InStock += _orderItem.Amount;
+                    dal.OrderItem.Delete(_orderItem.OrderItemID);
+                }
+                else // item simple update
+                {
+                    dataProduct.InStock += _orderItem.Amount; // adding the old amount
+                    boOrder.TotalPrice -= _orderItem.TotalPrice; // erasing old total item price
+                    _orderItem.Amount = newAmount; //setting new amount
+                    _orderItem.PricePerUnit = dataProduct.Price; // new price per unit
+                    _orderItem.TotalPrice = newAmount * _orderItem.PricePerUnit; // new total item price
+                    boOrder.TotalPrice += _orderItem.TotalPrice; // adding to cart total price
+                    boOrder.ListOfItems.Add(_orderItem);
+                    dataProduct.InStock -= newAmount; // taking back the new amount
+                    dal.OrderItem.Update(new DO.OrderItem
+                    {
+                        Amount = newAmount,
+                        OrderID = orderID,
+                        OrderItemID = orderItemID,
+                        Price = dataProduct.Price,
+                        ProductID = dataProduct.ID
+                    }); // orderItem update
                 }
             }
-            dal.OrderItem.Update(orderItem); // orderItem update
             dal.Product.Update(dataProduct); // product dal update
         }
         catch (DO.NotFoundException ex)

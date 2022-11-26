@@ -26,24 +26,8 @@ internal class Program
     static void Main(string[] args)
     {
         int menuChoose;
-        Console.Write("Please enter your details:\nName: ");
-        cart.CustomerName = yourChoiceString();
-        Console.Write("Email: ");
-        cart.CustomerEmail = yourChoiceString();
-        Console.Write("Address: ");
-        cart.CustomerAddress = yourChoiceString();
         do
         {
-            if (cart.CustomerName == null) // if we did a confirm in the order so here we will create a new cart 
-            {
-                Console.Write("Please enter your details:\nName: ");
-                cart.CustomerName = Console.ReadLine();
-                Console.Write("Email: ");
-                cart.CustomerEmail = Console.ReadLine();
-                Console.Write("Address: ");
-                cart.CustomerAddress = Console.ReadLine();
-            }
-
             Console.WriteLine("Please select 1 of the options below: \n 0.EXIT. \n 1.PRODUCT.\n 2.ORDER\n 3.CART.");
             menuChoose = yourChoiceInt();
             try
@@ -67,12 +51,12 @@ internal class Program
             catch (NotFoundInDalException ex)
             {
                 Console.WriteLine(ex.Message);
-                //Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.InnerException);
             }
             catch (AlreadyExistInDalException ex)
             {
                 Console.WriteLine(ex.Message);
-                // Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.InnerException);
             }
             catch (BO.InvalidDataException ex)
             {
@@ -98,10 +82,13 @@ internal class Program
             {
                 Console.WriteLine(ex.Message);
             }
-            catch (Exception ex)
+            catch (ChangeInCartItemsDetailsException ex)
             {
                 Console.WriteLine(ex.Message);
-                // Console.WriteLine(ex.StackTrace);
+            }
+            catch (Exception ex) // for system exceptions
+            {
+                Console.WriteLine(ex);
             }
 
         } while (menuChoose != 0);
@@ -117,7 +104,7 @@ internal class Program
         do
         {
             Console.WriteLine(@"
-Please chose one of the fowling options:
+Please choose one of the followling options:
 
  0. EXIT / BACK
  1. Get product list
@@ -127,8 +114,6 @@ Please chose one of the fowling options:
  5. Delete product (admin)
  6. Update product (admin)
 ");
-
-
             option = yourChoiceInt();
 
             switch ((PRODUCT)option)
@@ -175,8 +160,7 @@ Please chose one of the fowling options:
         if (action == PRODUCT.UPDATE_ADMIN)// checker if prod exist so we won't recieve update input for nothing
         {
             Console.WriteLine("Enter product ID to update: ");
-            newProduct.ID = yourChoiceInt();
-            ibl.Product.UpdateProductAdmin(ibl.Product.RequestProductDetailsAdmin(newProduct.ID));
+            newProduct = ibl.Product.RequestProductDetailsAdmin(yourChoiceInt());
         }
 
         Console.WriteLine("Please enter the product details: \nEnter the name of the product: ");
@@ -218,7 +202,6 @@ Enter your choice: ");
         else ibl.Product.UpdateProductAdmin(newProduct);
     }
 
-
     /// <summary>
     /// The main caretaker: presents the 3nd menu and takes care of all options for the Order entity
     /// </summary>
@@ -227,7 +210,7 @@ Enter your choice: ");
         do
         {
             Console.WriteLine(@"
-Please chose one of the fowling options:
+Please choose one of the fowling options:
 
  0.EXIT / BACK.
  1.Get order list.
@@ -264,14 +247,16 @@ Please chose one of the fowling options:
                     Console.WriteLine(ibl.Order.OrderTrackingAdmin(yourChoiceInt()));
                     break;
 
-                case ORDER.UPDATE_ORDER_ADMIN:
-
+                case ORDER.UPDATE_ORDER_ADMIN: // BONUS
+                    Console.WriteLine(@"Enter order ID, Product ID, Order item ID and The new amount you wish to order 
+In case of removing item from order, set new amount to 0
+In case of adding a new item to the order, set order item ID to 0");
+                    ibl.Order.UpdateOrderAdmin(yourChoiceInt(), yourChoiceInt(), yourChoiceInt(), yourChoiceInt());
                     break;
 
             }
         } while (option != 0);
     }
-
 
     /// <summary>
     /// The main caretaker: presents the 4nd menu and takes care of all options for the Cart entity
@@ -281,7 +266,7 @@ Please chose one of the fowling options:
         do
         {
             Console.WriteLine(@"
-Please chose one of the fowling options:
+Please choose one of the fowling options:
 
  0.EXIT / BACK.
  1.Add product.
@@ -308,26 +293,28 @@ Please chose one of the fowling options:
                     Console.WriteLine(cart);
                     break;
                 case CART.CONFIRM:
+                    Console.Write("Please enter your details:\nName: ");
+                    cart.CustomerName = yourChoiceString();
+                    Console.Write("Email: ");
+                    cart.CustomerEmail = yourChoiceString();
+                    Console.Write("Address: ");
+                    cart.CustomerAddress = yourChoiceString();
                     Console.WriteLine(cart);
                     Console.WriteLine("For a final confirm please enter 1:");
                     if (yourChoiceInt() == 1)
+                    {
                         ibl.Cart.ConfirmOrder(cart);
-
-                    cart.CustomerName = null;
-                    cart.CustomerEmail = null;
-                    cart.CustomerAddress = null;
-                    cart.ListOfItems.Clear();
-                    cart.TotalPrice = 0;
+                        // erasing cart only if confirmation was a success
+                        cart.CustomerName = null;
+                        cart.CustomerEmail = null;
+                        cart.CustomerAddress = null;
+                        cart.ListOfItems?.Clear();
+                        cart.TotalPrice = 0;
+                    }
                     break;
             }
         } while (option != 0);
     }
-
-
-
-
-
-
 
     /// <summary>
     /// prints all objects from a given entity's IEnumerable<>
@@ -345,7 +332,6 @@ Please chose one of the fowling options:
             Console.WriteLine(obj);
     }
 
-
     /// <summary>
     /// general double input machine with checker
     /// </summary>
@@ -355,13 +341,12 @@ Please chose one of the fowling options:
     private static double yourChoiceDouble()
     {
         double tempChoice = -1;
-        while (!(double.TryParse(Console.ReadLine(), out tempChoice)))
+        while (!(double.TryParse(Console.ReadLine(), out tempChoice))) // BONUS
         {
             Console.WriteLine("Error please enter again");
         }
         return tempChoice;
     }
-
 
     /// <summary>
     /// general int input machine with checker
@@ -372,13 +357,12 @@ Please chose one of the fowling options:
     private static int yourChoiceInt()
     {
         int tempChoice = -1;
-        while (!(int.TryParse(Console.ReadLine(), out tempChoice)))
+        while (!(int.TryParse(Console.ReadLine(), out tempChoice))) //BONUS
         {
             Console.WriteLine("Error. please enter a valid input");
         }
         return tempChoice;
     }
-
 
     /// <summary>
     /// general string input machine with checker

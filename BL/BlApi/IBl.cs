@@ -9,12 +9,10 @@ public interface IBl
     /// Icart getter. gives access to all ICart's methods
     /// </summary>
     public ICart Cart { get; }
-
     /// <summary>
     /// IOrder getter. gives access to all IOrder's methods
     /// </summary>
     public IOrder Order { get; }
-
     /// <summary>
     /// IProduct getter. gives access to all IProduct's methods
     /// </summary>

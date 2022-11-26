@@ -10,7 +10,6 @@ namespace BlImplementation;
 internal class Cart : ICart
 {
     private DalApi.IDal dal = new DalList();
-
     /// <summary>
     /// Adds a product to the cart if All conditions are met
     /// </summary>
@@ -48,6 +47,8 @@ internal class Cart : ICart
                     Amount = 1,
                     TotalPrice = dataProduct.Price  
                 });
+                cart.TotalPrice += dataProduct.Price;   // we only added the item once in any case
+
             }
             else // adding +1 to the item's amount
             {
@@ -55,10 +56,17 @@ internal class Cart : ICart
                 //else
                 cart.ListOfItems.Remove(cart.ListOfItems.First(item => item.ProductID == dataProduct.ID)); // removing old item
                 _orderItem.Amount += 1;
-                _orderItem.TotalPrice += dataProduct.Price;
-                cart.ListOfItems.Add(_orderItem); // adding updated item
+                cart.ListOfItems.Add(new BO.OrderItem
+                {
+                    ProductID = dataProduct.ID,
+                    PricePerUnit = dataProduct.Price,
+                    ProductName = dataProduct.Name,
+                    Amount = _orderItem.Amount,
+                    TotalPrice = _orderItem.Amount * dataProduct.Price
+                });
+                cart.TotalPrice -= _orderItem.TotalPrice; // we might have changed the product between addings so we erase old price
+                cart.TotalPrice += _orderItem.Amount * dataProduct.Price; // and add the new total price
             }
-            cart.TotalPrice += dataProduct.Price; // we only added the item once in any case
             return cart;
         }
         catch (DO.NotFoundException ex)
@@ -124,7 +132,6 @@ internal class Cart : ICart
             throw new BO.NotFoundInDalException("Product", ex);
         }
     }
-
     /// <summary>
     /// Makes an order once a cart is finished and updates all related data in the Dal
     /// </summary>
@@ -144,12 +151,12 @@ internal class Cart : ICart
     /// <exception cref="BO.StockNotEnoughtOrEmptyException">If one of the product's stock is empty so we can't add it to the cart</exception>
     /// <exception cref="BO.InvalidDataException">If one of the customer's or product's details is invalid</exception>
     void ICart.ConfirmOrder(BO.Cart cart)
-    {
-        if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null ||
-            !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer"); //customer's details check   //mail format not written anywhere...
-
-
+    {        
         cart.ListOfItems ??= new List<BO.OrderItem>();
+        if (cart.ListOfItems.Count == 0) throw new BO.InvalidDataException("cart");
+        bool changeInProductDetails = false;
+        if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null ||
+            !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer"); //customer's details check
         DO.Product dataProduct;
         try
         {
@@ -157,13 +164,23 @@ internal class Cart : ICart
             {
                 dataProduct = dal.Product.Get(item.ProductID);
                 if (dataProduct.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
+                if (dataProduct.Name != item.ProductName || dataProduct.Price != item.PricePerUnit)
+                {
+                    item.ProductName = dataProduct.Name;
+                    item.PricePerUnit = dataProduct.Price;
+                    item.TotalPrice = item.Amount * item.TotalPrice;
+                    changeInProductDetails = true;
+                }
             }
         }
         catch (DO.NotFoundException ex)
         {
             throw new BO.NotFoundInDalException("Product", ex);
         }
-
+        if (changeInProductDetails)
+        {
+            throw new BO.ChangeInCartItemsDetailsException();
+        }
         DO.Order order = new DO.Order
         {              // making a new Order for the Dal
             CustomerAddress = cart.CustomerAddress,
