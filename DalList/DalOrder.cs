@@ -41,7 +41,7 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order Get(int orderId) => Get(order => order!.Value.ID == orderId);
+    public Order? Get(int orderId) => Get(order => order!.Value.ID == orderId);
     
 
 
@@ -89,7 +89,7 @@ internal class DalOrder : IOrder
     public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null) =>
         func is null ? _orders.Select(order => order) : _orders.Where(func);
 
-    public Order Get(Func<Order?, bool>? func)
+    public Order? Get(Func<Order?, bool>? func)
     {
         if (_orders.FirstOrDefault(func!) is Order order)
             return order;

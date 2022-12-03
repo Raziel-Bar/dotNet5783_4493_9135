@@ -11,6 +11,8 @@
 public class NotFoundInDalException : Exception
 {
     public NotFoundInDalException(string type, Exception ex) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data", ex) { }
+    public NotFoundInDalException(string type) : base($"ERROR dotNet5783_BL_ERROR_01: {type} not found in data") { } /////////
+
 }
 /// <summary>
 /// Exception for cases when an object from a given entity already exists in the database when it's not suppose to

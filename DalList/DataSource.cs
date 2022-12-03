@@ -233,7 +233,7 @@ internal static class DataSource
 
                     item.ProductID = product.ID;
 
-                    item.Amount = _random.Next(1, 10000); // in order to make sure our stock is not being emptied...
+                    item.Amount = _random.Next(1, 250);
 
                     item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
 

@@ -159,13 +159,17 @@ Enter your choice: ");
     private static void productCheckUpdate()
     {
         Console.WriteLine("Please enter the product's ID: ");
-        Product productUpdate = dal.Product.Get(yourChoiceInt());
-        //Product productUpdate = _dalProduct.SearchProduct(yourChoiceInt()); @@@@@@@
 
-        int changeChoice;
-        do
+
+        //Product productUpdate = dal.Product.Get(yourChoiceInt());
+        if (dal.Product.Get(yourChoiceInt()) is Product productUpdate)
         {
-            Console.WriteLine(@"What details do you wish to change? 
+
+
+            int changeChoice;
+            do
+            {
+                Console.WriteLine(@"What details do you wish to change? 
 0. EXIT / BACK
 1. change product's name.
 2. change product's price.
@@ -173,33 +177,33 @@ Enter your choice: ");
 4. change product's category.       
 
 Enter your choice: ");
-            changeChoice = yourChoiceInt();
-            while (changeChoice > 4 || changeChoice < 0)
-            {
-                Console.WriteLine("Error. Please enter a valid option: ");
                 changeChoice = yourChoiceInt();
-            }
+                while (changeChoice > 4 || changeChoice < 0)
+                {
+                    Console.WriteLine("Error. Please enter a valid option: ");
+                    changeChoice = yourChoiceInt();
+                }
 
-            switch (changeChoice)
-            {
+                switch (changeChoice)
+                {
 
-                case 1:
-                    Console.WriteLine("Enter a new name of the product: ");
-                    productUpdate.Name = Console.ReadLine();
-                    break;
+                    case 1:
+                        Console.WriteLine("Enter a new name of the product: ");
+                        productUpdate.Name = Console.ReadLine();
+                        break;
 
-                case 2:
-                    Console.WriteLine("Enter a new price: ");
-                    productUpdate.Price = yourChoiceDouble();
-                    break;
+                    case 2:
+                        Console.WriteLine("Enter a new price: ");
+                        productUpdate.Price = yourChoiceDouble();
+                        break;
 
-                case 3:
-                    Console.WriteLine("Enter a new amount: ");
-                    productUpdate.InStock = yourChoiceInt();
-                    break;
+                    case 3:
+                        Console.WriteLine("Enter a new amount: ");
+                        productUpdate.InStock = yourChoiceInt();
+                        break;
 
-                case 4:
-                    Console.WriteLine(@"Please choose the product's category: 
+                    case 4:
+                        Console.WriteLine(@"Please choose the product's category: 
  0 for GOLAN
  1 for DALTON
  2 for TEPERBERG
@@ -208,19 +212,19 @@ Enter your choice: ");
 
 Enter your choice: ");
 
-                    int catgory = yourChoiceInt();
-                    while (catgory > 4 || catgory < 0)
-                    {
-                        Console.WriteLine("Error. Please enter a valid option: ");
-                        catgory = yourChoiceInt();
-                    }
-                    productUpdate.Category = (WINERYS)catgory;
-                    break;
-            };
-        } while (changeChoice != 0);
+                        int catgory = yourChoiceInt();
+                        while (catgory > 4 || catgory < 0)
+                        {
+                            Console.WriteLine("Error. Please enter a valid option: ");
+                            catgory = yourChoiceInt();
+                        }
+                        productUpdate.Category = (WINERYS)catgory;
+                        break;
+                };
+            } while (changeChoice != 0);
 
-        dal.Product.Update(productUpdate);
-
+            dal.Product.Update(productUpdate);
+        }
     }
 
     #endregion
@@ -330,11 +334,13 @@ Enter your choice: ");
 
         Console.WriteLine("Please enter the order's ID: ");
 
-        Order orderUpdate = dal.Order.Get(yourChoiceInt());
+        //  Order orderUpdate = dal.Order.Get(yourChoiceInt());
 
-        do
+        if (dal.Order.Get(yourChoiceInt()) is Order orderUpdate)
         {
-            Console.WriteLine(@"What details do you wish to change? 
+            do
+            {
+                Console.WriteLine(@"What details do you wish to change? 
  0. EXIT / BACK
  1. change customer's name.
  2. change customer's email.
@@ -344,51 +350,51 @@ Enter your choice: ");
  6. change delivery day. 
 
 Enter your choice: ");
-            changeChoice = yourChoiceInt();
-            while (changeChoice > 6 || changeChoice < 0)
-            {
-                Console.WriteLine("Error. Please enter a valid option: ");
                 changeChoice = yourChoiceInt();
+                while (changeChoice > 6 || changeChoice < 0)
+                {
+                    Console.WriteLine("Error. Please enter a valid option: ");
+                    changeChoice = yourChoiceInt();
+                }
+
+                switch (changeChoice)
+                {
+                    case 1:
+                        Console.WriteLine("Enter the new customer name:");
+                        orderUpdate.CustomerName = Console.ReadLine();
+                        break;
+
+                    case 2:
+                        Console.WriteLine("Enter the new customer email ");
+                        orderUpdate.CustomerEmail = Console.ReadLine();
+                        break;
+
+                    case 3:
+                        Console.WriteLine("Enter the new customer address");
+                        orderUpdate.CustomerAddress = Console.ReadLine();
+                        break;
+
+                    case 4:
+                        Console.WriteLine("Enter the new order date in the folowing format: {DD/MM/YY HH:MM:SS}");
+                        DateTime.TryParse(Console.ReadLine(), out dateTime);
+                        orderUpdate.OrderDate = dateTime;
+                        break;
+                    case 5:
+                        Console.WriteLine("Enter the new ship date in the folowing format: {DD/MM/YY HH:MM:SS}");
+                        DateTime.TryParse(Console.ReadLine(), out dateTime);
+                        orderUpdate.ShipDate = dateTime;
+                        break;
+                    case 6:
+                        Console.WriteLine("Enter the delivery date in the folowing format: {DD/MM/YY HH:MM:SS}");
+                        DateTime.TryParse(Console.ReadLine(), out dateTime);
+                        orderUpdate.DeliveryDate = dateTime;
+                        break;
+                };
             }
+            while (changeChoice != 0);
 
-            switch (changeChoice)
-            {
-                case 1:
-                    Console.WriteLine("Enter the new customer name:");
-                    orderUpdate.CustomerName = Console.ReadLine();
-                    break;
-
-                case 2:
-                    Console.WriteLine("Enter the new customer email ");
-                    orderUpdate.CustomerEmail = Console.ReadLine();
-                    break;
-
-                case 3:
-                    Console.WriteLine("Enter the new customer address");
-                    orderUpdate.CustomerAddress = Console.ReadLine();
-                    break;
-
-                case 4:
-                    Console.WriteLine("Enter the new order date in the folowing format: {DD/MM/YY HH:MM:SS}");
-                    DateTime.TryParse(Console.ReadLine(), out dateTime);
-                    orderUpdate.OrderDate = dateTime;
-                    break;
-                case 5:
-                    Console.WriteLine("Enter the new ship date in the folowing format: {DD/MM/YY HH:MM:SS}");
-                    DateTime.TryParse(Console.ReadLine(), out dateTime);
-                    orderUpdate.ShipDate = dateTime;
-                    break;
-                case 6:
-                    Console.WriteLine("Enter the delivery date in the folowing format: {DD/MM/YY HH:MM:SS}");
-                    DateTime.TryParse(Console.ReadLine(), out dateTime);
-                    orderUpdate.DeliveryDate = dateTime;
-                    break;
-            };
+            dal.Order.Update(orderUpdate);
         }
-        while (changeChoice != 0);
-
-        dal.Order.Update(orderUpdate);
-        
     }
 
     #endregion
@@ -421,14 +427,14 @@ Enter your choice: ");
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order item's ID to delete: ");
                         dal.OrderItem.Delete(yourChoiceInt());
-                        
+
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order item's ID to search: ");
 
                         Console.WriteLine(dal.OrderItem.Get(yourChoiceInt()));
 
-                        
+
                         break;
 
                     case OPTIONS.GET_LIST:
@@ -438,18 +444,18 @@ Enter your choice: ");
                     case OPTIONS.ORDER_ITEM_LIST:
                         Console.WriteLine("Enter order's ID: ");
                         int id = yourChoiceInt();
-                        printCollection(dal.OrderItem.GetList( orderItem => orderItem!.Value.OrderID == id ));
+                        printCollection(dal.OrderItem.GetList(orderItem => orderItem!.Value.OrderID == id));
 
-                       // printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
+                        // printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
                         break;
 
                     case OPTIONS.ORDER_ITEM_SEARCH:
                         Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
                         int orderID = yourChoiceInt();
                         int productID = yourChoiceInt();
-                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem.Value.OrderID == orderID && orderItem.Value.ProductID == productID));
+                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem!.Value.OrderID == orderID && orderItem.Value.ProductID == productID));
 
-                       // Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
+                        // Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
                         break;
                 }
             }
@@ -474,7 +480,7 @@ Enter your choice: ");
         Console.WriteLine("Enter the product's ID:");
         newOrderItem.ProductID = yourChoiceInt();
 
-        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID).Price; // price is given based on the product's price in the dalProduct
+        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID).Value.Price; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");
         newOrderItem.OrderID = yourChoiceInt();
@@ -493,10 +499,13 @@ Enter your choice: ");
     {
         int changeChoice;
         Console.WriteLine("Please enter the order item's ID: ");
-        OrderItem orderItemUpdate = dal.OrderItem.Get(yourChoiceInt());
-        do
+
+        // OrderItem? orderItemUpdate = dal.OrderItem.Get(yourChoiceInt());
+        if (dal.OrderItem.Get(yourChoiceInt()) is OrderItem orderitem)
         {
-            Console.WriteLine(@"What details do you wish to change? 
+            do
+            {
+                Console.WriteLine(@"What details do you wish to change? 
  0. EXIT / BACK
  1. change product's ID.
  2. change order's ID.
@@ -504,30 +513,31 @@ Enter your choice: ");
 
 Enter your choice: ");
 
-            changeChoice = yourChoiceInt();
-            while (changeChoice > 3 || changeChoice < 0)
-            {
-                Console.WriteLine("Error. Please enter a valid option: ");
                 changeChoice = yourChoiceInt();
-            }
+                while (changeChoice > 3 || changeChoice < 0)
+                {
+                    Console.WriteLine("Error. Please enter a valid option: ");
+                    changeChoice = yourChoiceInt();
+                }
 
-            switch (changeChoice)
-            {
-                case 1:
-                    orderItemUpdate.ProductID = yourChoiceInt();
-                    break;
+                switch (changeChoice)
+                {
+                    case 1:
+                        orderitem.ProductID = yourChoiceInt();
+                        break;
 
-                case 2:
-                    orderItemUpdate.OrderID = yourChoiceInt();
-                    break;
+                    case 2:
+                        orderitem.OrderID = yourChoiceInt();
+                        break;
 
-                case 3:
-                    orderItemUpdate.Amount = yourChoiceInt();
-                    break;
-            };
-        } while (changeChoice != 0);
+                    case 3:
+                        orderitem.Amount = yourChoiceInt();
+                        break;
+                };
+            } while (changeChoice != 0);
 
-        dal.OrderItem.Update(orderItemUpdate);
+            dal.OrderItem.Update(orderitem);
+        }
     }
 
     #endregion

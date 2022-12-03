@@ -25,7 +25,7 @@ internal class DalProduct : IProduct
     /// </exception> 
     public int Add(Product newProduct)
     {
-        // we did here ? because we want to do product is not null
+        
         Product? product = _products.FirstOrDefault(product => product?.ID == newProduct.ID);
 
         if (product is not null)
@@ -49,7 +49,7 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public Product Get(int productId) => Get(product => product!.Value.ID == productId);
+    public Product? Get(int productId) => Get(product => product!.Value.ID == productId);
   
 
     /// <summary>
@@ -87,7 +87,7 @@ internal class DalProduct : IProduct
         _products.Add(updateProduct);
     }
 
-    public Product Get(Func<Product?, bool>? func)
+    public Product? Get(Func<Product?, bool>? func)
     {   
         if (_products.FirstOrDefault(func!) is Product product)
             return product;

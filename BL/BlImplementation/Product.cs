@@ -52,15 +52,20 @@ internal class Product : IProduct
         {
             try
             {
-                DO.Product product = dal.Product.Get(productID);
-                return new BO.Product
+                // DO.Product? product = dal.Product.Get(productID);
+                if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    ID = product.ID,
-                    Name = product.Name,
-                    Price = product.Price,
-                    Category = (BO.WINERYS)product.Category!,
-                    InStock = product.InStock,
-                };
+                    return new BO.Product
+                    {
+                        ID = product.ID,
+                        Name = product.Name,
+                        Price = product.Price,
+                        Category = (BO.WINERYS)product.Category!,
+                        InStock = product.InStock,
+                    };
+                }
+                throw new BO.NotFoundInDalException("Product"); ////לבדוק הוספתי פה העמסה 
+
             }
             catch (DO.NotFoundException ex)
             {
@@ -89,7 +94,6 @@ internal class Product : IProduct
         {
             try
             {
-                DO.Product product = dal.Product.Get(productID);
                 cart.ListOfItems ??= new List<BO.OrderItem?>();
                 int amountInCart = 0;
 
@@ -97,15 +101,20 @@ internal class Product : IProduct
                 if (orderItem != null)
                     amountInCart = orderItem.Amount;
 
-                return new BO.ProductItem
+                //  DO.Product? product = dal.Product.Get(productID);
+                if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    ID = product.ID,
-                    Name = product.Name,
-                    Price = product.Price,
-                    Category = (BO.WINERYS)product.Category!,
-                    Amount = amountInCart,
-                    Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable
-                };
+                    return new BO.ProductItem
+                    {
+                        ID = product.ID,
+                        Name = product.Name,
+                        Price = product.Price,
+                        Category = (BO.WINERYS)product.Category!,
+                        Amount = amountInCart,
+                        Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable
+                    };
+                }
+                throw new BO.NotFoundInDalException("Product"); ////לבדוק הוספתי פה העמסה 
             }
             catch (DO.NotFoundException ex)
             {

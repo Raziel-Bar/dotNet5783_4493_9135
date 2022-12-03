@@ -14,9 +14,9 @@ public interface ICrud<T> where T : struct
 
     void Update(T t);
 
-    T Get(int id);
+    T? Get(int id);
 
-    T Get(Func<T?, bool>? func);
+    T? Get(Func<T?, bool>? func);
 
     IEnumerable<T?> GetList(Func<T?, bool>? func = null);
 }

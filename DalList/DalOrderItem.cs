@@ -42,7 +42,7 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the list
     /// </exception>
-    public OrderItem Get(int orderItemId) => Get(item => item!.Value.OrderID == orderItemId);
+    public OrderItem? Get(int orderItemId) => Get(item => item!.Value.OrderID == orderItemId);
 
 
     /// <summary>
@@ -74,7 +74,7 @@ internal class DalOrderItem : IOrderItem
     }
 
 
-    public OrderItem Get(Func<OrderItem?, bool>? func)
+    public OrderItem? Get(Func<OrderItem?, bool>? func)
     {
         if (_orderItems.FirstOrDefault(func!) is OrderItem orderItem)
             return orderItem;
