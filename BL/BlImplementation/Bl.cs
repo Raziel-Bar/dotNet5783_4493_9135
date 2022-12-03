@@ -15,9 +15,9 @@ sealed public class Bl : IBl
     /// <summary>
     ///  IOrder. has all order methods
     /// </summary>
-    public IOrder Order =>  new Order();
+    public IOrder Order => new Order();
     /// <summary>
     ///  IProduct. has all Product methods
     /// </summary>
-    public IProduct Product =>  new Product();
+    public IProduct Product => new Product();
 }

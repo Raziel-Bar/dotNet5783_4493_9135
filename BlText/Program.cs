@@ -19,7 +19,7 @@ internal class Program
         CustomerEmail = null,
         CustomerName = null,
         TotalPrice = 0,
-        ListOfItems = new List<OrderItem>()
+        ListOfItems = new List<OrderItem?>()
     };
 
     private static int option;
@@ -304,12 +304,7 @@ Please choose one of the fowling options:
                     if (yourChoiceInt() == 1)
                     {
                         ibl.Cart.ConfirmOrder(cart);
-                        // erasing cart only if confirmation was a success
-                        cart.CustomerName = null;
-                        cart.CustomerEmail = null;
-                        cart.CustomerAddress = null;
-                        cart.ListOfItems?.Clear();
-                        cart.TotalPrice = 0;
+                        ibl.Cart.ClearItems(cart); 
                     }
                     break;
             }

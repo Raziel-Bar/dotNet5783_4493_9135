@@ -1,5 +1,4 @@
-﻿using DO;
-namespace DalApi;
+﻿namespace DalApi;
 
 /// <summary>
 /// Genreric CRUD interface for our entities' databases
@@ -7,11 +6,17 @@ namespace DalApi;
 /// <typeparam name="T">
 /// will present entities
 /// </typeparam>
-public interface ICrud<T>
+public interface ICrud<T> where T : struct
 {
     int Add(T t);
+
     void Delete(int id);
+
     void Update(T t);
+
     T Get(int id);
-    IEnumerable<T> GetList();
+
+    T Get(Func<T?, bool>? func);
+
+    IEnumerable<T?> GetList(Func<T?, bool>? func = null);
 }

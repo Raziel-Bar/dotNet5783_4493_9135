@@ -12,7 +12,7 @@ public class OrderTracking
     /// <summary>
     /// The current status of an existing order
     /// </summary>
-    public ORDER_STATUS Status { get; set; }
+    public ORDER_STATUS? Status { get; set; }
     /// <summary>
     /// a tracking journey. list of dates that tracks the order's process
     /// </summary>

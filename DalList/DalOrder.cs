@@ -1,5 +1,5 @@
-﻿using DO;
-using DalApi;
+﻿using DalApi;
+using DO;
 using static Dal.DataSource;
 namespace Dal;
 
@@ -25,8 +25,10 @@ internal class DalOrder : IOrder
         newOrder.ID = getRunNumberOrderID; // ID is given here
         _orders.Add(newOrder);
         return newOrder.ID;
-
     }
+
+
+
     /// <summary>
     /// search for a specific order based on its ID
     /// </summary>
@@ -39,21 +41,11 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order Get(int orderId)
-    {
-        Order order = _orders.FirstOrDefault(order => order.ID == orderId);
-        if (order.ID == 0)
-            throw new NotFoundException("order");
-        return order;
+    public Order Get(int orderId) => Get(order => order!.Value.ID == orderId);
+    
 
-    }
-    /// <summary>
-    /// copies all _orders' RELEVANT cells into a new array
-    /// </summary>
-    /// <returns>
-    /// The new array
-    /// </returns>
-    public IEnumerable<Order> GetList() => _orders.Select(order => order);
+
+
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -63,7 +55,10 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void Delete(int orderId) => _orders.Remove(Get(orderId)); 
+    public void Delete(int orderId) => _orders.Remove(Get(orderId));
+
+
+
     /// <summary>
     /// updates an existing order
     /// </summary>
@@ -75,8 +70,30 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Update(Order orderUpdate)
     {
-
         Delete(orderUpdate.ID);
         _orders.Add(orderUpdate);
+    }
+
+    /// <summary>
+    /// לשנות את ההערה 
+    /// </summary>
+    /// <param name="func"></param>
+    /// <returns></returns>
+
+    /// <summary>
+    /// copies all _orders' RELEVANT cells into a new array
+    /// </summary>
+    /// <returns>
+    /// The new array
+    /// </returns>
+    public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null) =>
+        func is null ? _orders.Select(order => order) : _orders.Where(func);
+
+    public Order Get(Func<Order?, bool>? func)
+    {
+        if (_orders.FirstOrDefault(func!) is Order order)
+            return order;
+
+        throw new NotFoundException("order");
     }
 }

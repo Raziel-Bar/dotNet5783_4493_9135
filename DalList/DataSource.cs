@@ -39,9 +39,9 @@ internal static class DataSource
     /// <summary>
     /// defining lists
     /// </summary>
-    internal static List<Product> _products = new List<Product>();
-    internal static List<Order> _orders = new List<Order>();
-    internal static List<OrderItem> _orderItems = new List<OrderItem>();
+    internal static List<Product?> _products = new List<Product?>();
+    internal static List<Order?> _orders = new List<Order?>();
+    internal static List<OrderItem?> _orderItems = new List<OrderItem?>();
     /// <summary>
     /// defining the adding basic methods. adds a new entity object to its appropriate list (objects will be made in the inits)
     /// </summary>
@@ -91,7 +91,7 @@ internal static class DataSource
 
                 myIdNumber = _random.Next(100000, 1000000);
 
-                while(_products.Exists(p => p.ID == myIdNumber))  
+                while (_products.Exists(p => p?.ID == myIdNumber))
                     myIdNumber = _random.Next(100000, 1000000);
 
                 newProduct.ID = myIdNumber;
@@ -116,6 +116,7 @@ internal static class DataSource
             }
         }
     }
+
     /// <summary>
     /// The maker of the default database of orders list
     /// </summary>
@@ -199,6 +200,7 @@ internal static class DataSource
             AddOrder(newOrder); // Order's ready! adding to database
         }
     }
+
     /// <summary>
     /// The maker of the default database of order items list
     /// </summary>
@@ -211,26 +213,32 @@ internal static class DataSource
             for (int i = 0; i < _random.Next(1, 5); ++i) // up to 4 items in an order
             {
 
-                Product product = _products[_random.Next(0, _products.Count)];
-
-                while (product.InStock == 0) // In case we randomly took a product with 0 quantity
+                if (_products[_random.Next(0, _products.Count)] is Product product &&
+                    _orders[j] is Order order)
                 {
-                    product = _products[_random.Next(0, _products.Count)];
+
+                    //while (product.InStock == 0) // In case we randomly took a product with 0 quantity
+                    //{
+                    //    Product? p = _products[_random.Next(0, _products.Count)];
+
+                    //    if (p.HasValue)
+                    //        product = p.Value;
+                    //}
+
+                    OrderItem item = new OrderItem();
+
+                    item.OrderItemID = getRunNumberOrderItemID;
+
+                    item.OrderID = order.ID;
+
+                    item.ProductID = product.ID;
+
+                    item.Amount = _random.Next(1, 10000); // in order to make sure our stock is not being emptied...
+
+                    item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
+
+                    AddOrderItem(item); // Order item's ready! Adding to database...
                 }
-
-                OrderItem item = new OrderItem();
-
-                item.OrderItemID = getRunNumberOrderItemID;
-
-                item.OrderID = _orders[j].ID;
-
-                item.ProductID = product.ID;
-
-                item.Amount = _random.Next(1, (int)((product.InStock) / 5) + 1); // in order to make sure our stock is not being emptied...
-
-                item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
-
-                AddOrderItem(item); // Order item's ready! Adding to database...
             }
         }
     }

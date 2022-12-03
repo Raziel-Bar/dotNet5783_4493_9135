@@ -55,4 +55,10 @@ public interface ICart
     /// <exception cref="StockNotEnoughtOrEmptyException">If one of the product's stock is empty so we can't add it to the cart</exception>
     /// <exception cref="InvalidDataException">If one of the customer's or product's details is invalid</exception>
     void ConfirmOrder(Cart cart);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cart"></param>
+    void ClearItems(BO.Cart cart);
 }

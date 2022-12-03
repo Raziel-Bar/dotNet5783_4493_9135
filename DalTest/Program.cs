@@ -15,6 +15,17 @@ public class Program
 
 
     /// <summary>
+    /// enum for the first menu in DalTest\Program.cs
+    /// </summary>
+    public enum ENTITIES { EXIT, PRODUCT, ORDER, ORDER_ITEM, CART, };
+
+    /// <summary>
+    /// enum for the second menu for each selction from menu_1 in DalTest\Program.cs
+    /// </summary>
+    public enum OPTIONS { EXIT, ADD, UPDATE, DELETE, SEARCH, GET_LIST, ORDER_ITEM_LIST, ORDER_ITEM_SEARCH };
+
+
+    /// <summary>
     /// main program. presents the Main menu.
     /// </summary>
     /// <param name="args"></param>
@@ -209,7 +220,7 @@ Enter your choice: ");
         } while (changeChoice != 0);
 
         dal.Product.Update(productUpdate);
-        //_dalProduct.UpdateProduct(productUpdate)@@@@@@@@@
+
     }
 
     #endregion
@@ -241,17 +252,17 @@ Enter your choice: ");
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order's ID to delete: ");
                         dal.Order.Delete(yourChoiceInt());
-                       
+
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order's ID: ");
                         Console.WriteLine(dal.Order.Get(yourChoiceInt()));
-                       
+
                         break;
 
                     case OPTIONS.GET_LIST:
                         printCollection(dal.Order.GetList());
-                        
+
                         break;
                 }
             }
@@ -283,8 +294,8 @@ Enter your choice: ");
         newOrder.CustomerAddress = Console.ReadLine();
 
         newOrder.OrderDate = DateTime.Now;
-        newOrder.ShipDate = DateTime.MinValue;
-        newOrder.DeliveryDate = DateTime.MinValue;
+        newOrder.ShipDate = null; //DateTime.MinValue;
+        newOrder.DeliveryDate = null;//DateTime.MinValue;
 
         /*
         //we don't recive input from user for the order date.
@@ -377,7 +388,7 @@ Enter your choice: ");
         while (changeChoice != 0);
 
         dal.Order.Update(orderUpdate);
-        //_dalOrder.UpdateOrder(orderUpdate); @@@@@@@@
+        
     }
 
     #endregion
@@ -410,14 +421,14 @@ Enter your choice: ");
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order item's ID to delete: ");
                         dal.OrderItem.Delete(yourChoiceInt());
-                        //_dalOrderItem.Delete(yourChoiceInt());
+                        
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order item's ID to search: ");
 
                         Console.WriteLine(dal.OrderItem.Get(yourChoiceInt()));
 
-                        //Console.WriteLine(_dalOrderItem.Get(yourChoiceInt()));
+                        
                         break;
 
                     case OPTIONS.GET_LIST:
@@ -426,12 +437,19 @@ Enter your choice: ");
 
                     case OPTIONS.ORDER_ITEM_LIST:
                         Console.WriteLine("Enter order's ID: ");
-                        printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
+                        int id = yourChoiceInt();
+                        printCollection(dal.OrderItem.GetList( orderItem => orderItem!.Value.OrderID == id ));
+
+                       // printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
                         break;
 
                     case OPTIONS.ORDER_ITEM_SEARCH:
                         Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
-                        Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
+                        int orderID = yourChoiceInt();
+                        int productID = yourChoiceInt();
+                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem.Value.OrderID == orderID && orderItem.Value.ProductID == productID));
+
+                       // Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
                         break;
                 }
             }
@@ -588,12 +606,6 @@ Please choose on of the following options:
         }
     }
 
-    /// <summary>
-    /// general int input machine with checker
-    /// </summary>
-    /// <returns>
-    /// valid int input
-    /// </returns>
     private static int yourChoiceInt()
     {
         int tempChoice = -1;

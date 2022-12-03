@@ -1,7 +1,10 @@
 ﻿using DalApi;
 using DO;
+using System.Linq;
 using static Dal.DataSource;
 namespace Dal;
+
+
 
 /// <summary>
 /// Implementation for DalApi.IProduct
@@ -22,15 +25,18 @@ internal class DalProduct : IProduct
     /// </exception> 
     public int Add(Product newProduct)
     {
-        Product product = _products.FirstOrDefault(product => product.ID == newProduct.ID);
+        // we did here ? because we want to do product is not null
+        Product? product = _products.FirstOrDefault(product => product?.ID == newProduct.ID);
 
-        if (product.ID != 0)
+        if (product is not null)
             throw new AlreadyExistException("product");
 
         _products.Add(newProduct);
-        return product.ID;
+
+        return newProduct.ID;
 
     }
+
     /// <summary>
     /// searches for a specific product according to its ID
     /// </summary>
@@ -43,22 +49,18 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public Product Get(int productId)
-    {
-        Product product = _products.FirstOrDefault(product => product.ID == productId);
+    public Product Get(int productId) => Get(product => product!.Value.ID == productId);
+  
 
-        if (product.ID == 0)
-            throw new NotFoundException("product");
-
-        return product;
-    }
     /// <summary>
     /// copies all products from the list into a NEW List
     /// </summary>
     /// <returns>
     /// The new array
     /// </returns>
-    public IEnumerable<Product> GetList() => _products.Select(product => product);
+    /// 
+    //public IEnumerable<Product> GetList() => _products.Select(product => product);
+
     /// <summary>
     /// deletes a product from the list
     /// </summary>
@@ -69,6 +71,7 @@ internal class DalProduct : IProduct
     /// In case the product does not exist in the list
     /// </exception>
     public void Delete(int productId) => _products.Remove(Get(productId));
+
     /// <summary>
     /// updates a product's details
     /// </summary>
@@ -83,4 +86,14 @@ internal class DalProduct : IProduct
         Delete(updateProduct.ID);
         _products.Add(updateProduct);
     }
+
+    public Product Get(Func<Product?, bool>? func)
+    {   
+        if (_products.FirstOrDefault(func!) is Product product)
+            return product;
+        throw new NotFoundException("Product");
+    }
+
+    public IEnumerable<Product?> GetList(Func<Product?, bool>? func = null) =>
+        func is null ? _products.Select(product => product) : _products.Where(func);
 }

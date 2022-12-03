@@ -1,5 +1,4 @@
 ﻿using BlApi;
-using BO;
 using Dal;
 
 namespace BlImplementation;
@@ -17,18 +16,25 @@ internal class Product : IProduct
     /// <returns>
     /// list of products : type Ienumerable
     /// </returns>
-    public IEnumerable<BO.ProductForList> RequestProducts()
+    public IEnumerable<BO.ProductForList?> RequestProducts()
     {
-        IEnumerable<DO.Product> products = dal.Product.GetList();
+        IEnumerable<DO.Product?> products = dal.Product.GetList();
 
-        return products.Select(product => new BO.ProductForList
+        return products.Select(_product =>
         {
-            ID = product.ID,
-            Name = product.Name,
-            Category = (BO.WINERYS)product.Category,
-            Price = product.Price,
+            DO.Product product = _product!.Value;
+
+            return new BO.ProductForList
+            {
+                ID = product.ID,
+                Name = product.Name,
+                Category = (BO.WINERYS)product.Category!,
+                Price = product.Price,
+            };
         });
     }
+
+
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
     /// </summary>
@@ -52,7 +58,7 @@ internal class Product : IProduct
                     ID = product.ID,
                     Name = product.Name,
                     Price = product.Price,
-                    Category = (BO.WINERYS)product.Category,
+                    Category = (BO.WINERYS)product.Category!,
                     InStock = product.InStock,
                 };
             }
@@ -64,6 +70,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Makes a request to Dal for getting a product's details for customer's use (cart)
     /// </summary>
@@ -82,19 +90,19 @@ internal class Product : IProduct
             try
             {
                 DO.Product product = dal.Product.Get(productID);
-                cart.ListOfItems ??= new List<BO.OrderItem>();
+                cart.ListOfItems ??= new List<BO.OrderItem?>();
                 int amountInCart = 0;
-                if (cart.ListOfItems.Exists(item => item.ProductID == productID))
-                {
-                    BO.OrderItem? orderItem = cart.ListOfItems.First(item => item.ProductID == productID);
+
+                BO.OrderItem? orderItem = cart.ListOfItems.FirstOrDefault(item => item!.ProductID == productID);
+                if (orderItem != null)
                     amountInCart = orderItem.Amount;
-                }
+
                 return new BO.ProductItem
                 {
                     ID = product.ID,
                     Name = product.Name,
                     Price = product.Price,
-                    Category = (BO.WINERYS)product.Category,
+                    Category = (BO.WINERYS)product.Category!,
                     Amount = amountInCart,
                     Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable
                 };
@@ -107,6 +115,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -124,7 +134,7 @@ internal class Product : IProduct
                 ID = product.ID,
                 Name = product.Name,
                 InStock = product.InStock,
-                Category = (DO.WINERYS)product.Category,
+                Category = (DO.WINERYS)product.Category!,
                 Price = product.Price,
             };
             try
@@ -139,6 +149,8 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
     /// <summary>
     /// Removes a Product from the database in the Dal if all conditions are met
     /// </summary>
@@ -153,9 +165,7 @@ internal class Product : IProduct
 
         if (productID >= 100000)
         {
-            IEnumerable<DO.OrderItem> orderItem = dal.OrderItem.GetList();
-
-            if (orderItem.Any(orderItem => orderItem.ProductID == productID))
+            if (dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any())
                 throw new BO.RemoveProductThatIsInOrdersException();
 
             try
@@ -170,6 +180,9 @@ internal class Product : IProduct
         else
             throw new BO.InvalidDataException("Product");
     }
+
+
+
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
     /// </summary>
@@ -186,7 +199,7 @@ internal class Product : IProduct
             {
                 ID = product.ID,
                 InStock = product.InStock,
-                Category = (DO.WINERYS)product.Category,
+                Category = (DO.WINERYS)product.Category!,
                 Name = product.Name,
                 Price = product.Price,
             };
