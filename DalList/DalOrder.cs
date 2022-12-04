@@ -27,8 +27,6 @@ internal class DalOrder : IOrder
         return newOrder.ID;
     }
 
-
-
     /// <summary>
     /// search for a specific order based on its ID
     /// </summary>
@@ -43,9 +41,6 @@ internal class DalOrder : IOrder
     /// </exception>
     public Order? Get(int orderId) => Get(order => order!.Value.ID == orderId);
     
-
-
-
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -56,8 +51,6 @@ internal class DalOrder : IOrder
     /// In case the order does not exist in the array
     /// </exception>
     public void Delete(int orderId) => _orders.Remove(Get(orderId));
-
-
 
     /// <summary>
     /// updates an existing order
@@ -75,21 +68,20 @@ internal class DalOrder : IOrder
     }
 
     /// <summary>
-    /// לשנות את ההערה 
+    /// returns a list of all orders that fits a given condition
     /// </summary>
-    /// <param name="func"></param>
-    /// <returns></returns>
-
-    /// <summary>
-    /// copies all _orders' RELEVANT cells into a new array
-    /// </summary>
-    /// <returns>
-    /// The new array
-    /// </returns>
+    /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing orders</param>
+    /// <returns>the list of all orders that got true in the condition</returns>
     public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null) =>
         func is null ? _orders.Select(order => order) : _orders.Where(func);
 
-    public Order? Get(Func<Order?, bool>? func)
+    /// <summary>
+    /// gets an order that fits a condition
+    /// </summary>
+    /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the order</param>
+    /// <returns>the order if the condition was true</returns>
+    /// <exception cref="NotFoundException">In case we didn't find an order that fits the condition</exception>
+    public Order? Get(Func<Order?, bool>? func = null)
     {
         if (_orders.FirstOrDefault(func!) is Order order)
             return order;

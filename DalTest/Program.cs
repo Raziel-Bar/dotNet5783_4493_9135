@@ -96,7 +96,7 @@ public class Program
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.Product.GetList());
+                        printCollection(dal.Product.GetList(null));
                         break;
                 }
             }
@@ -265,7 +265,7 @@ Enter your choice: ");
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.Order.GetList());
+                        printCollection(dal.Order.GetList(null));
 
                         break;
                 }
@@ -438,7 +438,7 @@ Enter your choice: ");
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.OrderItem.GetList());
+                        printCollection(dal.OrderItem.GetList(null));
                         break;
 
                     case OPTIONS.ORDER_ITEM_LIST:
@@ -480,7 +480,7 @@ Enter your choice: ");
         Console.WriteLine("Enter the product's ID:");
         newOrderItem.ProductID = yourChoiceInt();
 
-        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID).Value.Price; // price is given based on the product's price in the dalProduct
+        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID)!.Value.Price; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");
         newOrderItem.OrderID = yourChoiceInt();

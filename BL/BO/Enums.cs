@@ -14,15 +14,6 @@ public enum WINERYS
     TEPERBERG,
     CARMEL,
     BARKAN,
-
-    //================================================
-    // for stage 2 we will stay with 5 categories//===
-    //================================================
-
-    /// <summary>
-    /// ELSE is the category for non wine bottle products.
-    /// </summary>
-    // ELSE
 }
 
 /// <summary>

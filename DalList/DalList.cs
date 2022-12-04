@@ -11,12 +11,10 @@ sealed public class DalList : IDal
     /// </summary>
     public IProduct Product => new DalProduct();
 
-
     /// <summary>
     /// DalOrder entity - "son" of IOrder. has all order methods
     /// </summary>
     public IOrder Order => new DalOrder();
-
 
     /// <summary>
     /// DalOrderItem entity - "son" of IOrderItem. has all OrderItem methods

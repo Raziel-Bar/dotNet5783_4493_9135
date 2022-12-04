@@ -30,48 +30,48 @@ internal class Cart : ICart
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
 
-            DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
+            DO.Product? dataProduct = dal.Product.Get(productID); // product exist in dal check
 
             cart.ListOfItems ??= new List<BO.OrderItem?>();
 
-            BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == dataProduct.ID);
+            BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == dataProduct!.Value.ID);
 
             if (_orderItem is null) // adding the item for the 1st time
             {
-                if (dataProduct.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
+                if (dataProduct!.Value.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
                 //else
                 cart.ListOfItems.Add(new BO.OrderItem
                 {
-                    ProductID = dataProduct.ID,
-                    PricePerUnit = dataProduct.Price,
-                    ProductName = dataProduct.Name,
+                    ProductID = dataProduct.Value.ID,
+                    Price = dataProduct.Value.Price,
+                    ProductName = dataProduct.Value.Name,
                     Amount = 1,
-                    TotalPrice = dataProduct.Price
+                    TotalPrice = dataProduct.Value.Price
                 });
 
-                cart.TotalPrice += dataProduct.Price;   // we only added the item once in any case
+                cart.TotalPrice += dataProduct.Value.Price;   // we only added the item once in any case
             }
 
             else // adding +1 to the item's amount
             {
-                if (dataProduct.InStock <= _orderItem.Amount)
+                if (dataProduct!.Value.InStock <= _orderItem.Amount)
                     throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
                 //else
-                cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.ID)); // removing old item
+                cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.Value.ID)); // removing old item
                 _orderItem.Amount += 1;
 
                 cart.ListOfItems.Add(new BO.OrderItem
                 {
-                    ProductID = dataProduct.ID,
-                    PricePerUnit = dataProduct.Price,
-                    ProductName = dataProduct.Name,
+                    ProductID = dataProduct.Value.ID,
+                    Price = dataProduct.Value.Price,
+                    ProductName = dataProduct.Value.Name,
                     Amount = _orderItem.Amount,
-                    TotalPrice = _orderItem.Amount * dataProduct.Price
+                    TotalPrice = _orderItem.Amount * dataProduct.Value.Price
                 });
 
                 cart.TotalPrice -= _orderItem.TotalPrice; // we might have changed the product between addings so we erase old price
-                cart.TotalPrice += _orderItem.Amount * dataProduct.Price; // and add the new total price
+                cart.TotalPrice += _orderItem.Amount * dataProduct.Value.Price; // and add the new total price
             }
 
             return cart;
@@ -81,6 +81,7 @@ internal class Cart : ICart
             throw new BO.NotFoundInDalException("Product", ex);
         }
     }
+
     /// <summary>
     /// Updates the amount of a product in the cart
     /// </summary>
@@ -107,9 +108,9 @@ internal class Cart : ICart
             if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
 
             cart.ListOfItems ??= new List<BO.OrderItem?>();
-            DO.Product dataProduct = dal.Product.Get(productID); // product exist in dal check
+            DO.Product? dataProduct = dal.Product.Get(productID); // product exist in dal check
 
-            if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
+            if (dataProduct!.Value.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
             BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == productID);
 
@@ -125,8 +126,8 @@ internal class Cart : ICart
             {
                 // In case difference is positive => we decrease the amount in the cart, so we use -= regulary
                 // In case it's negative => we INCREASE the amount in the cart, so using -= will actually ADD the new change in price because -(difference * <positive const>) > 0
-                _orderItem.TotalPrice -= difference * _orderItem.PricePerUnit;
-                cart.TotalPrice -= difference * _orderItem.PricePerUnit;
+                _orderItem.TotalPrice -= difference * _orderItem.Price;
+                cart.TotalPrice -= difference * _orderItem.Price;
                 cart.ListOfItems.Add(_orderItem);
             }
             else // removing the item entirely
@@ -142,12 +143,15 @@ internal class Cart : ICart
         }
     }
 
+    /// <summary>
+    /// erases the cart
+    /// </summary>
+    /// <param name="cart">the current cart</param>
     public void ClearItems(BO.Cart cart)
     {
         cart.ListOfItems!.Clear();
         cart.TotalPrice = 0;
     }
-
 
     /// <summary>
     /// Makes an order once a cart is finished and updates all related data in the Dal
@@ -181,19 +185,22 @@ internal class Cart : ICart
             !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer");
 
         //customer's details check
-        DO.Product dataProduct;
+        DO.Product? dataProduct;
         try
         {
             foreach (var item in cart.ListOfItems) // products exist in dal and stock check
             {
                 dataProduct = dal.Product.Get(item!.ProductID);
-                if (dataProduct.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
-                if (dataProduct.Name != item.ProductName || dataProduct.Price != item.PricePerUnit)
+                if (dataProduct is not null)
                 {
-                    item.ProductName = dataProduct.Name;
-                    item.PricePerUnit = dataProduct.Price;
-                    item.TotalPrice = item.Amount * item.TotalPrice;
-                    changeInProductDetails = true;
+                    if (dataProduct.Value.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
+                    if (dataProduct.Value.Name != item.ProductName || dataProduct.Value.Price != item.Price)
+                    {
+                        item.ProductName = dataProduct.Value.Name;
+                        item.Price = dataProduct.Value.Price;
+                        item.TotalPrice = item.Amount * item.TotalPrice;
+                        changeInProductDetails = true;
+                    }
                 }
             }
         }
@@ -223,16 +230,12 @@ internal class Cart : ICart
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
             dataProduct = dal.Product.Get(item!.ProductID); // stock update
-            dataProduct.InStock -= item.Amount;
-            dal.Product.Update(dataProduct);
-
-            DO.OrderItem orderItem = new DO.OrderItem
-            { // new OrderItems make
-                ProductID = item.ProductID,
-                OrderID = id,
-                Price = item.PricePerUnit,
-                Amount = item.Amount
-            };
+            DO.Product doProduct = new DO.Product();
+            PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct);
+            doProduct.InStock -= item.Amount;
+            DO.OrderItem orderItem = new DO.OrderItem();
+            PropertyCopier<BO.OrderItem, DO.OrderItem>.Copy(item, orderItem);
+            orderItem.OrderID = id;
             dal.OrderItem.Add(orderItem);
         }
         ClearItems(cart);

@@ -50,16 +50,6 @@ internal class DalProduct : IProduct
     /// In case the product does not exist in the list
     /// </exception>
     public Product? Get(int productId) => Get(product => product!.Value.ID == productId);
-  
-
-    /// <summary>
-    /// copies all products from the list into a NEW List
-    /// </summary>
-    /// <returns>
-    /// The new array
-    /// </returns>
-    /// 
-    //public IEnumerable<Product> GetList() => _products.Select(product => product);
 
     /// <summary>
     /// deletes a product from the list
@@ -87,6 +77,12 @@ internal class DalProduct : IProduct
         _products.Add(updateProduct);
     }
 
+    /// <summary>
+    /// gets a product that fits a condition
+    /// </summary>
+    /// <param name="func">the condition. a function that returns bool and receives product. in case func == null - we simply get the product</param>
+    /// <returns>the product if the condition was true</returns>
+    /// <exception cref="NotFoundException">In case we didn't find a product that fits the condition</exception>
     public Product? Get(Func<Product?, bool>? func)
     {   
         if (_products.FirstOrDefault(func!) is Product product)
@@ -94,6 +90,11 @@ internal class DalProduct : IProduct
         throw new NotFoundException("Product");
     }
 
+    /// <summary>
+    /// returns a list of all products that fits a given condition
+    /// </summary>
+    /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing products</param>
+    /// <returns>the list of all orders that got true in the condition</returns>
     public IEnumerable<Product?> GetList(Func<Product?, bool>? func = null) =>
         func is null ? _products.Select(product => product) : _products.Where(func);
 }

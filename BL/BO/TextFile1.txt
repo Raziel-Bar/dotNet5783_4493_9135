@@ -1,0 +1,43 @@
+﻿-property name-			-DO ...-				- BO classes with a property that has that name-
+
+CustomerName			Order					Cart, Order, OrderForList
+
+CustomerEmail			Order					Cart, Order
+
+CustomerAddress			Order					Cart, Order
+
+ListOfItems										Cart, Order
+
+TotalPrice										Cart, Order, OrderForList, OrderItem
+
+ID						Order, Product			Order, OrderForList, OrderTracking, Product, ProductForList, ProductItem
+
+OrderItemID				OrderItem				OrderItem
+
+ProductID				OrderItem				OrderItem
+
+OrderID					OrderItem
+
+ProductName										OrderItem
+
+Status											Order, OrderForList, OrderTracking
+
+OrderDate				Order					Order
+
+ShipDate				Order					Order
+	
+DeliveryDate			Order					Order
+	
+Amount					OrderItem				OrderForList, OrderItem, ProductItem
+
+Tracker											OrderTracking
+
+Name					Product					Product, ProductForList, ProductItem
+
+Price					OrderItem, Product		Product, ProductForList, ProductItem, OrderItem
+
+Category				Product					Product, ProductForList, ProductItem
+
+InStock					Product					Product
+
+Available										ProductItem

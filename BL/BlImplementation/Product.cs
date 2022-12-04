@@ -1,6 +1,5 @@
 ﻿using BlApi;
 using Dal;
-
 namespace BlImplementation;
 
 /// <summary>
@@ -18,22 +17,16 @@ internal class Product : IProduct
     /// </returns>
     public IEnumerable<BO.ProductForList?> RequestProducts()
     {
-        IEnumerable<DO.Product?> products = dal.Product.GetList();
+        IEnumerable<DO.Product?> products = dal.Product.GetList(null);
 
         return products.Select(_product =>
         {
             DO.Product product = _product!.Value;
-
-            return new BO.ProductForList
-            {
-                ID = product.ID,
-                Name = product.Name,
-                Category = (BO.WINERYS)product.Category!,
-                Price = product.Price,
-            };
+            BO.ProductForList retProduct = new BO.ProductForList();
+            PropertyCopier<DO.Product, BO.ProductForList>.Copy(product, retProduct); // bonus
+            return retProduct;
         });
     }
-
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
@@ -52,30 +45,18 @@ internal class Product : IProduct
         {
             try
             {
-                // DO.Product? product = dal.Product.Get(productID);
                 if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    return new BO.Product
-                    {
-                        ID = product.ID,
-                        Name = product.Name,
-                        Price = product.Price,
-                        Category = (BO.WINERYS)product.Category!,
-                        InStock = product.InStock,
-                    };
+                    BO.Product retProduct = new BO.Product();
+                    PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
+                    return retProduct;
                 }
-                throw new BO.NotFoundInDalException("Product"); ////לבדוק הוספתי פה העמסה 
-
+                throw new BO.NotFoundInDalException("Product"); 
             }
-            catch (DO.NotFoundException ex)
-            {
-                throw new BO.NotFoundInDalException("Product", ex);
-            }
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
-        else
-            throw new BO.InvalidDataException("Product");
+        else throw new BO.InvalidDataException("Product");
     }
-
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for customer's use (cart)
@@ -101,30 +82,20 @@ internal class Product : IProduct
                 if (orderItem != null)
                     amountInCart = orderItem.Amount;
 
-                //  DO.Product? product = dal.Product.Get(productID);
                 if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    return new BO.ProductItem
-                    {
-                        ID = product.ID,
-                        Name = product.Name,
-                        Price = product.Price,
-                        Category = (BO.WINERYS)product.Category!,
-                        Amount = amountInCart,
-                        Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable
-                    };
+                    BO.ProductItem retProduct = new BO.ProductItem();
+                    PropertyCopier<DO.Product, BO.ProductItem>.Copy(product, retProduct); // bonus
+                    retProduct.Amount = amountInCart; // unique prop
+                    retProduct.Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable; // unique prop
+                    return retProduct;
                 }
-                throw new BO.NotFoundInDalException("Product"); ////לבדוק הוספתי פה העמסה 
+                throw new BO.NotFoundInDalException("Product"); 
             }
-            catch (DO.NotFoundException ex)
-            {
-                throw new BO.NotFoundInDalException("Product", ex);
-            }
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex);}
         }
-        else
-            throw new BO.InvalidDataException("Product");
+        else throw new BO.InvalidDataException("Product");
     }
-
 
     /// <summary>
     /// Adds a Product to the database in the Dal if all conditions are met
@@ -138,27 +109,13 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
-            DO.Product product1 = new DO.Product
-            {
-                ID = product.ID,
-                Name = product.Name,
-                InStock = product.InStock,
-                Category = (DO.WINERYS)product.Category!,
-                Price = product.Price,
-            };
-            try
-            {
-                dal.Product.Add(product1);
-            }
-            catch (DO.AlreadyExistException ex)
-            {
-                throw new BO.AlreadyExistInDalException("Product", ex);
-            }
+            DO.Product product1 = new DO.Product();
+            PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);
+            try { dal.Product.Add(product1);}
+            catch (DO.AlreadyExistException ex) {throw new BO.AlreadyExistInDalException("Product", ex);}
         }
-        else
-            throw new BO.InvalidDataException("Product");
+        else throw new BO.InvalidDataException("Product");
     }
-
 
     /// <summary>
     /// Removes a Product from the database in the Dal if all conditions are met
@@ -171,26 +128,15 @@ internal class Product : IProduct
     /// <exception cref="BO.InvalidDataException">The productID is invalid (less than 6 digits or negative)</exception>
     public void RemoveProductAdmin(int productID)
     {
-
         if (productID >= 100000)
         {
             if (dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any())
                 throw new BO.RemoveProductThatIsInOrdersException();
-
-            try
-            {
-                dal.Product.Delete(productID);
-            }
-            catch (DO.NotFoundException ex)
-            {
-                throw new BO.NotFoundInDalException("Product", ex);
-            }
+            try { dal.Product.Delete(productID); }
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
-        else
-            throw new BO.InvalidDataException("Product");
+        else throw new BO.InvalidDataException("Product");
     }
-
-
 
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
@@ -204,14 +150,8 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
-            DO.Product dataProduct = new DO.Product
-            {
-                ID = product.ID,
-                InStock = product.InStock,
-                Category = (DO.WINERYS)product.Category!,
-                Name = product.Name,
-                Price = product.Price,
-            };
+            DO.Product dataProduct = new DO.Product();
+            PropertyCopier<BO.Product, DO.Product>.Copy(product, dataProduct); // Bonus
             try
             {
                 // before we update the changes we need to remove the old and add the update one  but we still need to check the product is not in any order  
@@ -219,12 +159,8 @@ internal class Product : IProduct
                 //dal.Product.Update(dataProduct);
                 dal.Product.Add(dataProduct);
             }
-            catch (DO.NotFoundException ex)
-            {
-                throw new BO.NotFoundInDalException("Product", ex);
-            }
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
-        else
-            throw new BO.InvalidDataException("Product");
+        else throw new BO.InvalidDataException("Product");
     }
 }

@@ -29,7 +29,6 @@ internal class DalOrderItem : IOrderItem
         return newOrderItem.OrderItemID;
     }
 
-
     /// <summary>
     /// Global search if the given item exists in any order at all
     /// </summary>
@@ -42,8 +41,7 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the list
     /// </exception>
-    public OrderItem? Get(int orderItemId) => Get(item => item!.Value.OrderID == orderItemId);
-
+    public OrderItem? Get(int orderItemId) => Get(item => item!.Value.OrderItemID == orderItemId);
 
     /// <summary>
     /// deletes an order item from the list
@@ -56,7 +54,6 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public void Delete(int orderItemId) => _orderItems.Remove(Get(orderItemId));
 
-
     /// <summary>
     /// Updates a specific order item's details
     /// </summary>
@@ -66,14 +63,18 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the order item does not exist
     /// </exception>
-
     public void Update(OrderItem updateOrderItem)
     {
         Delete(updateOrderItem.OrderItemID);
         _orderItems.Add(updateOrderItem);
     }
 
-
+    /// <summary>
+    /// gets an orderItem that fits a condition
+    /// </summary>
+    /// <param name="func">the condition. a function that returns bool and receives product. in case func == null - we simply get the orderItem</param>
+    /// <returns>the product if the condition was true</returns>
+    /// <exception cref="NotFoundException">In case we didn't find an orderItem that fits the condition</exception>
     public OrderItem? Get(Func<OrderItem?, bool>? func)
     {
         if (_orderItems.FirstOrDefault(func!) is OrderItem orderItem)
@@ -81,6 +82,11 @@ internal class DalOrderItem : IOrderItem
         throw new NotFoundException("Order item");
     }
 
+    /// <summary>
+    /// returns a list of all orderItems that fits a given condition
+    /// </summary>
+    /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing orderItems</param>
+    /// <returns>the list of all orderItems that got true in the condition</returns>
     public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func = null) =>
         func is null ? _orderItems.Select(orderItem => orderItem) : _orderItems.Where(func);
 }

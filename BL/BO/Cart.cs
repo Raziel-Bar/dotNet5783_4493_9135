@@ -28,7 +28,7 @@ public class Cart
         Email: {CustomerEmail}
     	Address: {CustomerAddress}
     	Items:
-            {string.Join(Environment.NewLine, ListOfItems)}
+            {string.Join(Environment.NewLine, ListOfItems!)} 
         
         --Price in total--: {TotalPrice}
         ";

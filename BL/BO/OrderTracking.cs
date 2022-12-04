@@ -21,5 +21,5 @@ public class OrderTracking
         Order Number: {ID}
         Status: {Status}
         Tracking journey: 
-{string.Join(Environment.NewLine, Tracker)}";
+{string.Join(Environment.NewLine, Tracker!)}";
 }
