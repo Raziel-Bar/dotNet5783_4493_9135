@@ -216,7 +216,9 @@ internal class Order : IOrder
     public void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount)
     {
         if (orderID < 0) throw new BO.InvalidDataException("Order"); // Order ID validity check
+
         if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
+
         if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
         try
         {
@@ -229,8 +231,10 @@ internal class Order : IOrder
 
             // preparing all data for update and some more checks
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
+
             DO.Order? doOrder = dal.Order.Get(orderID);
-            //    DO.Product? dataProduct = dal.Product.Get(productID) ?? throw new UnexpectedException();
+
+          
 
             if (dal.Product.Get(productID) is DO.Product dataProduct)
             {
