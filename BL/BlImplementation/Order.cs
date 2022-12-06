@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using Dal;
 using System;
 
@@ -28,7 +29,7 @@ internal class Order : IOrder
                 boOrdersList.Add(boOrderForList);
             }
         }
-        return boOrdersList;
+        return boOrdersList.Select(orderForList => orderForList);//@@@@
     }
 
     /// <summary>

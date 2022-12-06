@@ -18,13 +18,7 @@ internal class Product : IProduct
     /// </returns>
     public IEnumerable<BO.ProductForList?> RequestProducts()
     {
-        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
-
-        //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
-        //                                            select new ProductForList ()
-        //                                            {
-        //                                            PropertyCopier<DO.Product?, BO.ProductForList>.Copy(item,); 
-        //                                            };
+        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null); 
 
         return doProducts.Select(_product =>
         {
