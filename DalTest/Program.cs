@@ -444,7 +444,7 @@ Enter your choice: ");
                     case OPTIONS.ORDER_ITEM_LIST:
                         Console.WriteLine("Enter order's ID: ");
                         int id = yourChoiceInt();
-                        printCollection(dal.OrderItem.GetList(orderItem => orderItem!.Value.OrderID == id));
+                        printCollection(dal.OrderItem.GetList(orderItem => orderItem?.OrderID == id));
 
                         // printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
                         break;
@@ -453,7 +453,7 @@ Enter your choice: ");
                         Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
                         int orderID = yourChoiceInt();
                         int productID = yourChoiceInt();
-                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem!.Value.OrderID == orderID && orderItem.Value.ProductID == productID));
+                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem?.OrderID == orderID && orderItem?.ProductID == productID));
 
                         // Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
                         break;
@@ -480,7 +480,9 @@ Enter your choice: ");
         Console.WriteLine("Enter the product's ID:");
         newOrderItem.ProductID = yourChoiceInt();
 
-        newOrderItem.Price = dal.Product.Get(newOrderItem.ProductID)!.Value.Price; // price is given based on the product's price in the dalProduct
+
+       
+        newOrderItem.Price = (double)(dal.Product.Get(newOrderItem.ProductID)?.Price)!; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");
         newOrderItem.OrderID = yourChoiceInt();

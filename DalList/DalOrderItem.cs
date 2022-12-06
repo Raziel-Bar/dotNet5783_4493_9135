@@ -41,7 +41,7 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the list
     /// </exception>
-    public OrderItem? Get(int orderItemId) => Get(item => item!.Value.OrderItemID == orderItemId);
+    public OrderItem? Get(int orderItemId) => Get(item => item?.OrderItemID == orderItemId);
 
     /// <summary>
     /// deletes an order item from the list

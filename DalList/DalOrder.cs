@@ -39,7 +39,7 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order? Get(int orderId) => Get(order => order!.Value.ID == orderId);
+    public Order? Get(int orderId) => Get(order => order?.ID == orderId);
     
     /// <summary>
     /// deletes an order from the _orders array

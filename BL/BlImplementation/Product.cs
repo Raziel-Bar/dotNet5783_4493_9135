@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using Dal;
 namespace BlImplementation;
 
@@ -17,13 +18,19 @@ internal class Product : IProduct
     /// </returns>
     public IEnumerable<BO.ProductForList?> RequestProducts()
     {
-        IEnumerable<DO.Product?> products = dal.Product.GetList(null);
+        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
 
-        return products.Select(_product =>
+        //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
+        //                                            select new ProductForList ()
+        //                                            {
+        //                                            PropertyCopier<DO.Product?, BO.ProductForList>.Copy(item,); 
+        //                                            };
+
+        return doProducts.Select(_product =>
         {
-            DO.Product product = _product!.Value;
+            //DO.Product? product = _product;// @@ מיותר
             BO.ProductForList retProduct = new BO.ProductForList();
-            PropertyCopier<DO.Product, BO.ProductForList>.Copy(product, retProduct); // bonus
+            PropertyCopier<DO.Product?, BO.ProductForList>.Copy(_product, retProduct); // bonus
             return retProduct;
         });
     }
@@ -51,7 +58,7 @@ internal class Product : IProduct
                     PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
                     return retProduct;
                 }
-                throw new BO.NotFoundInDalException("Product"); 
+                throw new BO.NotFoundInDalException("Product");
             }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
@@ -90,9 +97,9 @@ internal class Product : IProduct
                     retProduct.Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable; // unique prop
                     return retProduct;
                 }
-                throw new BO.NotFoundInDalException("Product"); 
+                throw new BO.NotFoundInDalException("Product");
             }
-            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex);}
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");
     }
@@ -111,8 +118,8 @@ internal class Product : IProduct
         {
             DO.Product product1 = new DO.Product();
             PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);
-            try { dal.Product.Add(product1);}
-            catch (DO.AlreadyExistException ex) {throw new BO.AlreadyExistInDalException("Product", ex);}
+            try { dal.Product.Add(product1); }
+            catch (DO.AlreadyExistException ex) { throw new BO.AlreadyExistInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");
     }

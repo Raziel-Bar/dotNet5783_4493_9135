@@ -30,50 +30,53 @@ internal class Cart : ICart
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
 
-            DO.Product? dataProduct = dal.Product.Get(productID); // product exist in dal check
+            //DO.Product? dataProduct = dal.Product.Get(productID); //@@@@@@@@@
 
-            cart.ListOfItems ??= new List<BO.OrderItem?>();
-
-            BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == dataProduct!.Value.ID);
-
-            if (_orderItem is null) // adding the item for the 1st time
+            if (dal.Product.Get(productID) is DO.Product dataProduct)// product exist in dal check
             {
-                if (dataProduct!.Value.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
-                //else
-                cart.ListOfItems.Add(new BO.OrderItem
+                cart.ListOfItems ??= new List<BO.OrderItem?>();
+
+                BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == dataProduct.ID);
+
+                if (_orderItem is null) // adding the item for the 1st time
                 {
-                    ProductID = dataProduct.Value.ID,
-                    Price = dataProduct.Value.Price,
-                    ProductName = dataProduct.Value.Name,
-                    Amount = 1,
-                    TotalPrice = dataProduct.Value.Price
-                });
+                    if (dataProduct.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
+                                                                                                 //else
+                    cart.ListOfItems.Add(new BO.OrderItem
+                    {
+                        ProductID = dataProduct.ID,
+                        Price = dataProduct.Price,
+                        ProductName = dataProduct.Name,
+                        Amount = 1,
+                        TotalPrice = dataProduct.Price
+                    });
 
-                cart.TotalPrice += dataProduct.Value.Price;   // we only added the item once in any case
-            }
+                    cart.TotalPrice += dataProduct.Price;   // we only added the item once in any case
+                }
 
-            else // adding +1 to the item's amount
-            {
-                if (dataProduct!.Value.InStock <= _orderItem.Amount)
-                    throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
-
-                //else
-                cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.Value.ID)); // removing old item
-                _orderItem.Amount += 1;
-
-                cart.ListOfItems.Add(new BO.OrderItem
+                else // adding +1 to the item's amount
                 {
-                    ProductID = dataProduct.Value.ID,
-                    Price = dataProduct.Value.Price,
-                    ProductName = dataProduct.Value.Name,
-                    Amount = _orderItem.Amount,
-                    TotalPrice = _orderItem.Amount * dataProduct.Value.Price
-                });
+                    if (dataProduct.InStock <= _orderItem.Amount)
+                        throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
-                cart.TotalPrice -= _orderItem.TotalPrice; // we might have changed the product between addings so we erase old price
-                cart.TotalPrice += _orderItem.Amount * dataProduct.Value.Price; // and add the new total price
+                    //else
+                    cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.ID)); // removing old item
+                    _orderItem.Amount += 1;
+
+                    cart.ListOfItems.Add(new BO.OrderItem
+                    {
+                        ProductID = dataProduct.ID,
+                        Price = dataProduct.Price,
+                        ProductName = dataProduct.Name,
+                        Amount = _orderItem.Amount,
+                        TotalPrice = _orderItem.Amount * dataProduct.Price
+                    });
+
+                    cart.TotalPrice -= _orderItem.TotalPrice; // we might have changed the product between addings so we erase old price
+                    cart.TotalPrice += _orderItem.Amount * dataProduct.Price; // and add the new total price
+                }
             }
-
+            else throw new BO.UnexpectedException();
             return cart;
         }
         catch (DO.NotFoundException ex)
@@ -108,9 +111,10 @@ internal class Cart : ICart
             if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
 
             cart.ListOfItems ??= new List<BO.OrderItem?>();
-            DO.Product? dataProduct = dal.Product.Get(productID); // product exist in dal check
 
-            if (dataProduct!.Value.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
+            DO.Product? dataProduct = dal.Product.Get(productID) ?? throw new BO.UnexpectedException(); // product exist in dal check
+
+            if (dataProduct?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
             BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == productID);
 
@@ -188,20 +192,21 @@ internal class Cart : ICart
         DO.Product? dataProduct;
         try
         {
+
             foreach (var item in cart.ListOfItems) // products exist in dal and stock check
             {
-                dataProduct = dal.Product.Get(item!.ProductID);
-                if (dataProduct is not null)
+                dataProduct = dal.Product.Get(item!.ProductID) ?? throw new BO.UnexpectedException();
+
+                if (dataProduct?.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
+
+                if (dataProduct?.Name != item.ProductName || dataProduct?.Price != item.Price)
                 {
-                    if (dataProduct.Value.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
-                    if (dataProduct.Value.Name != item.ProductName || dataProduct.Value.Price != item.Price)
-                    {
-                        item.ProductName = dataProduct.Value.Name;
-                        item.Price = dataProduct.Value.Price;
-                        item.TotalPrice = item.Amount * item.TotalPrice;
-                        changeInProductDetails = true;
-                    }
+                    item.ProductName = dataProduct?.Name;
+                    item.Price = (double)dataProduct?.Price!;
+                    item.TotalPrice = item.Amount * item.TotalPrice;
+                    changeInProductDetails = true;
                 }
+
             }
         }
 

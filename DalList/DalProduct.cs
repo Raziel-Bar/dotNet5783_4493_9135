@@ -49,7 +49,7 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public Product? Get(int productId) => Get(product => product!.Value.ID == productId);
+    public Product? Get(int productId) => Get(product => product?.ID == productId);
 
     /// <summary>
     /// deletes a product from the list

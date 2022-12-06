@@ -13,15 +13,15 @@ internal class Order : IOrder
     /// <returns>List of OrderForList objects : type IEnumerable</returns>
     public IEnumerable<BO.OrderForList?> RequestOrdersListAdmin()
     {
-        IEnumerable<DO.Order?> doOrders = dal.Order.GetList(null); // getting the DO orders
+        IEnumerable<DO.Order?> doOrders = dal.Order.GetList(null); // getting the DO orders      
 
         List<BO.OrderForList?> boOrdersList = new List<BO.OrderForList?>();
 
         foreach (var item in doOrders) // transforming all DO orders into BO orders so that we can have the Status, amount of items and the total price
         {
-            if (item is not null)
+            if (item is DO.Order order)
             {
-                BO.Order boOrder = RequestOrderDetails(item.Value.ID);  // transforming DO order into BO order
+                BO.Order boOrder = RequestOrderDetails(order.ID);  // transforming DO order into BO order
                 BO.OrderForList boOrderForList = new BO.OrderForList();
                 PropertyCopier<BO.Order, BO.OrderForList>.Copy(boOrder, boOrderForList); // bonus
                 boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
@@ -52,7 +52,7 @@ internal class Order : IOrder
             // Now for the ListOfitems, TotalPrice and Status //
 
             // getting a DO orderItems list for the price and amount info
-            IEnumerable<DO.OrderItem?> doOrderItems = dal.OrderItem.GetList(orderItem => orderItem!.Value.OrderID == orderID);
+            IEnumerable<DO.OrderItem?> doOrderItems = dal.OrderItem.GetList(orderItem => orderItem?.OrderID == orderID);
             double totalPriceOrder = 0; // sum for the total price
 
             foreach (var item in doOrderItems) // running over the order items
@@ -61,7 +61,7 @@ internal class Order : IOrder
                 {
                     BO.OrderItem boOrderItem = new BO.OrderItem();
                     PropertyCopier<DO.OrderItem, BO.OrderItem>.Copy(orderItem, boOrderItem); // Bonus
-                    boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)!.Value.Name; // unique prop
+                    boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)?.Name; // unique prop
                     boOrderItem.TotalPrice = orderItem.Price * orderItem.Amount; // unique prop
                     boOrder.ListOfItems.Add(boOrderItem);
                     totalPriceOrder += boOrderItem.TotalPrice;
@@ -98,11 +98,17 @@ internal class Order : IOrder
         try
         {
             DO.Order? doOrder = dal.Order.Get(orderID); // order exists in Dal check
-            if (doOrder!.Value.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
+
+            if (doOrder?.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
+
             DO.Order retDoOrder = new DO.Order();
+
             PropertyCopier<DO.Order?, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
+
             retDoOrder.ShipDate = DateTime.Now; // update. CHECK WITH DAN!
+
             dal.Order.Update(retDoOrder);
+
             return RequestOrderDetails(orderID);
 
             // TO CHECK WITH DAN!
@@ -134,9 +140,9 @@ internal class Order : IOrder
         {
             DO.Order? doOrder = dal.Order.Get(orderID); // order exists in Dal check
 
-            if (doOrder!.Value.ShipDate == null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
+            if (doOrder?.ShipDate == null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
 
-            if (doOrder.Value.DeliveryDate != null) throw new BO.DateException("Order has already been delivered!"); // order's status check
+            if (doOrder?.DeliveryDate != null) throw new BO.DateException("Order has already been delivered!"); // order's status check
 
             DO.Order retDoOrder = new DO.Order();
             PropertyCopier<DO.Order?, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
@@ -216,83 +222,90 @@ internal class Order : IOrder
             if (orderItemID >= 0) // OrderItem ID check
             {
                 DO.OrderItem? orderItem = dal.OrderItem.Get(orderItemID);
-                if (orderItem!.Value.ProductID != productID || orderItem.Value.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
+                if (orderItem?.ProductID != productID || orderItem?.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
             }
             else throw new BO.InvalidDataException("ID");
 
             // preparing all data for update and some more checks
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
-            DO.Order? doOrder = dal.Order.Get(orderID); 
-            DO.Product? dataProduct = dal.Product.Get(productID);
-           
-            if (dataProduct!.Value.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
-            if (boOrder.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
-            
-            boOrder.ListOfItems ??= new List<BO.OrderItem?>(); // insurance for not having null list
-            int newDataProductInStock = 0; // since we update Dal.Product database only at the end of the code, we made this variable to store the exact value for the InStock prop
+            DO.Order? doOrder = dal.Order.Get(orderID);
+            //    DO.Product? dataProduct = dal.Product.Get(productID) ?? throw new UnexpectedException();
 
-            if (boOrder.ListOfItems.Find(item => item!.OrderItemID == orderItemID) == null) // new add
-            {                
-                boOrder.ListOfItems.Add(new BO.OrderItem // bonus here is inefficient since we have many props with different names. and we need special assignments
-                {
-                    ProductID = dataProduct.Value.ID,
-                    Price = dataProduct.Value.Price,
-                    ProductName = dataProduct.Value.Name,
-                    Amount = newAmount,
-                    TotalPrice = dataProduct.Value.Price * newAmount
-                });
-                newDataProductInStock = dataProduct.Value.InStock - newAmount;
-                // updating dal.OrderItem database
-                dal.OrderItem.Add(new DO.OrderItem // bonus here is inefficient since we have many props with different names. and we need special assignments
-                {
-                    Amount = newAmount,
-                    OrderID = orderID,
-                    OrderItemID = 0, // will be added in the dalOrderItem method
-                    Price = dataProduct.Value.Price,
-                    ProductID = dataProduct.Value.ID
-                });
-            }
-            else // caretake of an existing item
+            if (dal.Product.Get(productID) is DO.Product dataProduct)
             {
-                BO.OrderItem? _orderItem = boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID); // copying old item
-                boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID)); // removing old item
+                if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
 
-                if (boOrder.ListOfItems.Count == 0 && newAmount == 0) // delete an intire order
+                if (boOrder.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
+
+                boOrder.ListOfItems ??= new List<BO.OrderItem?>(); // insurance for not having null list
+
+                int newDataProductInStock = 0; // since we update Dal.Product database only at the end of the code, we made this variable to store the exact value for the InStock prop
+
+                if (boOrder.ListOfItems.Find(item => item!.OrderItemID == orderItemID) == null) // new add
                 {
-                    newDataProductInStock = dataProduct.Value.InStock + _orderItem!.Amount;
-                    dal.Order.Delete(orderID); // updating Dal.Order
-                    dal.OrderItem.Delete(_orderItem.OrderItemID); // updating Dal.OrderItem
-                }
-                else if (newAmount == 0)// removing the item entirely
-                {
-                    boOrder.TotalPrice -= _orderItem!.TotalPrice;
-                    newDataProductInStock = dataProduct.Value.InStock + _orderItem.Amount;
-                    dal.OrderItem.Delete(_orderItem.OrderItemID); // updating Dal.OrderItem
-                }
-                else // item simple amount update
-                {
-                    newDataProductInStock = dataProduct.Value.InStock + _orderItem!.Amount; // adding the old amount
-                    boOrder.TotalPrice -= _orderItem.TotalPrice; // erasing old total item price
-                    _orderItem.Amount = newAmount; //setting new amount
-                    _orderItem.Price = dataProduct.Value.Price; // new price per unit
-                    _orderItem.TotalPrice = newAmount * _orderItem.Price; // new total item price
-                    boOrder.TotalPrice += _orderItem.TotalPrice; // adding to cart total price
-                    boOrder.ListOfItems.Add(_orderItem);
-                    newDataProductInStock -= newAmount; // taking back the new amount
-                    dal.OrderItem.Update(new DO.OrderItem // bonus here is inefficient since we need special assignments
+                    boOrder.ListOfItems.Add(new BO.OrderItem // bonus here is inefficient since we have many props with different names. and we need special assignments
+                    {
+                        ProductID = dataProduct.ID,
+                        Price = dataProduct.Price,
+                        ProductName = dataProduct.Name,
+                        Amount = newAmount,
+                        TotalPrice = dataProduct.Price * newAmount
+                    });
+
+                    newDataProductInStock = dataProduct.InStock - newAmount;
+                    // updating dal.OrderItem database
+                    dal.OrderItem.Add(new DO.OrderItem // bonus here is inefficient since we have many props with different names. and we need special assignments
                     {
                         Amount = newAmount,
                         OrderID = orderID,
-                        OrderItemID = orderItemID,
-                        Price = dataProduct.Value.Price,
-                        ProductID = dataProduct.Value.ID
-                    }); // orderItem update
+                        OrderItemID = 0, // will be added in the dalOrderItem method
+                        Price = dataProduct.Price,
+                        ProductID = dataProduct.ID
+                    });
                 }
+                else // caretake of an existing item
+                {
+                    BO.OrderItem? _orderItem = boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID); // copying old item
+                    boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID)); // removing old item
+
+                    if (boOrder.ListOfItems.Count == 0 && newAmount == 0) // delete an intire order
+                    {
+                        newDataProductInStock = dataProduct.InStock + _orderItem!.Amount;
+                        dal.Order.Delete(orderID); // updating Dal.Order
+                        dal.OrderItem.Delete(_orderItem.OrderItemID); // updating Dal.OrderItem
+                    }
+                    else if (newAmount == 0)// removing the item entirely
+                    {
+                        boOrder.TotalPrice -= _orderItem!.TotalPrice;
+                        newDataProductInStock = dataProduct.InStock + _orderItem.Amount;
+                        dal.OrderItem.Delete(_orderItem.OrderItemID); // updating Dal.OrderItem
+                    }
+                    else // item simple amount update
+                    {
+                        newDataProductInStock = dataProduct.InStock + _orderItem!.Amount; // adding the old amount
+                        boOrder.TotalPrice -= _orderItem.TotalPrice; // erasing old total item price
+                        _orderItem.Amount = newAmount; //setting new amount
+                        _orderItem.Price = dataProduct.Price; // new price per unit
+                        _orderItem.TotalPrice = newAmount * _orderItem.Price; // new total item price
+                        boOrder.TotalPrice += _orderItem.TotalPrice; // adding to cart total price
+                        boOrder.ListOfItems.Add(_orderItem);
+                        newDataProductInStock -= newAmount; // taking back the new amount
+                        dal.OrderItem.Update(new DO.OrderItem // bonus here is inefficient since we need special assignments
+                        {
+                            Amount = newAmount,
+                            OrderID = orderID,
+                            OrderItemID = orderItemID,
+                            Price = dataProduct.Price,
+                            ProductID = dataProduct.ID
+                        }); // orderItem update
+                    }
+                }
+                DO.Product doProduct = new DO.Product();
+                PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct); // Bonus
+                doProduct.InStock = newDataProductInStock;
+                dal.Product.Update(doProduct); // Dal.Product Update
             }
-            DO.Product doProduct = new DO.Product();
-            PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct); // Bonus
-            doProduct.InStock = newDataProductInStock;
-            dal.Product.Update(doProduct); // Dal.Product Update
+            else throw new BO.UnexpectedException(); // not should happens 
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order/OrderItem", ex); }
     }

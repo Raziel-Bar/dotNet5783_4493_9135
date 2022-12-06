@@ -215,15 +215,7 @@ internal static class DataSource
 
                 if (_products[_random.Next(0, _products.Count)] is Product product &&
                     _orders[j] is Order order)
-                {
-
-                    //while (product.InStock == 0) // In case we randomly took a product with 0 quantity
-                    //{
-                    //    Product? p = _products[_random.Next(0, _products.Count)];
-
-                    //    if (p.HasValue)
-                    //        product = p.Value;
-                    //}
+                {   
 
                     OrderItem item = new OrderItem();
 
