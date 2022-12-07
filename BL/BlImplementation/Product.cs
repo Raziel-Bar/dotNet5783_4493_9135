@@ -10,15 +10,36 @@ internal class Product : IProduct
 {
     private DalApi.IDal dal = new DalList();
 
+    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<ProductForList?, bool>? func)
+    {
+        return productForLists.Where(func!);
+    }
+
+
     /// <summary>
     /// makes a product's list based on the requested Dal data
     /// </summary>
     /// <returns>
     /// list of products : type Ienumerable
     /// </returns>
-    public IEnumerable<BO.ProductForList?> RequestProducts()
+    ///
+    public IEnumerable<BO.ProductForList?> RequestProducts(/*Func<BO.ProductForList?, bool>? func = null*/)
     {
-        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null); 
+
+        //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
+
+        //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
+        //                                                 select new BO.ProductForList()
+        //                                                 {
+        //                                                     ID = item.ID,
+        //                                                     Name = item.Name,  
+        //                                                     Price = item.Price,
+        //                                                     Category = (BO.WINERYS)item.Category!,
+        //                                                 };
+
+        //return func is null ? productForLists : productForLists.Where(func);
+
+        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
 
         return doProducts.Select(_product =>
         {

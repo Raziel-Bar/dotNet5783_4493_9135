@@ -18,15 +18,19 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
             <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged">
+                
             </ComboBox>
-            <Label Name="Categoryheader" Content="Winerys:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
+            <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
-        <ListView Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+        <ListView x:Name ="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Background="White" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <Button Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" />
+
     </Grid>
 </Window>

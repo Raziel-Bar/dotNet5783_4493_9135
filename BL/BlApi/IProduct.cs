@@ -12,7 +12,10 @@ public interface IProduct
     /// <returns>
     /// list of products : type Ienumerable
     /// </returns>
-    public IEnumerable<ProductForList?> RequestProducts();
+   // public IEnumerable<ProductForList?> RequestProducts();
+    public IEnumerable<ProductForList?> RequestProducts(/*Func<ProductForList?, bool>? func*/);
+
+    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists , Func<ProductForList?, bool>? func);
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use

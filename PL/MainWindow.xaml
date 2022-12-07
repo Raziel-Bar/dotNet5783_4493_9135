@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Button Name="AdminAccess" Content="Admin" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="-2.146,0.618" Height="56" Width="180" Click="AdminAccess_Click"/>
 
     </Grid>
 </Window>

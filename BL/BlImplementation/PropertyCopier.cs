@@ -26,10 +26,12 @@ public class PropertyCopier<TFrom, TTO>
     {
         var fromProperties = from?.GetType().GetProperties();
         var toProperties = to?.GetType().GetProperties();
+
         if (fromProperties is null || toProperties is null)
         {
             throw new BO.UnexpectedException();
         }
+
         foreach (var fromProperty in fromProperties)
         {
             foreach (var toProperty in toProperties)
