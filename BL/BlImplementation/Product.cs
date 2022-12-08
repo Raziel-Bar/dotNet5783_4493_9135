@@ -23,32 +23,34 @@ internal class Product : IProduct
     /// list of products : type Ienumerable
     /// </returns>
     ///
-    public IEnumerable<BO.ProductForList?> RequestProducts(/*Func<BO.ProductForList?, bool>? func = null*/)
-    {
+    public IEnumerable<BO.ProductForList?> RequestProducts(/*Func<BO.ProductForList?, bool>? func = null*/) => dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
+    //{
 
-        //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
+    //    //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
 
-        //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
-        //                                                 select new BO.ProductForList()
-        //                                                 {
-        //                                                     ID = item.ID,
-        //                                                     Name = item.Name,  
-        //                                                     Price = item.Price,
-        //                                                     Category = (BO.WINERYS)item.Category!,
-        //                                                 };
+    //    //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
+    //    //                                                 select new BO.ProductForList()
+    //    //                                                 {
+    //    //                                                     ID = item.ID,
+    //    //                                                     Name = item.Name,  
+    //    //                                                     Price = item.Price,
+    //    //                                                     Category = (BO.WINERYS)item.Category!,
+    //    //                                                 };
 
-        //return func is null ? productForLists : productForLists.Where(func);
+    //    //return func is null ? productForLists : productForLists.Where(func);
 
-        IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
+    //    //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
 
-        return doProducts.Select(_product =>
-        {
-            //DO.Product? product = _product;// @@ מיותר
-            BO.ProductForList retProduct = new BO.ProductForList();
-            PropertyCopier<DO.Product?, BO.ProductForList>.Copy(_product, retProduct); // bonus
-            return retProduct;
-        });
-    }
+    //    //return doProducts.Select(_product =>
+    //    //{
+    //    //    //DO.Product? product = _product;// @@ מיותר
+    //    //    BO.ProductForList retProduct = new BO.ProductForList();
+    //    //    PropertyCopier<DO.Product?, BO.ProductForList>.Copy(_product, retProduct); // bonus
+    //    //    return retProduct;
+    //    //});
+
+    //    return dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
+    //}
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
@@ -69,9 +71,12 @@ internal class Product : IProduct
             {
                 if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    BO.Product retProduct = new BO.Product();
-                    PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
-                    return retProduct;
+                    //BO.Product retProduct = new BO.Product();
+
+                    //PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
+
+                    //return retProduct;
+                    return product.CopyPropTo(new BO.Product());
                 }
                 throw new BO.NotFoundInDalException("Product");
             }
@@ -106,8 +111,11 @@ internal class Product : IProduct
 
                 if (dal.Product.Get(productID) is DO.Product product)
                 {
-                    BO.ProductItem retProduct = new BO.ProductItem();
-                    PropertyCopier<DO.Product, BO.ProductItem>.Copy(product, retProduct); // bonus
+                    // BO.ProductItem retProduct = new BO.ProductItem();
+                    //PropertyCopier<DO.Product, BO.ProductItem>.Copy(product, retProduct); // bonus
+
+                    BO.ProductItem retProduct = product.CopyPropTo(new BO.ProductItem());
+
                     retProduct.Amount = amountInCart; // unique prop
                     retProduct.Available = product.InStock > 0 ? BO.Available.Available : BO.Available.Unavailable; // unique prop
                     return retProduct;
@@ -131,9 +139,13 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
-            DO.Product product1 = new DO.Product();
-            PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);
-            try { dal.Product.Add(product1); }
+            //DO.Product product1 = new DO.Product();
+            //PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);@@2
+
+              DO.Product productDo = product.CopyPropToStruct(new DO.Product());
+
+           
+            try { dal.Product.Add(productDo); }
             catch (DO.AlreadyExistException ex) { throw new BO.AlreadyExistInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");
@@ -154,6 +166,7 @@ internal class Product : IProduct
         {
             if (dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any())
                 throw new BO.RemoveProductThatIsInOrdersException();
+
             try { dal.Product.Delete(productID); }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
@@ -172,12 +185,16 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
-            DO.Product dataProduct = new DO.Product();
-            PropertyCopier<BO.Product, DO.Product>.Copy(product, dataProduct); // Bonus
+            //DO.Product dataProduct = new DO.Product();
+            //PropertyCopier<BO.Product, DO.Product>.Copy(product, dataProduct); // Bonus
+           
+
+            DO.Product dataProduct = product.CopyPropToStruct(new DO.Product());
             try
             {
                 // before we update the changes we need to remove the old and add the update one  but we still need to check the product is not in any order  
                 RemoveProductAdmin(product.ID);
+
                 //dal.Product.Update(dataProduct);
                 dal.Product.Add(dataProduct);
             }

@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents an order's details for LIST
@@ -30,10 +32,11 @@ public class OrderForList
     /// </summary>
     public double TotalPrice { get; set; }
 
-    public override string ToString() => $@"
-        Order ID: {ID}
-        Customer name: {CustomerName} 
-        Status: {Status}
-        Amount of items: {Amount}
-        Total: {TotalPrice}";
+    public override string ToString() => this.ToStringProperty();
+        //$@"
+        //Order ID: {ID}
+        //Customer name: {CustomerName} 
+        //Status: {Status}
+        //Amount of items: {Amount}
+        //Total: {TotalPrice}";
 }

@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents an Order's status - current state in time.
@@ -17,7 +19,7 @@ public class OrderTracking
     /// a tracking journey. list of dates that tracks the order's process
     /// </summary>
     public List<(DateTime? date, string? description)>? Tracker { get; set; }
-    public override string ToString() => $@"
+    public override string ToString() =>$@"
         Order Number: {ID}
         Status: {Status}
         Tracking journey: 

@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents a Product's details for the catalog display
@@ -34,10 +36,11 @@ public class ProductItem
     /// The amount of product units currently in the cart
     /// </summary>
     public int Amount { get; set; }
-    public override string ToString() => $@"
-        Product ID: {ID} : {Name}
-        Category: {Category}
-        Price per unit: {Price}
-        Available: {(Available == BO.Available.Available ? "No" : "Yes")}
-        Amount in cart: {Amount}";
+    public override string ToString() => this.ToStringProperty();
+        //$@"
+        //Product ID: {ID} : {Name}
+        //Category: {Category}
+        //Price per unit: {Price}
+        //Available: {(Available == BO.Available.Available ? "No" : "Yes")}
+        //Amount in cart: {Amount}";
 }

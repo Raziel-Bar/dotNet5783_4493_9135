@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using Tools;
+
+namespace DO;
 /// <summary>
 /// Structure for a given product in database. In our case, wine!
 /// We are running a wine store that sells 4 different types of wine from 5 different wineries
@@ -32,10 +34,12 @@ public struct Product
     /// The product's quantity in the stock
     /// </summary>
     public int InStock { get; set; }
-    public override string ToString() => $@"
-        Product ID: {ID}: {Name}
-        category: {Category}
-    	Price: {Price}
-    	Amount in stock: {InStock}
-        ";
+
+    public override string ToString() => this.ToStringProperty();
+    //public override string ToString() => $@"
+    //    Product ID: {ID}: {Name}
+    //    category: {Category}
+    //	Price: {Price}
+    //	Amount in stock: {InStock}
+    //    ";
 }

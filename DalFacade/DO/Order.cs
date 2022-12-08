@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using Tools;
+
+namespace DO;
 
 /// <summary>
 /// Structure for a given order in database
@@ -33,13 +35,14 @@ public struct Order
     /// The date on which the order is to be delivered to the customer
     /// </summary>
     public DateTime? DeliveryDate { get; set; }
-    public override string ToString() => $@"
-       Order ID: {ID}
-       Customer name: {CustomerName} 
-       Customer email: {CustomerEmail}
-       Customer address: {CustomerAddress}
-       Time of the order: {OrderDate} 
-       Time of ship: {ShipDate}
-       Time of delivering: {DeliveryDate}
-       ";
+    public override string ToString() => this.ToStringProperty();
+    // $@"
+    //Order ID: {ID}
+    //Customer name: {CustomerName} 
+    //Customer email: {CustomerEmail}
+    //Customer address: {CustomerAddress}
+    //Time of the order: {OrderDate} 
+    //Time of ship: {ShipDate}
+    //Time of delivering: {DeliveryDate}
+    //";
 }
