@@ -1,6 +1,5 @@
 ﻿using DalApi;
 using DO;
-using System.Linq;
 using static Dal.DataSource;
 namespace Dal;
 
@@ -25,7 +24,7 @@ internal class DalProduct : IProduct
     /// </exception> 
     public int Add(Product newProduct)
     {
-        
+
         Product? product = _products.FirstOrDefault(product => product?.ID == newProduct.ID);
 
         if (product is not null)
@@ -84,7 +83,7 @@ internal class DalProduct : IProduct
     /// <returns>the product if the condition was true</returns>
     /// <exception cref="NotFoundException">In case we didn't find a product that fits the condition</exception>
     public Product? Get(Func<Product?, bool>? func)
-    {   
+    {
         if (_products.FirstOrDefault(func!) is Product product)
             return product;
         throw new NotFoundException("Product");

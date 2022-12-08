@@ -215,7 +215,7 @@ internal static class DataSource
 
                 if (_products[_random.Next(0, _products.Count)] is Product product &&
                     _orders[j] is Order order)
-                {   
+                {
 
                     OrderItem item = new OrderItem();
 

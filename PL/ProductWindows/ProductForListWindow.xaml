@@ -18,11 +18,14 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
             <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged">
-                
+
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
-        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Background="White" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode">
+        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode" SelectionChanged="WinesListView_SelectionChanged">
+            <ListView.Background>
+                <ImageBrush/>
+            </ListView.Background>
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>

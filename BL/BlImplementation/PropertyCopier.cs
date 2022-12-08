@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlImplementation;
+﻿namespace BlImplementation;
 
 /// <summary>
 /// no object class. made only for its method that we will use in the other BlImplementation files
@@ -57,7 +50,7 @@ public static class PropertyCopier
         var toProperties = to?.GetType().GetProperties();
 
         if (fromProperties is null || toProperties is null) throw new BO.UnexpectedException();
-                 
+
         foreach (var fromProperty in fromProperties)
         {
             var value = fromProperty.GetValue(from);

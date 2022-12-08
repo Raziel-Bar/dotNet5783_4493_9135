@@ -37,10 +37,10 @@ public class ProductItem
     /// </summary>
     public int Amount { get; set; }
     public override string ToString() => this.ToStringProperty();
-        //$@"
-        //Product ID: {ID} : {Name}
-        //Category: {Category}
-        //Price per unit: {Price}
-        //Available: {(Available == BO.Available.Available ? "No" : "Yes")}
-        //Amount in cart: {Amount}";
+    //$@"
+    //Product ID: {ID} : {Name}
+    //Category: {Category}
+    //Price per unit: {Price}
+    //Available: {(Available == BO.Available.Available ? "No" : "Yes")}
+    //Amount in cart: {Amount}";
 }

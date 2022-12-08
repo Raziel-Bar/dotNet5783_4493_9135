@@ -33,10 +33,10 @@ public class OrderForList
     public double TotalPrice { get; set; }
 
     public override string ToString() => this.ToStringProperty();
-        //$@"
-        //Order ID: {ID}
-        //Customer name: {CustomerName} 
-        //Status: {Status}
-        //Amount of items: {Amount}
-        //Total: {TotalPrice}";
+    //$@"
+    //Order ID: {ID}
+    //Customer name: {CustomerName} 
+    //Status: {Status}
+    //Amount of items: {Amount}
+    //Total: {TotalPrice}";
 }

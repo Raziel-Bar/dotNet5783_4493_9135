@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents a Product's details for product's LIST 
@@ -21,8 +23,9 @@ public class ProductForList
     /// The product's category
     /// </summary>
     public WINERYS? Category { get; set; }
-    public override string ToString() => $@"
-        Product ID: {ID}: {Name}
-        category: {Category}
-    	Price: {Price}";
+    public override string ToString() => this.ToStringProperty();
+    //public override string ToString() => $@"
+    //    Product ID: {ID}: {Name}
+    //    category: {Category}
+    //	Price: {Price}";
 }

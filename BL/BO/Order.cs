@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents an order's details for administrator
@@ -55,18 +57,20 @@ public class Order
     /// </summary>
     public double TotalPrice { get; set; }
 
-    public override string ToString() => $@"
-        Order ID: {ID}
-        Customer name: {CustomerName} 
-        Customer email: {CustomerEmail}
-        Customer address: {CustomerAddress}
-        Status: {Status}
-        Time of the order: {OrderDate} 
-        Time of ship: {ShipDate}
-        Time of delivering: {DeliveryDate}
-  Items:
-{string.Join(Environment.NewLine, ListOfItems!)}
+    public override string ToString() => this.ToStringProperty();
 
-        --TOTAL: {TotalPrice}--
-";
+    //    public override string ToString() => $@"
+    //        Order ID: {ID}
+    //        Customer name: {CustomerName} 
+    //        Customer email: {CustomerEmail}
+    //        Customer address: {CustomerAddress}
+    //        Status: {Status}
+    //        Time of the order: {OrderDate} 
+    //        Time of ship: {ShipDate}
+    //        Time of delivering: {DeliveryDate}
+    //  Items:
+    //{string.Join(Environment.NewLine, ListOfItems!)}
+
+    //        --TOTAL: {TotalPrice}--
+    //";
 }

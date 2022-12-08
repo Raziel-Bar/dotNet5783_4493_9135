@@ -481,7 +481,7 @@ Enter your choice: ");
         newOrderItem.ProductID = yourChoiceInt();
 
 
-       
+
         newOrderItem.Price = (double)(dal.Product.Get(newOrderItem.ProductID)?.Price)!; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");

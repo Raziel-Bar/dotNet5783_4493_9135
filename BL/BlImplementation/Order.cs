@@ -1,7 +1,5 @@
 ﻿using BlApi;
-using BO;
 using Dal;
-using System;
 
 namespace BlImplementation;
 internal class Order : IOrder
@@ -37,8 +35,6 @@ internal class Order : IOrder
     }
 
 
-
-
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
     /// </summary>
@@ -49,11 +45,11 @@ internal class Order : IOrder
     /// <exception cref="BO.UnexpectedException">FOR DEVELOPERS: not supposed to happen! but just in case there will be any inner error between the Dal and the Bl.</exception>
     public BO.Order RequestOrderDetails(int orderID)
     {
-      //  if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        //  if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         IDCheck(orderID);
         try
         {
-            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check@@@@
+            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal
 
             BO.Order boOrder = doOrder.CopyPropTo(new BO.Order()); // bonus // we now sets the "easy" values - the identical props
 
@@ -63,6 +59,7 @@ internal class Order : IOrder
 
             // getting a DO orderItems list for the price and amount info
             IEnumerable<DO.OrderItem?> doOrderItems = dal.OrderItem.GetList(orderItem => orderItem?.OrderID == orderID);
+
             double totalPriceOrder = 0; // sum for the total price
 
             foreach (var item in doOrderItems) // running over the order items
@@ -92,6 +89,7 @@ internal class Order : IOrder
         catch (Exception) { throw new BO.UnexpectedException(); } // for developers!. that exception is NOT supposed to happen
     }
 
+
     /// <summary>
     /// sets a shipping date for an existing pending order
     /// </summary>
@@ -102,7 +100,7 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order with such ID in the Dal</exception>
     public BO.Order UpdateOrderShipDateAdmin(int orderID)
     {
-       // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         IDCheck(orderID);
         try
         {
@@ -118,6 +116,7 @@ internal class Order : IOrder
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
+
 
     /// <summary>
     /// sets a delivery date for an existing already shipped order
@@ -149,6 +148,7 @@ internal class Order : IOrder
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
 
+
     /// <summary>
     /// makes an orderTracking for an existing order.
     /// </summary>
@@ -164,12 +164,16 @@ internal class Order : IOrder
         {
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
 
-            BO.OrderTracking boOrderTrack = new BO.OrderTracking // could've use bonus here but in this case, this code is shorter
-            {
-                ID = orderID,
-                Status = boOrder.Status,
-                Tracker = new List<(DateTime? date, string? description)>()
-            };
+            BO.OrderTracking boOrderTrack = boOrder.CopyPropTo(new BO.OrderTracking());
+
+            boOrderTrack.Tracker = new List<(DateTime? date, string? description)>();
+
+            //BO.OrderTracking boOrderTrack = new BO.OrderTracking // could've use bonus here but in this case, this code is shorter
+            //{
+            //    ID = orderID,
+            //    Status = boOrder.Status,
+            //    Tracker = new List<(DateTime? date, string? description)>()
+            //};
 
             boOrderTrack.Tracker.Add((boOrder.OrderDate, " Order created"));
 
@@ -307,10 +311,6 @@ internal class Order : IOrder
 
 
 
-
-
-
-
     // ID validity check
     private void IDCheck(int id)
     {
@@ -318,7 +318,7 @@ internal class Order : IOrder
             throw new BO.InvalidDataException("Order"); // ID validity check
     }
 
-    private ORDER_STATUS? GetStatus(DO.Order order) =>
-    order.DeliveryDate is not null ? ORDER_STATUS.DELIVERED : order.ShipDate is not null ? ORDER_STATUS.SHIPPED : BO.ORDER_STATUS.PENDING;
+    private BO.ORDER_STATUS? GetStatus(DO.Order order) =>
+    order.DeliveryDate is not null ? BO.ORDER_STATUS.DELIVERED : order.ShipDate is not null ? BO.ORDER_STATUS.SHIPPED : BO.ORDER_STATUS.PENDING;
 
 }

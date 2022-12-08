@@ -14,7 +14,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
+	  <None Remove="o.jpg" />
+	  <None Remove="pexels-tim-mossholder-2336117.jpg" />
+	  <None Remove="ProductWindows\o.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\BL\BL.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
+	  <Resource Include="o.jpg" />
+	  <Resource Include="pexels-tim-mossholder-2336117.jpg" />
+	  <Resource Include="ProductWindows\o.jpg" />
 	</ItemGroup>
 
 </Project>

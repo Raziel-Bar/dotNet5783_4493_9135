@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Tools
 {
@@ -30,10 +26,16 @@ namespace Tools
                 if (value is IEnumerable && value is not string) // please call bob the builder...
                 {
                     var items = (IEnumerable)value;
+
+                    var innerItemsType = propertyInfo.PropertyType.GetGenericArguments().Single();
+
                     foreach (var item in items)
                     {
-                        item.helpToStringProperty(stringBuilder);
+                        if (innerItemsType.IsValueType)
+                            stringBuilder.Append(item.ToString() + "\n");
 
+                        else
+                             helpToStringProperty(item, stringBuilder);
                     }
                 }
                 else
@@ -43,6 +45,7 @@ namespace Tools
                     stringBuilder.Append(value);
                     stringBuilder.Append('\n');
                 }
+                
             }
             return stringBuilder;
         }

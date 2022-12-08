@@ -304,7 +304,7 @@ Please choose one of the fowling options:
                     if (yourChoiceInt() == 1)
                     {
                         ibl.Cart.ConfirmOrder(cart);
-                        ibl.Cart.ClearItems(cart); 
+                        ibl.Cart.ClearItems(cart);
                     }
                     break;
             }

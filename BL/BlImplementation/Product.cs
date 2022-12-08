@@ -37,7 +37,7 @@ internal class Product : IProduct
         {
             try
             {
-                DO.Product product = dal.Product.Get(productID)  ?? throw new BO.UnexpectedException();
+                DO.Product product = dal.Product.Get(productID) ?? throw new BO.UnexpectedException();
 
                 return product.CopyPropTo(new BO.Product());
 
@@ -114,9 +114,9 @@ internal class Product : IProduct
             //DO.Product product1 = new DO.Product();
             //PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);@@2
 
-              DO.Product productDo = product.CopyPropToStruct(new DO.Product());
+            DO.Product productDo = product.CopyPropToStruct(new DO.Product());
 
-           
+
             try { dal.Product.Add(productDo); }
             catch (DO.AlreadyExistException ex) { throw new BO.AlreadyExistInDalException("Product", ex); }
         }
@@ -159,7 +159,7 @@ internal class Product : IProduct
         {
             //DO.Product dataProduct = new DO.Product();
             //PropertyCopier<BO.Product, DO.Product>.Copy(product, dataProduct); // Bonus
-           
+
 
             DO.Product dataProduct = product.CopyPropToStruct(new DO.Product());
             try

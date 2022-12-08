@@ -35,10 +35,10 @@ public class Product
     public int InStock { get; set; }
 
     public override string ToString() => this.ToStringProperty();
-     //   $@"
-     //   Product ID: {ID}: {Name}
-     //   category: {Category}
-    	//Price: {Price}
-    	//Amount in stock: {InStock}
-     //   ";
+    //   $@"
+    //   Product ID: {ID}: {Name}
+    //   category: {Category}
+    //Price: {Price}
+    //Amount in stock: {InStock}
+    //   ";
 }

@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Represents an order item's details for both Order and Cart objects
@@ -34,11 +36,12 @@ public class OrderItem
     /// The total price for the product : Amount * Price
     /// </summary>
     public double TotalPrice { get; set; }
-    public override string ToString() => $@"
-        Order item ID: {OrderItemID}
-        Product ID: {ProductID}
-        Product name: {ProductName}
-        Price per unit: {Price}
-        Amount of product: {Amount}
-        Total: {TotalPrice}";
+    public override string ToString() => this.ToStringProperty();
+    //public override string ToString() => $@"
+    //    Order item ID: {OrderItemID}
+    //    Product ID: {ProductID}
+    //    Product name: {ProductName}
+    //    Price per unit: {Price}
+    //    Amount of product: {Amount}
+    //    Total: {TotalPrice}";
 }

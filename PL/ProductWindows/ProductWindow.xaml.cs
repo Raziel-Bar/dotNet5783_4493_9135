@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using BO;
-using BlApi;
+﻿using BlApi;
 using BlImplementation;
-using System.Windows.Controls.Primitives;
+using BO;
+using System;
+using System.Windows;
 
 namespace PL.ProductWindows
 {
@@ -25,9 +13,10 @@ namespace PL.ProductWindows
     {
         IBl bl = new Bl();
 
-        public ProductWindow(string state, int? id = null)
+        public ProductWindow(string state, Product product = null!)
         {
             InitializeComponent();
+
             CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERYS));
             if (state == "ADD")
             {
@@ -38,6 +27,12 @@ namespace PL.ProductWindows
             {
                 AddButton.Visibility = Visibility.Collapsed;
                 IdTextBox.Visibility = Visibility.Collapsed;
+
+                IdTextBlock.Text = product.ID.ToString();
+                NameTextBox.Text = product.Name;
+                CategoryComboBox.Text = product.Category.ToString();
+                PriceTextBox.Text = product.Price.ToString();
+                AmountTextBox.Text = product.InStock.ToString();
             }
         }
 
@@ -45,12 +40,13 @@ namespace PL.ProductWindows
         {
             try
             {
+
                 bl.Product.AddProductAdmin(new BO.Product
                 {
                     ID = int.Parse(IdTextBox.Text),
                     Category = (BO.WINERYS)CategoryComboBox.SelectedItem,
                     Name = NameTextBox.Text,
-                    Price = int.Parse(PriceTextBox.Text),
+                    Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)
                 });
                 new ProductForListWindow().Show();
@@ -76,7 +72,7 @@ namespace PL.ProductWindows
                     ID = int.Parse(IdTextBlock.Text),
                     Category = (BO.WINERYS)CategoryComboBox.SelectedItem,
                     Name = NameTextBox.Text,
-                    Price = int.Parse(PriceTextBox.Text),
+                    Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)
                 });
                 new ProductForListWindow().Show();
@@ -91,6 +87,22 @@ namespace PL.ProductWindows
             {
                 new ErrorMessageWindow(ex.Message).Show();
             }
+        }
+
+        private void BackToMainWindow(object sender, RoutedEventArgs e)
+        {
+            new ProductForListWindow().Show();
+            this.Close();
+        }
+
+        private void NameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
+
+        private void NameTextBox_TextChanged_1(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
         }
     }
 }

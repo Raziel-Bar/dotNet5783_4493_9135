@@ -40,7 +40,7 @@ internal class DalOrder : IOrder
     /// In case the order does not exist
     /// </exception>
     public Order? Get(int orderId) => Get(order => order?.ID == orderId);
-    
+
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>

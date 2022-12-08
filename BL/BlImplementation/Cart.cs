@@ -43,6 +43,9 @@ internal class Cart : ICart
                 {
                     if (dataProduct.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
                                                                                                  //else
+
+
+
                     cart.ListOfItems.Add(new BO.OrderItem
                     {
                         ProductID = dataProduct.ID,
@@ -62,7 +65,14 @@ internal class Cart : ICart
 
                     //else
                     cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.ID)); // removing old item
+
                     _orderItem.Amount += 1;
+
+                    //BO.OrderItem item = dataProduct.CopyPropTo(new BO.OrderItem());
+
+                    //item.Amount = _orderItem.Amount;
+
+                    //item.TotalPrice = _orderItem.Amount * dataProduct.Price;
 
                     cart.ListOfItems.Add(new BO.OrderItem
                     {
@@ -78,6 +88,7 @@ internal class Cart : ICart
                 }
             }
             else throw new BO.UnexpectedException();
+
             return cart;
         }
         catch (DO.NotFoundException ex)
@@ -113,9 +124,11 @@ internal class Cart : ICart
 
             cart.ListOfItems ??= new List<BO.OrderItem?>();
 
-            DO.Product? dataProduct = dal.Product.Get(productID) ?? throw new BO.UnexpectedException(); // product exist in dal check
+            if (dal.Product.Get(productID)?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
-            if (dataProduct?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
+            //DO.Product dataProduct = dal.Product.Get(productID) ?? throw new BO.UnexpectedException(); // product exist in dal check
+
+            //if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
             BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == productID);
 
@@ -220,29 +233,31 @@ internal class Cart : ICart
             throw new BO.ChangeInCartItemsDetailsException();
         }
 
-        DO.Order order = cart.CopyPropTo(new DO.Order());
+        //DO.Order order = cart.CopyPropTo(new DO.Order());
 
-        order.OrderDate = DateTime.Now;
+        //order.OrderDate = DateTime.Now;
+
+        DO.Order order = new DO.Order
+        {              // making a new Order for the Dal
+            CustomerAddress = cart.CustomerAddress,
+            CustomerEmail = cart.CustomerEmail,
+            CustomerName = cart.CustomerName,
+            OrderDate = DateTime.Now,
+            DeliveryDate = null,
+            ShipDate = null
+        };
 
         int id = dal.Order.Add(order);
-
-        //DO.Order order = new DO.Order
-        //{              // making a new Order for the Dal
-        //    CustomerAddress = cart.CustomerAddress,
-        //    CustomerEmail = cart.CustomerEmail,
-        //    CustomerName = cart.CustomerName,
-        //    OrderDate = DateTime.Now,
-        //    DeliveryDate = null,
-        //    ShipDate = null
-        //};
 
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
             item!.OrderItemID = id;
             dal.OrderItem.Add(item.CopyPropTo(new DO.OrderItem()));
-          
+
             dataProduct = dal.Product.Get(item!.ProductID) ?? throw new UnexpectedException(); // stock update
+
             dataProduct.InStock -= item.Amount;
+
             dal.Product.Update(dataProduct);
 
             //DO.Product doProduct = new DO.Product();
