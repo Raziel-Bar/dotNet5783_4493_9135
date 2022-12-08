@@ -1,4 +1,6 @@
-﻿namespace BO;
+﻿using Tools;
+
+namespace BO;
 
 /// <summary>
 /// Presents a Product's details for administrator
@@ -32,10 +34,11 @@ public class Product
     /// </summary>
     public int InStock { get; set; }
 
-    public override string ToString() => $@"
-        Product ID: {ID}: {Name}
-        category: {Category}
-    	Price: {Price}
-    	Amount in stock: {InStock}
-        ";
+    public override string ToString() => this.ToStringProperty();
+     //   $@"
+     //   Product ID: {ID}: {Name}
+     //   category: {Category}
+    	//Price: {Price}
+    	//Amount in stock: {InStock}
+     //   ";
 }

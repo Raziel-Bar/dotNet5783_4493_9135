@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using Dal;
 using System.ComponentModel.DataAnnotations;
 
@@ -189,20 +190,19 @@ internal class Cart : ICart
             !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer");
 
         //customer's details check
-        DO.Product? dataProduct;
+        DO.Product dataProduct;
         try
         {
-
             foreach (var item in cart.ListOfItems) // products exist in dal and stock check
             {
                 dataProduct = dal.Product.Get(item!.ProductID) ?? throw new BO.UnexpectedException();
 
-                if (dataProduct?.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
+                if (dataProduct.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
 
-                if (dataProduct?.Name != item.ProductName || dataProduct?.Price != item.Price)
+                if (dataProduct.Name != item.ProductName || dataProduct.Price != item.Price)
                 {
-                    item.ProductName = dataProduct?.Name;
-                    item.Price = (double)dataProduct?.Price!;
+                    item.ProductName = dataProduct.Name;
+                    item.Price = dataProduct.Price!;
                     item.TotalPrice = item.Amount * item.TotalPrice;
                     changeInProductDetails = true;
                 }
@@ -220,28 +220,34 @@ internal class Cart : ICart
             throw new BO.ChangeInCartItemsDetailsException();
         }
 
-        DO.Order order = new DO.Order
-        {              // making a new Order for the Dal
-            CustomerAddress = cart.CustomerAddress,
-            CustomerEmail = cart.CustomerEmail,
-            CustomerName = cart.CustomerName,
-            OrderDate = DateTime.Now,
-            DeliveryDate = null,
-            ShipDate = null
-        };
+        DO.Order order = cart.CopyPropTo(new DO.Order());
+
+        order.OrderDate = DateTime.Now;
 
         int id = dal.Order.Add(order);
 
+        //DO.Order order = new DO.Order
+        //{              // making a new Order for the Dal
+        //    CustomerAddress = cart.CustomerAddress,
+        //    CustomerEmail = cart.CustomerEmail,
+        //    CustomerName = cart.CustomerName,
+        //    OrderDate = DateTime.Now,
+        //    DeliveryDate = null,
+        //    ShipDate = null
+        //};
+
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
-            dataProduct = dal.Product.Get(item!.ProductID); // stock update
-            DO.Product doProduct = new DO.Product();
-            PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct);
-            doProduct.InStock -= item.Amount;
-            DO.OrderItem orderItem = new DO.OrderItem();
-            PropertyCopier<BO.OrderItem, DO.OrderItem>.Copy(item, orderItem);
-            orderItem.OrderID = id;
-            dal.OrderItem.Add(orderItem);
+            item!.OrderItemID = id;
+            dal.OrderItem.Add(item.CopyPropTo(new DO.OrderItem()));
+          
+            dataProduct = dal.Product.Get(item!.ProductID) ?? throw new UnexpectedException(); // stock update
+            dataProduct.InStock -= item.Amount;
+            dal.Product.Update(dataProduct);
+
+            //DO.Product doProduct = new DO.Product();
+            //PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct);
+
         }
         ClearItems(cart);
     }

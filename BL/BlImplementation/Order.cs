@@ -22,14 +22,39 @@ internal class Order : IOrder
         {
             if (item is DO.Order order)
             {
-                BO.Order boOrder = RequestOrderDetails(order.ID);  // transforming DO order into BO order
-                BO.OrderForList boOrderForList = new BO.OrderForList();
-                PropertyCopier<BO.Order, BO.OrderForList>.Copy(boOrder, boOrderForList); // bonus
-                boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
+                BO.OrderForList boOrderForList = item.CopyPropTo(new BO.OrderForList());
+
+                IEnumerable<DO.OrderItem> orderItems = dal.OrderItem.GetList(o =>
+                {
+                    DO.OrderItem orderItem = o ?? throw new BO.UnexpectedException();
+                    return orderItem.OrderID == order.ID;
+                }).Select(o => o ?? throw new BO.UnexpectedException());
+
+                boOrderForList.Amount = orderItems.Count();
+
+                boOrderForList.TotalPrice = orderItems.Sum(orderItem => orderItem.Price * orderItem.Amount);
+
+                boOrderForList.Status = GetStatus(order);
+
                 boOrdersList.Add(boOrderForList);
+
+
+                //BO.Order boOrder = RequestOrderDetails(order.ID);  // transforming DO order into BO order
+                //BO.OrderForList boOrderForList = new BO.OrderForList();
+                //PropertyCopier<BO.Order, BO.OrderForList>.Copy(boOrder, boOrderForList); // bonus
+                //boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
+
             }
         }
-        return boOrdersList.Select(orderForList => orderForList);//@@@@
+        return boOrdersList;//@@@@
+
+        //return boOrdersList.Select(orderForList => orderForList);//@@@@
+    }
+
+    private ORDER_STATUS? GetStatus(DO.Order order)
+    {
+        return order.DeliveryDate is not null ? ORDER_STATUS.DELIVERED : order.ShipDate is not null ? ORDER_STATUS.SHIPPED :
+            BO.ORDER_STATUS.PENDING;
     }
 
     /// <summary>
@@ -45,9 +70,13 @@ internal class Order : IOrder
         if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         try
         {
-            DO.Order? doOrder = dal.Order.Get(orderID); // order exists in Dal check
-            BO.Order boOrder = new BO.Order(); // we now sets the "easy" values - the identical props
-            PropertyCopier<DO.Order?, BO.Order>.Copy(doOrder, boOrder);
+            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check@@@@
+
+            //BO.Order boOrder = new BO.Order(); // we now sets the "easy" values - the identical props
+
+            BO.Order boOrder = doOrder.CopyPropTo(new BO.Order()); // we now sets the "easy" values - the identical props
+
+            //PropertyCopier<DO.Order?, BO.Order>.Copy(doOrder, boOrder);
             boOrder.ListOfItems = new List<BO.OrderItem?>();
 
             // Now for the ListOfitems, TotalPrice and Status //
@@ -60,23 +89,32 @@ internal class Order : IOrder
             {
                 if (item is DO.OrderItem orderItem)
                 {
-                    BO.OrderItem boOrderItem = new BO.OrderItem();
-                    PropertyCopier<DO.OrderItem, BO.OrderItem>.Copy(orderItem, boOrderItem); // Bonus
+                    BO.OrderItem boOrderItem = orderItem.CopyPropTo(new BO.OrderItem());
+
+                    //PropertyCopier<DO.OrderItem, BO.OrderItem>.Copy(orderItem, boOrderItem); // Bonus
+
                     boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)?.Name; // unique prop
+
                     boOrderItem.TotalPrice = orderItem.Price * orderItem.Amount; // unique prop
+
                     boOrder.ListOfItems.Add(boOrderItem);
+
                     totalPriceOrder += boOrderItem.TotalPrice;
                 }
             }
 
             boOrder.TotalPrice = totalPriceOrder; // sets the total price field
 
-            // only 1 value left, the status
-            if (boOrder.DeliveryDate != null) boOrder.Status = BO.ORDER_STATUS.DELIVERED;
+            boOrder.Status = GetStatus(doOrder); // only 1 value left, the status
 
-            else if (boOrder.ShipDate != null) boOrder.Status = BO.ORDER_STATUS.SHIPPED;
 
-            else boOrder.Status = BO.ORDER_STATUS.PENDING;
+
+
+            //if (boOrder.DeliveryDate != null) boOrder.Status = BO.ORDER_STATUS.DELIVERED;
+
+            //else if (boOrder.ShipDate != null) boOrder.Status = BO.ORDER_STATUS.SHIPPED;
+
+            //else boOrder.Status = BO.ORDER_STATUS.PENDING;
 
             return boOrder; // BO order is calculated and ready
         }
@@ -98,17 +136,19 @@ internal class Order : IOrder
         if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         try
         {
-            DO.Order? doOrder = dal.Order.Get(orderID); // order exists in Dal check
+            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
 
-            if (doOrder?.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
+            if (doOrder.ShipDate is not null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
 
-            DO.Order retDoOrder = new DO.Order();
+            // DO.Order retDoOrder = new DO.Order();
 
-            PropertyCopier<DO.Order?, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
+            //  PropertyCopier<DO.Order?, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
 
-            retDoOrder.ShipDate = DateTime.Now; // update. CHECK WITH DAN!
+            // retDoOrder.ShipDate = DateTime.Now; // update. CHECK WITH DAN!
 
-            dal.Order.Update(retDoOrder);
+            doOrder.ShipDate = DateTime.Now;
+            
+            dal.Order.Update(doOrder);
 
             return RequestOrderDetails(orderID);
 
@@ -139,16 +179,22 @@ internal class Order : IOrder
         if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         try
         {
-            DO.Order? doOrder = dal.Order.Get(orderID); // order exists in Dal check
+            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); ; // order exists in Dal check
 
-            if (doOrder?.ShipDate == null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
+            if (doOrder.ShipDate == null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
 
-            if (doOrder?.DeliveryDate != null) throw new BO.DateException("Order has already been delivered!"); // order's status check
+            if (doOrder.DeliveryDate != null) throw new BO.DateException("Order has already been delivered!"); // order's status check
 
-            DO.Order retDoOrder = new DO.Order();
-            PropertyCopier<DO.Order?, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
-            retDoOrder.DeliveryDate = DateTime.Now; // update. CHECK WITH DAN!
-            dal.Order.Update(retDoOrder);
+
+            //  DO.Order retDoOrder = new DO.Order();
+
+            //    PropertyCopier<DO.Order, DO.Order>.Copy(doOrder, retDoOrder); // Bonus
+
+
+            doOrder.DeliveryDate = DateTime.Now; // update
+
+            dal.Order.Update(doOrder);
+
             return RequestOrderDetails(orderID); // after we update the dal the BO.order will be update too  
 
             //Console.Write("Enter Delivery date: ");
@@ -176,6 +222,7 @@ internal class Order : IOrder
         try
         {
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
+
             BO.OrderTracking boOrderTrack = new BO.OrderTracking // could've use bonus here but in this case, this code is shorter
             {
                 ID = orderID,
@@ -188,6 +235,7 @@ internal class Order : IOrder
             if (boOrder.ShipDate != null) boOrderTrack.Tracker.Add((boOrder.ShipDate, " Order shipped"));
 
             if (boOrder.DeliveryDate != null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, " Order Delivered"));
+
             return boOrderTrack;
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
@@ -234,7 +282,7 @@ internal class Order : IOrder
 
             DO.Order? doOrder = dal.Order.Get(orderID);
 
-          
+
 
             if (dal.Product.Get(productID) is DO.Product dataProduct)
             {
@@ -305,10 +353,18 @@ internal class Order : IOrder
                         }); // orderItem update
                     }
                 }
-                DO.Product doProduct = new DO.Product();
-                PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct); // Bonus
-                doProduct.InStock = newDataProductInStock;
-                dal.Product.Update(doProduct); // Dal.Product Update
+               // DO.Product doProduct = new DO.Product();
+
+               // doProduct = dataProduct.CopyPropTo(doProduct);
+
+
+                dataProduct.InStock = newDataProductInStock;
+                dal.Product.Update(dataProduct); // Dal.Product Update
+
+                //   PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct); // Bonus
+
+                //doProduct.InStock = newDataProductInStock;
+                //dal.Product.Update(doProduct); // Dal.Product Update
             }
             else throw new BO.UnexpectedException(); // not should happens 
         }

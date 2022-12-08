@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using Tools;
+
+namespace DO;
 
 /// <summary>
 /// Structure for a given item-in-order in database.
@@ -25,13 +27,18 @@ public struct OrderItem
     /// The amount of product units in the order
     /// </summary>
     public int Amount { get; set; }
-    public override string ToString() => $@"
-       Order item ID: {OrderItemID}
-       Order ID: {OrderID}
-       Product ID: {ProductID}
-       Price: {Price}
-       Amount of product: {Amount}
-       ";
+
+    public override string ToString() => this.ToStringProperty();
+       
+
+
+    //public override string ToString() => $@"
+    //   Order item ID: {OrderItemID}
+    //   Order ID: {OrderID}
+    //   Product ID: {ProductID}
+    //   Price: {Price}
+    //   Amount of product: {Amount}
+    //   ";
 }
 
 
