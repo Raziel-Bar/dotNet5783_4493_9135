@@ -22,7 +22,7 @@
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
-        <ListView x:Name ="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Background="White" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" >
+        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Background="White" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
@@ -30,7 +30,8 @@
             </ListView.View>
         </ListView>
 
-        <Button Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" />
+        <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" />
+        <Button Name="BackButton" Content="Back" Grid.Row="2" HorizontalAlignment="left" Margin="5" Padding="5" Click="BackToMainWindow" />
 
     </Grid>
 </Window>

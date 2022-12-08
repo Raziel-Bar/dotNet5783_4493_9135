@@ -24,6 +24,9 @@ namespace PL.ProductWindows
             InitializeComponent();
             SuccessTextBlock.Text = text;
         }
-        private void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

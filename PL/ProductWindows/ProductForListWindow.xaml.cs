@@ -60,10 +60,27 @@ namespace PL.ProductWindows
 
         //private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
-       //  SelectionChanged="WinesListView_SelectionChanged"
+        //  SelectionChanged="WinesListView_SelectionChanged"
         //}
 
-        private void ToProductWindowAddMode(object sender, RoutedEventArgs e) => new ProductWindow("ADD").Show();
-       
+        private void ToProductWindowAddMode(object sender, RoutedEventArgs e)
+        {
+            new ProductWindow("ADD").Show();
+            this.Close();
+        }
+        private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
+        {
+            //var track = ((ListViewItem)sender).Content as BO.Product;
+            //var item = e.OriginalSource;
+            new ProductWindow("UPDATE").Show();
+            this.Close();
+        }
+
+        private void BackToMainWindow(object sender, RoutedEventArgs e)
+        {
+            new MainWindow().Show();
+            this.Close();
+        }
+
     }
 }

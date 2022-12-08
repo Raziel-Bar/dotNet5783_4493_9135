@@ -27,7 +27,7 @@ namespace Tools
             {
                 object? value = propertyInfo.GetValue(entity);
 
-                if (value is IEnumerable && value is not string)
+                if (value is IEnumerable && value is not string) // please call bob the builder...
                 {
                     var items = (IEnumerable)value;
                     foreach (var item in items)

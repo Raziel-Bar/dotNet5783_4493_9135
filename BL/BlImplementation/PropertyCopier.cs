@@ -16,7 +16,7 @@ namespace BlImplementation;
 public static class PropertyCopier
 {
 
-    //    public static TTO CopyPropTo<TFrom, TTO>(this TFrom from, TTO to)
+    /*//    public static TTO CopyPropTo<TFrom, TTO>(this TFrom from, TTO to)
     //    {
     //        var fromProperties = from?.GetType().GetProperties();
 
@@ -48,7 +48,7 @@ public static class PropertyCopier
     //            }
     //        }
     //        return to;
-    //    }
+    //    }*/
 
     public static TTO CopyPropTo<TFrom, TTO>(this TFrom from, TTO to)
     {
@@ -75,26 +75,9 @@ public static class PropertyCopier
                         Type typeNullAbleTo = Nullable.GetUnderlyingType(toProperty.PropertyType)!;
 
                         if (typeNullAbleTo is not null)
-                            toProperty.SetValue(to, Enum.ToObject(typeNullAbleTo, value));
+                            toProperty.SetValue(to, Enum.ToObject(typeNullAbleTo, value!));
                     }
                 }
-
-
-                //if (fromProperty.Name == toProperty.Name && fromProperty.PropertyType == toProperty.PropertyType)
-                //{
-                //    toProperty.SetValue(to, fromProperty.GetValue(from));
-                //    break;
-                //}
-                //if (fromProperty.Name == toProperty.Name && fromProperty.Name == "Category") // special case for the category prop since the DO.WINERYS enum is similar to the BO.WINERYS
-                //{
-                //    if (toProperty.PropertyType.Name == "DO.WINERYS" ) // we always convert to the to's type
-                //    {
-                //        toProperty.SetValue(to, (DO.WINERYS)fromProperty.GetValue(from)!);
-                //        break;
-                //    }
-                //    toProperty.SetValue(to, (BO.WINERYS)fromProperty.GetValue(from)!);
-                //    break;
-                //}
             }
         }
 

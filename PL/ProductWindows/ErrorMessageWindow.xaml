@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
-        Title="ErrorMessageWindow" Height="100" Width="auto" MinWidth="200">
+        Title="ErrorMessageWindow" Height="auto" MaxHeight="200" Width="auto" MaxWidth="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
         <TextBlock Name="ErrorMessageTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="Sample" Margin="2,2,2,2" FontSize="16"/>
-        <Button Name="OKButton" Grid.Row="1" Height="30" Width="50" Content="OK" HorizontalAlignment="Right" Margin="2,2,2,2" Click="CloseWindow"/>
+        <Button Name="OKButton" Content="OK" Grid.Row="1" Height="30" Width="50" HorizontalAlignment="Right" Margin="2,2,2,2" Click="CloseWindow"/>
     </Grid>
 </Window>

@@ -10,11 +10,7 @@ internal class Product : IProduct
 {
     private DalApi.IDal dal = new DalList();
 
-    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<ProductForList?, bool>? func)
-    {
-        return productForLists.Where(func!);
-    }
-
+    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<ProductForList?, bool>? func) => productForLists.Where(func!);
 
     /// <summary>
     /// makes a product's list based on the requested Dal data
@@ -23,34 +19,7 @@ internal class Product : IProduct
     /// list of products : type Ienumerable
     /// </returns>
     ///
-    public IEnumerable<BO.ProductForList?> RequestProducts(/*Func<BO.ProductForList?, bool>? func = null*/) => dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
-    //{
-
-    //    //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
-
-    //    //IEnumerable<BO.ProductForList> productForLists = from DO.Product item in doProducts
-    //    //                                                 select new BO.ProductForList()
-    //    //                                                 {
-    //    //                                                     ID = item.ID,
-    //    //                                                     Name = item.Name,  
-    //    //                                                     Price = item.Price,
-    //    //                                                     Category = (BO.WINERYS)item.Category!,
-    //    //                                                 };
-
-    //    //return func is null ? productForLists : productForLists.Where(func);
-
-    //    //IEnumerable<DO.Product?> doProducts = dal.Product.GetList(null);
-
-    //    //return doProducts.Select(_product =>
-    //    //{
-    //    //    //DO.Product? product = _product;// @@ מיותר
-    //    //    BO.ProductForList retProduct = new BO.ProductForList();
-    //    //    PropertyCopier<DO.Product?, BO.ProductForList>.Copy(_product, retProduct); // bonus
-    //    //    return retProduct;
-    //    //});
-
-    //    return dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
-    //}
+    public IEnumerable<BO.ProductForList?> RequestProducts() => dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use

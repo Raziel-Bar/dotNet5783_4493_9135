@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
-        Title="ErrorMessageWindow" Height="100" Width="auto" MinWidth="200">
+        Title="SuccessMessageWindow" Height="150" Width="auto" MaxWidth="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

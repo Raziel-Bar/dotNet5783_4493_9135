@@ -31,7 +31,12 @@ namespace PL
             IBl bl = new Bl();
         }
 
-        private void AdminAccess_Click(object sender, RoutedEventArgs e) => new ProductForListWindow().Show();
-       
+        private void AdminAccess_Click(object sender, RoutedEventArgs e)
+        {
+            new ProductForListWindow().Show();
+            this.Close();
+        }
+
+        private void Exit(object sender, RoutedEventArgs e) => this.Close();
     }
 }
