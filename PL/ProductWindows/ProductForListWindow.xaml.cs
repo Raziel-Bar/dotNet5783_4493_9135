@@ -46,7 +46,7 @@ namespace PL.ProductWindows
 
             WinesListView.ItemsSource = productForLists;
 
-            WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS)); // changed instructions to enable clearing the category
+            WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
          
         }
 
@@ -63,7 +63,7 @@ namespace PL.ProductWindows
        //  SelectionChanged="WinesListView_SelectionChanged"
         //}
 
-        private void ToProductWindowAddMode(object sender, RoutedEventArgs e) => new ProductWindow().Show();
+        private void ToProductWindowAddMode(object sender, RoutedEventArgs e) => new ProductWindow("ADD").Show();
        
     }
 }
