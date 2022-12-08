@@ -1,5 +1,4 @@
 ﻿using BlApi;
-using BO;
 using Dal;
 namespace BlImplementation;
 
@@ -10,7 +9,7 @@ internal class Product : IProduct
 {
     private DalApi.IDal dal = new DalList();
 
-    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<ProductForList?, bool>? func) => productForLists.Where(func!);
+    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<BO.ProductForList?, bool>? func) => productForLists.Where(func!);
 
     /// <summary>
     /// makes a product's list based on the requested Dal data
@@ -38,16 +37,20 @@ internal class Product : IProduct
         {
             try
             {
-                if (dal.Product.Get(productID) is DO.Product product)
-                {
-                    //BO.Product retProduct = new BO.Product();
+                DO.Product product = dal.Product.Get(productID)  ?? throw new BO.UnexpectedException();
 
-                    //PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
+                return product.CopyPropTo(new BO.Product());
 
-                    //return retProduct;
-                    return product.CopyPropTo(new BO.Product());
-                }
-                throw new BO.NotFoundInDalException("Product");
+                //if (dal.Product.Get(productID) is DO.Product product)
+                //{
+                //    //BO.Product retProduct = new BO.Product();
+
+                //    //PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
+
+                //    //return retProduct;
+                //    return product.CopyPropTo(new BO.Product());
+                //}
+                //throw new BO.NotFoundInDalException("Product");
             }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
@@ -106,7 +109,7 @@ internal class Product : IProduct
     /// <exception cref="BO.AlreadyExistInDalException">If the Product already exists in the Dal</exception>
     public void AddProductAdmin(BO.Product product)
     {
-        if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
+        if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null && product.Category != null)
         {
             //DO.Product product1 = new DO.Product();
             //PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);@@2

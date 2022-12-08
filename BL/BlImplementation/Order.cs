@@ -16,26 +16,28 @@ internal class Order : IOrder
     {
         IEnumerable<DO.Order?> doOrders = dal.Order.GetList(null); // getting the DO orders      
 
-        List<BO.OrderForList?> boOrdersList = new List<BO.OrderForList?>();
+        List<BO.OrderForList?> boList = new List<BO.OrderForList?>();
 
         foreach (var item in doOrders) // transforming all DO orders into BO orders so that we can have the Status, amount of items and the total price
         {
             if (item is DO.Order order)
             {
                 BO.Order boOrder = RequestOrderDetails(order.ID);  // transforming DO order into BO order
+
                 BO.OrderForList boOrderForList = boOrder.CopyPropTo(new BO.OrderForList()); // bonus
+
                 boOrderForList.TotalPrice = boOrder.ListOfItems!.Sum(orderItem => orderItem!.Price * orderItem.Amount);
+
                 boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
+
+                boList.Add(boOrderForList);
             }
         }
-        return boOrdersList;
+        return boList;
     }
 
-    private ORDER_STATUS? GetStatus(DO.Order order)
-    {
-        return order.DeliveryDate is not null ? ORDER_STATUS.DELIVERED : order.ShipDate is not null ? ORDER_STATUS.SHIPPED :
-            BO.ORDER_STATUS.PENDING;
-    }
+
+
 
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
@@ -47,7 +49,8 @@ internal class Order : IOrder
     /// <exception cref="BO.UnexpectedException">FOR DEVELOPERS: not supposed to happen! but just in case there will be any inner error between the Dal and the Bl.</exception>
     public BO.Order RequestOrderDetails(int orderID)
     {
-        if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+      //  if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        IDCheck(orderID);
         try
         {
             DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check@@@@
@@ -79,6 +82,7 @@ internal class Order : IOrder
             }
 
             boOrder.TotalPrice = totalPriceOrder; // sets the total price field
+
             boOrder.Status = GetStatus(doOrder); // only 1 value left, the status
 
             return boOrder; // BO order is calculated and ready
@@ -98,7 +102,8 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order with such ID in the Dal</exception>
     public BO.Order UpdateOrderShipDateAdmin(int orderID)
     {
-        if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+       // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        IDCheck(orderID);
         try
         {
             DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
@@ -106,7 +111,7 @@ internal class Order : IOrder
             if (doOrder.ShipDate is not null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
 
             doOrder.ShipDate = DateTime.Now;
-            
+
             dal.Order.Update(doOrder);
 
             return RequestOrderDetails(orderID);
@@ -124,14 +129,15 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order with such ID in the Dal</exception>
     public BO.Order UpdateOrderDeliveryDateAdmin(int orderID)
     {
-        if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        IDCheck(orderID);
         try
         {
-            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); ; // order exists in Dal check
+            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
 
-            if (doOrder.ShipDate == null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
+            if (doOrder.ShipDate is null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
 
-            if (doOrder.DeliveryDate != null) throw new BO.DateException("Order has already been delivered!"); // order's status check
+            if (doOrder.DeliveryDate is not null) throw new BO.DateException("Order has already been delivered!"); // order's status check
 
             doOrder.DeliveryDate = DateTime.Now; // update
 
@@ -152,7 +158,8 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order in dal with such ID</exception>
     public BO.OrderTracking OrderTrackingAdmin(int orderID)
     {
-        if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        //if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        IDCheck(orderID);
         try
         {
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
@@ -166,14 +173,15 @@ internal class Order : IOrder
 
             boOrderTrack.Tracker.Add((boOrder.OrderDate, " Order created"));
 
-            if (boOrder.ShipDate != null) boOrderTrack.Tracker.Add((boOrder.ShipDate, " Order shipped"));
+            if (boOrder.ShipDate is not null) boOrderTrack.Tracker.Add((boOrder.ShipDate, " Order shipped"));
 
-            if (boOrder.DeliveryDate != null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, " Order Delivered"));
+            if (boOrder.DeliveryDate is not null) boOrderTrack.Tracker.Add((boOrder.DeliveryDate, " Order Delivered"));
 
             return boOrderTrack;
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
+
 
     /// <summary>
     /// updates an already confirmed order's orderItem's details
@@ -197,32 +205,33 @@ internal class Order : IOrder
     /// </BONUS_METHOD_explanation>
     public void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount)
     {
-        if (orderID < 0) throw new BO.InvalidDataException("Order"); // Order ID validity check
+        //if (orderID < 0) throw new BO.InvalidDataException("Order"); // Order ID validity check
+        IDCheck(orderID);
 
         if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
 
-        if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
+        if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check   
         try
         {
             if (orderItemID >= 0) // OrderItem ID check
             {
-                DO.OrderItem? orderItem = dal.OrderItem.Get(orderItemID);
-                if (orderItem?.ProductID != productID || orderItem?.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
+                DO.OrderItem orderItem = dal.OrderItem.Get(orderItemID) ?? throw new BO.UnexpectedException();
+
+                if (orderItem.ProductID != productID || orderItem.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
             }
             else throw new BO.InvalidDataException("ID");
 
             // preparing all data for update and some more checks
+
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
 
-            DO.Order? doOrder = dal.Order.Get(orderID);
-
-
+            //   DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); 
 
             if (dal.Product.Get(productID) is DO.Product dataProduct)
             {
                 if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
 
-                if (boOrder.ShipDate != null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
+                if (boOrder.ShipDate is not null) throw new BO.DateException("Order has already been shipped away!"); // checks if the order has already been shipped 
 
                 boOrder.ListOfItems ??= new List<BO.OrderItem?>(); // insurance for not having null list
 
@@ -294,4 +303,22 @@ internal class Order : IOrder
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order/OrderItem", ex); }
     }
+
+
+
+
+
+
+
+
+    // ID validity check
+    private void IDCheck(int id)
+    {
+        if (id < 0)
+            throw new BO.InvalidDataException("Order"); // ID validity check
+    }
+
+    private ORDER_STATUS? GetStatus(DO.Order order) =>
+    order.DeliveryDate is not null ? ORDER_STATUS.DELIVERED : order.ShipDate is not null ? ORDER_STATUS.SHIPPED : BO.ORDER_STATUS.PENDING;
+
 }
