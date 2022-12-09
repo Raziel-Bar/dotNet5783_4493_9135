@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
         Title="ProductForListWindow" Height="640" Width="800">
-    <Grid Name ="MainGrid">
+    <Grid Name ="MainGrid" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
@@ -22,10 +22,7 @@
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
-        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="Black" FontFamily="David" FontSize="12" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode" SelectionChanged="WinesListView_SelectionChanged">
-            <ListView.Background>
-                <ImageBrush/>
-            </ListView.Background>
+        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="Black" FontFamily="Agency FB" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="#FF44526C" Background="{x:Null}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding ="{Binding Name}"/>
