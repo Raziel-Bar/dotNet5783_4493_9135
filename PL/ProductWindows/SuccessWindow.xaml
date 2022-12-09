@@ -12,6 +12,12 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBlock Name="SuccessTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="Sample"  Margin="2,2,2,2" FontSize="16"/>
-        <Button Name="OKButton" Grid.Row="1" Height="30" Width="50" Content="OK" HorizontalAlignment="Right" Margin="2,2,2,2" Click="CloseWindow"/>
+        <Button Name="OKButton" Grid.Row="1" Height="30" Width="50" Content="OK" HorizontalAlignment="Right" Margin="2,2,2,2" Click="CloseWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </Window>

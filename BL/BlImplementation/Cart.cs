@@ -252,7 +252,9 @@ internal class Cart : ICart
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
             item!.OrderItemID = id;
-            dal.OrderItem.Add(item.CopyPropTo(new DO.OrderItem()));
+            DO.OrderItem orderItem = item.CopyPropToStruct(new DO.OrderItem());
+            orderItem.OrderID = id;
+            dal.OrderItem.Add(orderItem);
 
             dataProduct = dal.Product.Get(item!.ProductID) ?? throw new UnexpectedException(); // stock update
 

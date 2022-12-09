@@ -18,7 +18,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
             <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged">
-
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
@@ -37,8 +36,20 @@
             </ListView.View>
         </ListView>
 
-        <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" />
-        <Button Name="BackButton" Content="Back" Grid.Row="2" HorizontalAlignment="left" Margin="5" Padding="5" Click="BackToMainWindow" />
+        <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button Name="BackButton" Content="Back" Grid.Row="2" HorizontalAlignment="left" Margin="5" Padding="5" Click="BackToMainWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
 
     </Grid>
 </Window>

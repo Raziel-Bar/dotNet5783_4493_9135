@@ -38,10 +38,28 @@
         <Label Name="AmountLabel" Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0"/>
         <TextBox Name="AmountTextBox" MaxLength="5" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Button Name="AddButton" Content="Add" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent"/>
-        <Button Name="UpdateButton" Content="Update" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent"/>
+        <Button Name="AddButton" Content="Add" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button Name="UpdateButton" Content="Update" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
 
-        <Button Name="BackButton" Content="Back" Grid.Row="6" HorizontalAlignment="Left" Height="30" Width="65" Margin="27,150,0,25" Padding="5" Click="BackToMainWindow" />
+        <Button Name="BackButton" Content="Back" Grid.Row="6" HorizontalAlignment="Left" Height="30" Width="65" Margin="27,150,0,25" Padding="5" Click="BackToMainWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
 
 
 

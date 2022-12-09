@@ -42,18 +42,12 @@ namespace PL.ProductWindows
 
         }
 
-
         private void WinerySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = productForLists;
 
             else WinesListView.ItemsSource = bl.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem);
         }
-
-        //private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //  SelectionChanged="WinesListView_SelectionChanged"
-        //}
 
         private void ToProductWindowAddMode(object sender, RoutedEventArgs e)
         {
@@ -63,19 +57,11 @@ namespace PL.ProductWindows
 
         private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
         {
-            //var track = ((ListViewItem)sender).Content as BO.Product;
-            //var item = e.OriginalSource;
-
             if (WinesListView.SelectedItem is ProductForList productForList)
             {
-                
                 new ProductWindow("UPDATE", bl.Product.RequestProductDetailsAdmin(productForList.ID) ).Show();
                 this.Close();
-
             }
-           
-            //new ProductWindow("UPDATE").Show();
-            //this.Close();
         }
 
         private void BackToMainWindow(object sender, RoutedEventArgs e)
