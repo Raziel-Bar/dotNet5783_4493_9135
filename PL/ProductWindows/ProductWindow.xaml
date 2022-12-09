@@ -26,8 +26,8 @@
         <TextBox Name="IdTextBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
         <TextBlock Name="IdTextBlock" Text="Sample" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
 
-        <Label Name="CategoryLabel" Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0"/>
-        <ComboBox Name="CategoryComboBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Name="CategoryLabel" Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" />
+        <ComboBox Name="CategoryComboBox" SelectedIndex="0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Name="NameLabel" Content="Name:" Grid.Row="3" HorizontalAlignment="left" Margin="250,0,0,0"/>
         <TextBox Name="NameTextBox" MaxLength="30" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
