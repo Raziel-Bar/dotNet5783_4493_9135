@@ -80,9 +80,9 @@ namespace PL.ProductWindows
             this.Close();
         }
 
-        //private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        // SelectionChanged="WinesListView_SelectionChanged"
-        //}
+        private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+          
+        }
     }
 }

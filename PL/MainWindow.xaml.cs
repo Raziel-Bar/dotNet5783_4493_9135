@@ -14,12 +14,14 @@ namespace PL
         public MainWindow()
         {
             InitializeComponent();
+
             IBl bl = new Bl();
         }
 
         private void AdminAccess_Click(object sender, RoutedEventArgs e)
         {
             new ProductForListWindow().Show();
+           
             this.Close();
         }
 

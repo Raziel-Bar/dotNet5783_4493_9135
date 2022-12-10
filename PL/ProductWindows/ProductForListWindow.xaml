@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
         Title="ProductForListWindow" Height="640" Width="800">
-    <Grid Name ="MainGrid" Background="White">
+    <Grid Name ="MainGrid">
+        <Grid.Background>
+            <ImageBrush ImageSource="/ProductWindows/red-wine.jpg"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
@@ -17,11 +20,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged">
+            <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.2">               
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
-        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="Black" FontFamily="Agency FB" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="#FF44526C" Background="{x:Null}">
+        <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="White" FontFamily="Agency FB" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding ="{Binding Name}"/>
@@ -30,21 +33,36 @@
                     <GridViewColumn Header="Price" DisplayMemberBinding ="{Binding Price}"/>
 
                 </GridView>
+
+                
             </ListView.View>
+            
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FF853636"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
+            
         </ListView>
 
-        <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode">
+        <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" Foreground="White" BorderBrush="White" Background="{x:Null}" FontWeight="Bold">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Name="BackButton" Content="Back" Grid.Row="2" HorizontalAlignment="left" Margin="5" Padding="5" Click="BackToMainWindow">
+        <Button Name="BackButton" Content="Back" Grid.Row="2" HorizontalAlignment="left" Margin="5" Padding="5" Click="BackToMainWindow" Background="{x:Null}" Foreground="White" FontWeight="Bold" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
+                    
                 </Style>
+
             </Button.Resources>
         </Button>
 

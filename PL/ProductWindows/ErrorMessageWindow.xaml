@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="ErrorMessageWindow" Height="auto" MaxHeight="200" Width="auto" MaxWidth="400">
     <Grid>
+        <Grid.Background>
+            <ImageBrush/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>

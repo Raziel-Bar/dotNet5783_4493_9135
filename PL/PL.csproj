@@ -14,9 +14,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
-	  <None Remove="o.jpg" />
 	  <None Remove="pexels-tim-mossholder-2336117.jpg" />
+	  <None Remove="ProductWindows\red-wine.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -24,9 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
-	  <Resource Include="o.jpg" />
 	  <Resource Include="pexels-tim-mossholder-2336117.jpg" />
+	  <Resource Include="ProductWindows\red-wine.jpg" />
 	</ItemGroup>
 
 </Project>

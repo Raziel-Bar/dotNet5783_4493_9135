@@ -266,6 +266,7 @@ internal class Order : IOrder
                 else // caretake of an existing item
                 {
                     BO.OrderItem? _orderItem = boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID); // copying old item
+
                     boOrder.ListOfItems.Remove(boOrder.ListOfItems.First(item => item!.OrderItemID == orderItemID)); // removing old item
 
                     if (boOrder.ListOfItems.Count == 0 && newAmount == 0) // delete an intire order
