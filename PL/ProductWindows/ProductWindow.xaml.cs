@@ -76,7 +76,7 @@ namespace PL.ProductWindows
                     InStock = int.Parse(AmountTextBox.Text)
                 });
                 new ProductForListWindow().Show();
-                new SuccessWindow("Your Product Has been added successfully!").Show();
+                new SuccessWindow("Your Product Has been Updated successfully!").Show();
                 this.Close();
             }
             catch (FormatException)

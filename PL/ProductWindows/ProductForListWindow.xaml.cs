@@ -1,6 +1,7 @@
 ﻿using BlApi;
 using BlImplementation;
 using BO;
+using DO;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -57,10 +58,19 @@ namespace PL.ProductWindows
 
         private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
         {
+
             if (WinesListView.SelectedItem is ProductForList productForList)
             {
-                new ProductWindow("UPDATE", bl.Product.RequestProductDetailsAdmin(productForList.ID) ).Show();
-                this.Close();
+                //try
+                //{
+                    //bl.Product.UpdateProductAdmin(bl.Product.RequestProductDetailsAdmin(productForList.ID));
+                    new ProductWindow("UPDATE", bl.Product.RequestProductDetailsAdmin(productForList.ID)).Show();
+                    this.Close();
+                //}
+                //catch (BO.RemoveProductThatIsInOrdersException ex)
+                //{
+                //    new ErrorMessageWindow(ex.Message).Show();
+                //}               
             }
         }
 
