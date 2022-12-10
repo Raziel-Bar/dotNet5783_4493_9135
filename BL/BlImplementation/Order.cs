@@ -168,13 +168,6 @@ internal class Order : IOrder
 
             boOrderTrack.Tracker = new List<(DateTime? date, string? description)>();
 
-            //BO.OrderTracking boOrderTrack = new BO.OrderTracking // could've use bonus here but in this case, this code is shorter
-            //{
-            //    ID = orderID,
-            //    Status = boOrder.Status,
-            //    Tracker = new List<(DateTime? date, string? description)>()
-            //};
-
             boOrderTrack.Tracker.Add((boOrder.OrderDate, " Order created"));
 
             if (boOrder.ShipDate is not null) boOrderTrack.Tracker.Add((boOrder.ShipDate, " Order shipped"));
@@ -217,19 +210,17 @@ internal class Order : IOrder
         if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check   
         try
         {
-            if (orderItemID >= 0) // OrderItem ID check
+            if (orderItemID > 0) // OrderItem ID check
             {
                 DO.OrderItem orderItem = dal.OrderItem.Get(orderItemID) ?? throw new BO.UnexpectedException();
 
                 if (orderItem.ProductID != productID || orderItem.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
             }
-            else throw new BO.InvalidDataException("ID");
+            else if(orderItemID < 0) throw new BO.InvalidDataException("ID"); // else => orderItemID == 0 => new add
 
             // preparing all data for update and some more checks
 
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
-
-            //   DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); 
 
             if (dal.Product.Get(productID) is DO.Product dataProduct)
             {

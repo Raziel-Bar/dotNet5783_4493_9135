@@ -13,6 +13,11 @@ namespace PL.ProductWindows
     {
         IBl bl = new Bl();
 
+        /// <summary>
+        /// a window for either adding or updating a product
+        /// </summary>
+        /// <param name="state">the state of the current window (either ADD mode or UPDATE mode)</param>
+        /// <param name="product">In case of UPDATE MODE: the selected product that we wish to update its details</param>
         public ProductWindow(string state, Product product = null!)
         {
             InitializeComponent();
@@ -21,13 +26,14 @@ namespace PL.ProductWindows
             if (state == "ADD")
             {
                 UpdateButton.Visibility = Visibility.Collapsed;
-                IdTextBlock.Visibility = Visibility.Collapsed;
+                IdTextBlock.Visibility = Visibility.Collapsed; 
             }
             else
             {
                 AddButton.Visibility = Visibility.Collapsed;
-                IdTextBox.Visibility = Visibility.Collapsed;
+                IdTextBox.Visibility = Visibility.Collapsed; // ID can't be changed
 
+                // all old details are shown
                 IdTextBlock.Text = product.ID.ToString();
                 NameTextBox.Text = product.Name;
                 CategoryComboBox.Text = product.Category.ToString();
@@ -36,6 +42,11 @@ namespace PL.ProductWindows
             }
         }
 
+        /// <summary>
+        /// the add product event
+        /// </summary>
+        /// <param name="sender">the add button</param>
+        /// <param name="e">mouse click</param>
         private void AddProductEvent(object sender, RoutedEventArgs e)
         {
             try
@@ -53,16 +64,21 @@ namespace PL.ProductWindows
                 new SuccessWindow("Your Product Has been added successfully!").Show();
                 this.Close();
             }
-            catch (FormatException)
+            catch (FormatException) // we do not allow empty boxes or illegal input
             {
                 new ErrorMessageWindow("Invalid input!\nSome of the textboxes are either empty or contain illegal input.").Show();
             }
-            catch (Exception ex) // to check if we need to split catches by exceptions or not..
+            catch (Exception ex) // in any other case we will just link the inner exception for better knowledge
             {
                 new ErrorMessageWindow(ex.Message).Show();
             }
         }
 
+        /// <summary>
+        /// the update product event
+        /// </summary>
+        /// <param name="sender">the update button</param>
+        /// <param name="e">mouse click</param>
         private void UpdateProductEvent(object sender, RoutedEventArgs e)
         {
             try
@@ -79,7 +95,7 @@ namespace PL.ProductWindows
                 new SuccessWindow("Your Product Has been Updated successfully!").Show();
                 this.Close();
             }
-            catch (FormatException)
+            catch (FormatException) // we do not allow empty boxes or illegal input
             {
                 new ErrorMessageWindow("Invalid input!\nSome of the textboxes are either empty or contain illegal input.").Show();
             }
@@ -89,25 +105,15 @@ namespace PL.ProductWindows
             }
         }
 
+        /// <summary>
+        /// going back to ProducrFor list window
+        /// </summary>
+        /// <param name="sender">the back button</param>
+        /// <param name="e">mouse click</param>
         private void BackToMainWindow(object sender, RoutedEventArgs e)
         {
             new ProductForListWindow().Show();
             this.Close();
-        }
-
-        private void NameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
-
-        private void NameTextBox_TextChanged_1(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
-
-        private void CategoryComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-
         }
     }
 }

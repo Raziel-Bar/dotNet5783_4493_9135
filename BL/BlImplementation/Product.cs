@@ -144,6 +144,29 @@ internal class Product : IProduct
         }
         else throw new BO.InvalidDataException("Product");
     }
+    /*
+        public void RemoveProductAdmin(int productID)
+    {
+        if (productID >= 100000)
+        {
+            IEnumerable<DO.OrderItem?> orderItems = dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID);
+            if (orderItems.Any())
+            {
+                foreach (var item in orderItems)
+                {
+                    var orderItem = item.CopyPropToStruct<DO.OrderItem?, DO.OrderItem>(new DO.OrderItem());
+                    if (dal.Order.Get(orderItem.OrderID).CopyPropToStruct<DO.Order?, DO.Order>(new DO.Order()).DeliveryDate != null)
+                    {
+                        throw new BO.RemoveProductThatIsInOrdersException();
+                    }
+                }
+            }
+            try { dal.Product.Delete(productID); }
+            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
+        }
+        else throw new BO.InvalidDataException("Product");
+    } 
+    */
 
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
