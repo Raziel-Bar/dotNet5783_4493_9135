@@ -77,16 +77,16 @@ public partial class ProductForListWindow : Window
 
         if (WinesListView.SelectedItem is ProductForList productForList)
         {
-            try
-            {
-                bl.Product.UpdateProductAdmin(bl.Product.RequestProductDetailsAdmin(productForList.ID));
+           // try
+           // {
+                //bl.Product.UpdateProductAdmin(bl.Product.RequestProductDetailsAdmin(productForList.ID));
                 new ProductWindow("UPDATE", bl.Product.RequestProductDetailsAdmin(productForList.ID)).Show();
                 this.Close();
-            }
-            catch (BO.RemoveProductThatIsInOrdersException)
-            {
-                new ErrorMessageWindow("Cannot Update the product because there are orders that includes that product!").Show();
-            }               
+            //}
+            //catch (BO.RemoveProductThatIsInOrdersException)
+            //{
+               // new ErrorMessageWindow("Cannot Update the product because there are orders that includes that product!").Show();
+            //}               
         }
     }
 
