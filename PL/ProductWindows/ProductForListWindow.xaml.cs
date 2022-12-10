@@ -101,4 +101,8 @@ public partial class ProductForListWindow : Window
         this.Close();
     }
 
+    private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      
+    }
 }
