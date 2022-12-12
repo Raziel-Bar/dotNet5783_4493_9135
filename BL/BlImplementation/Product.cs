@@ -180,19 +180,8 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
-            //DO.Product dataProduct = new DO.Product();
-            //PropertyCopier<BO.Product, DO.Product>.Copy(product, dataProduct); // Bonus
-
-
             DO.Product dataProduct = product.CopyPropToStruct(new DO.Product());
-            try
-            {
-                // before we update the changes we need to remove the old and add the update one  but we still need to check the product is not in any order  
-                RemoveProductAdmin(product.ID);
-
-                //dal.Product.Update(dataProduct);
-                dal.Product.Add(dataProduct);
-            }
+            try { dal.Product.Update(dataProduct); }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");
