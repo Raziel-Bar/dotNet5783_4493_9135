@@ -81,7 +81,7 @@ internal class DalOrder : IOrder
     /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the order</param>
     /// <returns>the order if the condition was true</returns>
     /// <exception cref="NotFoundException">In case we didn't find an order that fits the condition</exception>
-    public Order? Get(Func<Order?, bool>? func = null)
+    public Order? Get(Func<Order?, bool>? func)
     {
         if (_orders.FirstOrDefault(func!) is Order order)
             return order;

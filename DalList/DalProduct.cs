@@ -94,6 +94,6 @@ internal class DalProduct : IProduct
     /// </summary>
     /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing products</param>
     /// <returns>the list of all orders that got true in the condition</returns>
-    public IEnumerable<Product?> GetList(Func<Product?, bool>? func = null) =>
+    public IEnumerable<Product?> GetList(Func<Product?, bool>? func) =>
         func is null ? _products.Select(product => product) : _products.Where(func);
 }

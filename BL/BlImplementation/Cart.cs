@@ -10,7 +10,7 @@ namespace BlImplementation;
 /// </summary>
 internal class Cart : ICart
 {
-    private DalApi.IDal dal = new DalList();
+    private DalApi.IDal? dal = DalApi.Factory.Get(); // new DalList();
 
     /// <summary>
     /// Adds a product to the cart if All conditions are met
@@ -30,10 +30,9 @@ internal class Cart : ICart
         try
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
+  
 
-            //DO.Product? dataProduct = dal.Product.Get(productID); //@@@@@@@@@
-
-            if (dal.Product.Get(productID) is DO.Product dataProduct)// product exist in dal check
+            if (dal?.Product.Get(productID) is DO.Product dataProduct)// product exist in dal check
             {
                 cart.ListOfItems ??= new List<BO.OrderItem?>();
 
@@ -43,8 +42,6 @@ internal class Cart : ICart
                 {
                     if (dataProduct.InStock <= 0) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
                                                                                                  //else
-
-
 
                     cart.ListOfItems.Add(new BO.OrderItem
                     {
@@ -124,7 +121,7 @@ internal class Cart : ICart
 
             cart.ListOfItems ??= new List<BO.OrderItem?>();
 
-            if (dal.Product.Get(productID)?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
+            if (dal?.Product.Get(productID)?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
             //DO.Product dataProduct = dal.Product.Get(productID) ?? throw new BO.UnexpectedException(); // product exist in dal check
 
@@ -208,7 +205,7 @@ internal class Cart : ICart
         {
             foreach (var item in cart.ListOfItems) // products exist in dal and stock check
             {
-                dataProduct = dal.Product.Get(item!.ProductID) ?? throw new BO.UnexpectedException();
+                dataProduct = dal?.Product.Get(item!.ProductID) ?? throw new BO.UnexpectedException();
 
                 if (dataProduct.InStock < item.Amount) throw new BO.StockNotEnoughtOrEmptyException();
 
@@ -247,7 +244,7 @@ internal class Cart : ICart
             ShipDate = null
         };
 
-        int id = dal.Order.Add(order);
+        int id = dal?.Order.Add(order)?? throw new BO.UnexpectedException();
 
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
@@ -260,11 +257,7 @@ internal class Cart : ICart
 
             dataProduct.InStock -= item.Amount;
 
-            dal.Product.Update(dataProduct);
-
-            //DO.Product doProduct = new DO.Product();
-            //PropertyCopier<DO.Product?, DO.Product>.Copy(dataProduct, doProduct);
-
+            dal.Product.Update(dataProduct);  
         }
         ClearItems(cart);
     }

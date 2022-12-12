@@ -11,7 +11,7 @@ public class Program
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
-    private static IDal dal = new DalList();
+    private static IDal? dal = Factory.Get(); // new DalList();
 
 
     /// <summary>
@@ -84,19 +84,19 @@ public class Program
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the product's ID to delete: ");
-                        dal.Product.Delete(yourChoiceInt());
+                        dal?.Product.Delete(yourChoiceInt());
 
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the product's ID: ");
 
-                        Console.WriteLine(dal.Product.Get(yourChoiceInt()));
+                        Console.WriteLine(dal?.Product.Get(yourChoiceInt()));
 
 
                         break;
 
-                    case OPTIONS.GET_LIST:
-                        printCollection(dal.Product.GetList(null));
+                    case OPTIONS.GET_LIST: // the GetList may return null
+                        printCollection(dal?.Product.GetList() ?? throw new UnexpectedException());
                         break;
                 }
             }
@@ -150,7 +150,7 @@ Enter your choice: ");
         Console.WriteLine("Please enter the amount in stock: ");
         newProduct.InStock = yourChoiceInt();
 
-        dal.Product.Add(newProduct);
+        dal?.Product.Add(newProduct);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ Enter your choice: ");
 
 
         //Product productUpdate = dal.Product.Get(yourChoiceInt());
-        if (dal.Product.Get(yourChoiceInt()) is Product productUpdate)
+        if (dal?.Product.Get(yourChoiceInt()) is Product productUpdate)
         {
 
 
@@ -255,17 +255,17 @@ Enter your choice: ");
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order's ID to delete: ");
-                        dal.Order.Delete(yourChoiceInt());
+                        dal?.Order.Delete(yourChoiceInt());
 
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order's ID: ");
-                        Console.WriteLine(dal.Order.Get(yourChoiceInt()));
+                        Console.WriteLine(dal?.Order.Get(yourChoiceInt()));
 
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.Order.GetList(null));
+                        printCollection(dal?.Order.GetList() ?? throw new UnexpectedException());
 
                         break;
                 }
@@ -318,7 +318,7 @@ Enter your choice: ");
         DateTime.TryParse(Console.ReadLine(), out dateTime);
         newOrder.DeliveryDate = dateTime;*/
 
-        dal.Order.Add(newOrder);
+        dal?.Order.Add(newOrder);
 
 
 
@@ -336,7 +336,7 @@ Enter your choice: ");
 
         //  Order orderUpdate = dal.Order.Get(yourChoiceInt());
 
-        if (dal.Order.Get(yourChoiceInt()) is Order orderUpdate)
+        if (dal?.Order.Get(yourChoiceInt()) is Order orderUpdate)
         {
             do
             {
@@ -426,25 +426,25 @@ Enter your choice: ");
 
                     case OPTIONS.DELETE:
                         Console.WriteLine("Enter the order item's ID to delete: ");
-                        dal.OrderItem.Delete(yourChoiceInt());
+                        dal?.OrderItem.Delete(yourChoiceInt());
 
                         break;
                     case OPTIONS.SEARCH:
                         Console.WriteLine("Enter the order item's ID to search: ");
 
-                        Console.WriteLine(dal.OrderItem.Get(yourChoiceInt()));
+                        Console.WriteLine(dal?.OrderItem.Get(yourChoiceInt()));
 
 
                         break;
 
                     case OPTIONS.GET_LIST:
-                        printCollection(dal.OrderItem.GetList(null));
+                        printCollection(dal?.OrderItem.GetList()?? throw new UnexpectedException());
                         break;
 
                     case OPTIONS.ORDER_ITEM_LIST:
                         Console.WriteLine("Enter order's ID: ");
                         int id = yourChoiceInt();
-                        printCollection(dal.OrderItem.GetList(orderItem => orderItem?.OrderID == id));
+                        printCollection(dal?.OrderItem.GetList(orderItem => orderItem?.OrderID == id)!);
 
                         // printCollection(dal.OrderItem.GetItemsInOrder(yourChoiceInt()));
                         break;
@@ -453,7 +453,7 @@ Enter your choice: ");
                         Console.WriteLine("Enter the order's ID first, press 'enter' and then enter the product's ID: ");
                         int orderID = yourChoiceInt();
                         int productID = yourChoiceInt();
-                        Console.WriteLine(dal.OrderItem.Get(orderItem => orderItem?.OrderID == orderID && orderItem?.ProductID == productID));
+                        Console.WriteLine(dal?.OrderItem.Get(orderItem => orderItem?.OrderID == orderID && orderItem?.ProductID == productID));
 
                         // Console.WriteLine(dal.OrderItem.GetByOrderAndProcuctIDs(yourChoiceInt(), yourChoiceInt()));
                         break;
@@ -482,7 +482,7 @@ Enter your choice: ");
 
 
 
-        newOrderItem.Price = (double)(dal.Product.Get(newOrderItem.ProductID)?.Price)!; // price is given based on the product's price in the dalProduct
+        newOrderItem.Price = (double)(dal?.Product.Get(newOrderItem.ProductID)?.Price)!; // price is given based on the product's price in the dalProduct
 
         Console.WriteLine("Enter the order's ID: ");
         newOrderItem.OrderID = yourChoiceInt();
@@ -503,7 +503,7 @@ Enter your choice: ");
         Console.WriteLine("Please enter the order item's ID: ");
 
         // OrderItem? orderItemUpdate = dal.OrderItem.Get(yourChoiceInt());
-        if (dal.OrderItem.Get(yourChoiceInt()) is OrderItem orderitem)
+        if (dal?.OrderItem.Get(yourChoiceInt()) is OrderItem orderitem)
         {
             do
             {

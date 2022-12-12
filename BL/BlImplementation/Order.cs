@@ -4,7 +4,7 @@ using Dal;
 namespace BlImplementation;
 internal class Order : IOrder
 {
-    private DalApi.IDal dal = new DalList();
+    private DalApi.IDal? dal = DalApi.Factory.Get(); //new DalList()@;
 
     /// <summary>
     /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
@@ -12,7 +12,7 @@ internal class Order : IOrder
     /// <returns>List of OrderForList objects : type IEnumerable</returns>
     public IEnumerable<BO.OrderForList?> RequestOrdersListAdmin()
     {
-        IEnumerable<DO.Order?> doOrders = dal.Order.GetList(null); // getting the DO orders      
+        IEnumerable<DO.Order?> doOrders = dal?.Order.GetList()?? throw new BO.UnexpectedException(); ; // getting the DO orders      
 
         List<BO.OrderForList?> boList = new List<BO.OrderForList?>();
 
@@ -45,11 +45,11 @@ internal class Order : IOrder
     /// <exception cref="BO.UnexpectedException">FOR DEVELOPERS: not supposed to happen! but just in case there will be any inner error between the Dal and the Bl.</exception>
     public BO.Order RequestOrderDetails(int orderID)
     {
-        //  if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+         // ID validity check
         IDCheck(orderID);
         try
         {
-            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal
+            DO.Order doOrder = dal?.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal
 
             BO.Order boOrder = doOrder.CopyPropTo(new BO.Order()); // bonus // we now sets the "easy" values - the identical props
 
@@ -100,11 +100,10 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order with such ID in the Dal</exception>
     public BO.Order UpdateOrderShipDateAdmin(int orderID)
     {
-        // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         IDCheck(orderID);
         try
         {
-            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
+            DO.Order doOrder = dal?.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
 
             if (doOrder.ShipDate is not null) throw new BO.DateException("Order has already been shipped away!"); // order's status check
 
@@ -128,11 +127,10 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order with such ID in the Dal</exception>
     public BO.Order UpdateOrderDeliveryDateAdmin(int orderID)
     {
-        // if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
         IDCheck(orderID);
         try
         {
-            DO.Order doOrder = dal.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
+            DO.Order doOrder = dal?.Order.Get(orderID) ?? throw new BO.UnexpectedException(); // order exists in Dal check
 
             if (doOrder.ShipDate is null) throw new BO.DateException("Order has'nt been shipped yet!"); // order's status check
 
@@ -158,7 +156,7 @@ internal class Order : IOrder
     /// <exception cref="BO.NotFoundInDalException">in case there is no order in dal with such ID</exception>
     public BO.OrderTracking OrderTrackingAdmin(int orderID)
     {
-        //if (orderID < 0) throw new BO.InvalidDataException("Order"); // ID validity check
+        // ID validity check
         IDCheck(orderID);
         try
         {
@@ -202,8 +200,8 @@ internal class Order : IOrder
     /// </BONUS_METHOD_explanation>
     public void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount)
     {
-        //if (orderID < 0) throw new BO.InvalidDataException("Order"); // Order ID validity check
-        IDCheck(orderID);
+       
+        IDCheck(orderID);// Order ID validity check
 
         if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
 
@@ -212,7 +210,7 @@ internal class Order : IOrder
         {
             if (orderItemID > 0) // OrderItem ID check
             {
-                DO.OrderItem orderItem = dal.OrderItem.Get(orderItemID) ?? throw new BO.UnexpectedException();
+                DO.OrderItem orderItem = dal?.OrderItem.Get(orderItemID) ?? throw new BO.UnexpectedException();
 
                 if (orderItem.ProductID != productID || orderItem.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
             }
@@ -222,7 +220,7 @@ internal class Order : IOrder
 
             BO.Order boOrder = RequestOrderDetails(orderID); // order exists in Dal check
 
-            if (dal.Product.Get(productID) is DO.Product dataProduct)
+            if (dal?.Product.Get(productID) is DO.Product dataProduct)
             {
                 if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException();// stock amount check
 

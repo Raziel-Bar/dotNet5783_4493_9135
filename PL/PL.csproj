@@ -15,6 +15,7 @@
 
 	<ItemGroup>
 	  <None Remove="pexels-tim-mossholder-2336117.jpg" />
+	  <None Remove="ProductWindows\elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
 	  <None Remove="ProductWindows\red-wine.jpg" />
 	</ItemGroup>
 
@@ -24,6 +25,7 @@
 
 	<ItemGroup>
 	  <Resource Include="pexels-tim-mossholder-2336117.jpg" />
+	  <Resource Include="ProductWindows\elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
 	  <Resource Include="ProductWindows\red-wine.jpg" />
 	</ItemGroup>
 

@@ -18,5 +18,5 @@ public interface ICrud<T> where T : struct
 
     T? Get(Func<T?, bool>? func);
 
-    IEnumerable<T?> GetList(Func<T?, bool>? func);
+    IEnumerable<T?> GetList(Func<T?, bool>? func = null);
 }

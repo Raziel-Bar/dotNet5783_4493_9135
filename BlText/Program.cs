@@ -11,7 +11,7 @@ internal class Program
     private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, DISPLAY, CONFIRM }
     private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN }
 
-    private static IBl ibl = new Bl();
+    private static IBl ibl =Factory.Get();
 
     private static Cart cart = new Cart
     {

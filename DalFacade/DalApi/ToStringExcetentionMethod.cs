@@ -15,6 +15,7 @@ namespace Tools
             return result;
         }
 
+
         private static StringBuilder helpToStringProperty<Entity>(this Entity entity, StringBuilder stringBuilder)
         {
             IEnumerable<PropertyInfo> propertyInfos = entity!.GetType().GetProperties();

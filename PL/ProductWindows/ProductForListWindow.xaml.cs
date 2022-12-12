@@ -1,7 +1,4 @@
-﻿using BlApi;
-using BlImplementation;
-using BO;
-using DO;
+﻿using BO;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -25,7 +22,7 @@ public enum WINERYS
 /// </summary>
 public partial class ProductForListWindow : Window
 {
-    IBl bl = new Bl();
+    BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
     IEnumerable<ProductForList?> productForLists;
 
     /// <summary>

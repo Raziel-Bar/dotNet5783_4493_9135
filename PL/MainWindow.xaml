@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Button Name="AdminAccess"  Content="Manager access" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1,0" Height="105" Width="334" Click="AdminAccess_Click" FontSize="36" FontWeight="Bold" FontFamily="Arial" Margin="421,123,0,0" BorderBrush="White" AutomationProperties.IsRowHeader="True" Background="{x:Null}" Foreground="White" FontStyle="Italic">
+        <Button Name="AdminAccess"  Content="Manager access" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1,0" Height="105" Width="334" Click="AdminAccess_Click" FontSize="36" FontWeight="Bold" FontFamily="Arial" Margin="439,127,0,0" AutomationProperties.IsRowHeader="True" Foreground="White" FontStyle="Italic" BorderThickness="1,1,1,1" Background="{x:Null}" BorderBrush="White">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -28,7 +28,6 @@
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </Button.Resources>
-
         </Button>
 
         <Button Name="ExitButton" Content="Exit" Grid.Row="1" HorizontalAlignment="left" VerticalAlignment="Center" Margin="10" Height="30" Width="50" Click="Exit" Background="{x:Null}" Foreground="White" BorderBrush="White" FontWeight="Bold"  >
