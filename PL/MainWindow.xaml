@@ -8,13 +8,13 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/pexels-tim-mossholder-2336117.jpg" Opacity="1" Stretch="Fill"/>
+            <ImageBrush ImageSource="/ProductWindows/red-wine.jpg" Opacity="1" Stretch="None"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Button Name="AdminAccess"  Content="Manager access" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1,0" Height="105" Width="334" Click="AdminAccess_Click" FontSize="36" FontWeight="Bold" FontFamily="Arial" Margin="439,127,0,0" AutomationProperties.IsRowHeader="True" Foreground="White" FontStyle="Italic" BorderThickness="1,1,1,1" Background="{x:Null}" BorderBrush="White">
+        <Button Name="AdminAccess"  Content="Manager access" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1,0" Height="105" Width="334" Click="AdminAccess_Click" FontSize="36" FontWeight="Bold" FontFamily="Arial" Margin="35,127,0,0" AutomationProperties.IsRowHeader="True" Foreground="White" FontStyle="Italic" BorderThickness="1,1,1,1" Background="{x:Null}" BorderBrush="White">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

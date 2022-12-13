@@ -30,7 +30,7 @@ internal class Cart : ICart
         try
         {
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
-  
+
 
             if (dal?.Product.Get(productID) is DO.Product dataProduct)// product exist in dal check
             {
@@ -64,12 +64,6 @@ internal class Cart : ICart
                     cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == dataProduct.ID)); // removing old item
 
                     _orderItem.Amount += 1;
-
-                    //BO.OrderItem item = dataProduct.CopyPropTo(new BO.OrderItem());
-
-                    //item.Amount = _orderItem.Amount;
-
-                    //item.TotalPrice = _orderItem.Amount * dataProduct.Price;
 
                     cart.ListOfItems.Add(new BO.OrderItem
                     {
@@ -122,10 +116,6 @@ internal class Cart : ICart
             cart.ListOfItems ??= new List<BO.OrderItem?>();
 
             if (dal?.Product.Get(productID)?.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
-
-            //DO.Product dataProduct = dal.Product.Get(productID) ?? throw new BO.UnexpectedException(); // product exist in dal check
-
-            //if (dataProduct.InStock < newAmount) throw new BO.StockNotEnoughtOrEmptyException(); // stock amount check
 
             BO.OrderItem? _orderItem = cart.ListOfItems.Find(item => item!.ProductID == productID);
 
@@ -230,9 +220,6 @@ internal class Cart : ICart
             throw new BO.ChangeInCartItemsDetailsException();
         }
 
-        //DO.Order order = cart.CopyPropTo(new DO.Order());
-
-        //order.OrderDate = DateTime.Now;
 
         DO.Order order = new DO.Order
         {              // making a new Order for the Dal
@@ -244,7 +231,7 @@ internal class Cart : ICart
             ShipDate = null
         };
 
-        int id = dal?.Order.Add(order)?? throw new BO.UnexpectedException();
+        int id = dal?.Order.Add(order) ?? throw new BO.UnexpectedException();
 
         foreach (var item in cart.ListOfItems)      // making new OrderItems for the Dal and updating DalProducts' stocks
         {
@@ -257,7 +244,7 @@ internal class Cart : ICart
 
             dataProduct.InStock -= item.Amount;
 
-            dal.Product.Update(dataProduct);  
+            dal.Product.Update(dataProduct);
         }
         ClearItems(cart);
     }

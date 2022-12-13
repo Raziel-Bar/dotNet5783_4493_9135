@@ -1,4 +1,5 @@
 ﻿using BO;
+using DO;
 using System;
 using System.Windows;
 
@@ -16,15 +17,17 @@ namespace PL.ProductWindows
         /// </summary>
         /// <param name="state">the state of the current window (either ADD mode or UPDATE mode)</param>
         /// <param name="product">In case of UPDATE MODE: the selected product that we wish to update its details</param>
-        public ProductWindow(string state, Product product = null!)
+
+        public ProductWindow(int id = 0)
         {
             InitializeComponent();
 
             CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERYS));
-            if (state == "ADD")
+
+            if (id == 0)
             {
                 UpdateButton.Visibility = Visibility.Collapsed;
-                IdTextBlock.Visibility = Visibility.Collapsed; 
+                IdTextBlock.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -32,13 +35,24 @@ namespace PL.ProductWindows
                 IdTextBox.Visibility = Visibility.Collapsed; // ID can't be changed
 
                 // all old details are shown
-                IdTextBlock.Text = product.ID.ToString();
-                NameTextBox.Text = product.Name;
-                CategoryComboBox.Text = product.Category.ToString();
-                PriceTextBox.Text = product.Price.ToString();
-                AmountTextBox.Text = product.InStock.ToString();
+                try
+                {
+                    BO.Product product = bl?.Product.RequestProductDetailsAdmin(id) ?? throw new BO.UnexpectedException();
+
+                    IdTextBlock.Text = product.ID.ToString();
+                    NameTextBox.Text = product.Name;
+                    CategoryComboBox.Text = product.Category.ToString();
+                    PriceTextBox.Text = product.Price.ToString();
+                    AmountTextBox.Text = product.InStock.ToString();
+                }
+                catch(Exception ex) 
+                {
+                    new ErrorMessageWindow(ex.Message).Show();
+                }
+               
             }
         }
+
 
         /// <summary>
         /// the add product event
@@ -114,19 +128,6 @@ namespace PL.ProductWindows
             this.Close();
         }
 
-        private void NameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
 
-        }
-
-        private void NameTextBox_TextChanged_1(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
-
-        private void CategoryComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

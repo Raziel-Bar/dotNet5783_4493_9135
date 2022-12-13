@@ -1,54 +1,51 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Text;
+namespace DalApi;
 
-namespace Tools
+public static class ToStringExcetentionMethod
 {
-    public static class ToStringExcetentionMethod
+
+    public static string ToStringProperty<Entity>(this Entity entity)
     {
+        StringBuilder stringBuilder = new StringBuilder();
+        string result = entity.helpToStringProperty(stringBuilder).ToString();
+        stringBuilder.Clear();
+        return result;
+    }
 
-        public static string ToStringProperty<Entity>(this Entity entity)
+
+    private static StringBuilder helpToStringProperty<Entity>(this Entity entity, StringBuilder stringBuilder)
+    {
+        IEnumerable<PropertyInfo> propertyInfos = entity!.GetType().GetProperties();
+
+        foreach (PropertyInfo propertyInfo in propertyInfos)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            string result = entity.helpToStringProperty(stringBuilder).ToString();
-            stringBuilder.Clear();
-            return result;
-        }
+            object? value = propertyInfo.GetValue(entity);
 
-
-        private static StringBuilder helpToStringProperty<Entity>(this Entity entity, StringBuilder stringBuilder)
-        {
-            IEnumerable<PropertyInfo> propertyInfos = entity!.GetType().GetProperties();
-
-            foreach (PropertyInfo propertyInfo in propertyInfos)
+            if (value is IEnumerable && value is not string) // please call bob the builder...
             {
-                object? value = propertyInfo.GetValue(entity);
+                var items = (IEnumerable)value;
 
-                if (value is IEnumerable && value is not string) // please call bob the builder...
+                var innerItemsType = propertyInfo.PropertyType.GetGenericArguments().Single();
+
+                foreach (var item in items)
                 {
-                    var items = (IEnumerable)value;
+                    if (innerItemsType.IsValueType)
+                        stringBuilder.Append(item.ToString() + "\n");
 
-                    var innerItemsType = propertyInfo.PropertyType.GetGenericArguments().Single();
-
-                    foreach (var item in items)
-                    {
-                        if (innerItemsType.IsValueType)
-                            stringBuilder.Append(item.ToString() + "\n");
-
-                        else
-                             helpToStringProperty(item, stringBuilder);
-                    }
+                    else
+                        item.helpToStringProperty(stringBuilder);
                 }
-                else
-                {
-                    stringBuilder.Append(propertyInfo.Name);
-                    stringBuilder.Append(": ");
-                    stringBuilder.Append(value);
-                    stringBuilder.Append('\n');
-                }
-                
             }
-            return stringBuilder;
+            else
+            {
+                stringBuilder.Append(propertyInfo.Name);
+                stringBuilder.Append(": ");
+                stringBuilder.Append(value);
+                stringBuilder.Append('\n');
+            }
         }
+        return stringBuilder;
     }
 }

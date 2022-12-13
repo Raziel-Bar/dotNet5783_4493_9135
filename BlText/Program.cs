@@ -1,7 +1,4 @@
-﻿using BlApi;
-using BlImplementation;
-using BO;
-
+﻿using BO;
 namespace BlText;
 
 internal class Program
@@ -11,7 +8,7 @@ internal class Program
     private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, DISPLAY, CONFIRM }
     private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN }
 
-    private static IBl ibl =Factory.Get();
+    private static BlApi.IBl? ibl = BlApi.Factory.Get();
 
     private static Cart cart = new Cart
     {
@@ -119,17 +116,17 @@ Please choose one of the followling options:
             switch ((PRODUCT)option)
             {
                 case PRODUCT.GET_LIST:
-                    printCollection(ibl.Product.RequestProducts());
+                    printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException());
                     break;
 
                 case PRODUCT.PRODUCT_DETAILS_CART:
                     Console.WriteLine("Enter product ID:");
-                    Console.WriteLine(ibl.Product.RequestProductDetailsUser(yourChoiceInt(), cart));
+                    Console.WriteLine(ibl?.Product.RequestProductDetailsUser(yourChoiceInt(), cart));
                     break;
 
                 case PRODUCT.ADMIN_PRODUCT_DETAILS:
                     Console.WriteLine("Enter product ID:");
-                    Console.WriteLine(ibl.Product.RequestProductDetailsAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl?.Product.RequestProductDetailsAdmin(yourChoiceInt()));
                     break;
 
                 case PRODUCT.ADD_ADMIN:
@@ -138,7 +135,7 @@ Please choose one of the followling options:
 
                 case PRODUCT.DELETE_ADMIN:
                     Console.WriteLine("Enter product ID to remove: ");
-                    ibl.Product.RemoveProductAdmin(yourChoiceInt());
+                    ibl?.Product.RemoveProductAdmin(yourChoiceInt());
                     break;
 
                 case PRODUCT.UPDATE_ADMIN:
@@ -160,7 +157,7 @@ Please choose one of the followling options:
         if (action == PRODUCT.UPDATE_ADMIN)// checker if prod exist so we won't recieve update input for nothing
         {
             Console.WriteLine("Enter product ID to update: ");
-            newProduct = ibl.Product.RequestProductDetailsAdmin(yourChoiceInt());
+            newProduct = ibl?.Product.RequestProductDetailsAdmin(yourChoiceInt()) ?? throw new UnexpectedException();
         }
 
         Console.WriteLine("Please enter the product details: \nEnter the name of the product: ");
@@ -197,9 +194,9 @@ Enter your choice: ");
 
         newProduct.InStock = yourChoiceInt();
 
-        if (action == PRODUCT.ADD_ADMIN) ibl.Product.AddProductAdmin(newProduct);
+        if (action == PRODUCT.ADD_ADMIN) ibl?.Product.AddProductAdmin(newProduct);
 
-        else ibl.Product.UpdateProductAdmin(newProduct);
+        else ibl?.Product.UpdateProductAdmin(newProduct);
     }
 
     /// <summary>
@@ -224,34 +221,34 @@ Please choose one of the fowling options:
             switch ((ORDER)option)
             {
                 case ORDER.GET_LIST:
-                    printCollection(ibl.Order.RequestOrdersListAdmin());
+                    printCollection(ibl?.Order.RequestOrdersListAdmin() ?? throw new UnexpectedException());
                     break;
 
                 case ORDER.GET_ORDER:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.RequestOrderDetails(yourChoiceInt()));
+                    Console.WriteLine(ibl?.Order.RequestOrderDetails(yourChoiceInt()));
                     break;
 
                 case ORDER.UPDATE_SHIP:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.UpdateOrderShipDateAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl?.Order.UpdateOrderShipDateAdmin(yourChoiceInt()));
                     break;
 
                 case ORDER.UPDATE_DELIVERY:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl?.Order.UpdateOrderDeliveryDateAdmin(yourChoiceInt()));
                     break;
 
                 case ORDER.ORDER_TRACKING:
                     Console.WriteLine("Please enter the order ID:");
-                    Console.WriteLine(ibl.Order.OrderTrackingAdmin(yourChoiceInt()));
+                    Console.WriteLine(ibl?.Order.OrderTrackingAdmin(yourChoiceInt()));
                     break;
 
                 case ORDER.UPDATE_ORDER_ADMIN: // BONUS
                     Console.WriteLine(@"Enter order ID, Product ID, Order item ID and The new amount you wish to order 
 In case of removing item from order, set new amount to 0
 In case of adding a new item to the order, set order item ID to 0");
-                    ibl.Order.UpdateOrderAdmin(yourChoiceInt(), yourChoiceInt(), yourChoiceInt(), yourChoiceInt());
+                    ibl?.Order.UpdateOrderAdmin(yourChoiceInt(), yourChoiceInt(), yourChoiceInt(), yourChoiceInt());
                     break;
 
             }
@@ -280,14 +277,14 @@ Please choose one of the fowling options:
             {
                 case CART.ADD_PRODUCT:
                     Console.WriteLine("Catalog:");
-                    printCollection(ibl.Product.RequestProducts());
+                    printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException() );
                     Console.WriteLine("Enter product ID");
-                    cart = ibl.Cart.AddProductToCart(yourChoiceInt(), cart);
+                    cart = ibl?.Cart.AddProductToCart(yourChoiceInt(), cart) ?? throw new UnexpectedException();
                     break;
 
                 case CART.UPDATE_PRODUCT:
                     Console.WriteLine("Please enter the product ID and the new amount");
-                    cart = ibl.Cart.UpdateProductInCart(yourChoiceInt(), cart, yourChoiceInt());
+                    cart = ibl?.Cart.UpdateProductInCart(yourChoiceInt(), cart, yourChoiceInt())?? throw new UnexpectedException();
                     break;
                 case CART.DISPLAY:
                     Console.WriteLine(cart);
@@ -303,8 +300,8 @@ Please choose one of the fowling options:
                     Console.WriteLine("For a final confirm please enter 1:");
                     if (yourChoiceInt() == 1)
                     {
-                        ibl.Cart.ConfirmOrder(cart);
-                        ibl.Cart.ClearItems(cart);
+                        ibl?.Cart.ConfirmOrder(cart);
+                        ibl?.Cart.ClearItems(cart);
                     }
                     break;
             }

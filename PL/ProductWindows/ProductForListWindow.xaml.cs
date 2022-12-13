@@ -22,7 +22,8 @@ public enum WINERYS
 /// </summary>
 public partial class ProductForListWindow : Window
 {
-    BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
+    BlApi.IBl? bl = BlApi.Factory.Get();
+
     IEnumerable<ProductForList?> productForLists;
 
     /// <summary>
@@ -50,7 +51,7 @@ public partial class ProductForListWindow : Window
     {
         if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = productForLists;
 
-        else WinesListView.ItemsSource = bl.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem);
+        else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem);
     }
 
     /// <summary>
@@ -60,7 +61,7 @@ public partial class ProductForListWindow : Window
     /// <param name="e">mouse click</param>
     private void ToProductWindowAddMode(object sender, RoutedEventArgs e)
     {
-        new ProductWindow("ADD").Show();
+        new ProductWindow().Show();
         this.Close();
     }
 
@@ -73,17 +74,9 @@ public partial class ProductForListWindow : Window
     {
 
         if (WinesListView.SelectedItem is ProductForList productForList)
-        {
-           // try
-           // {
-                //bl.Product.UpdateProductAdmin(bl.Product.RequestProductDetailsAdmin(productForList.ID));
-                new ProductWindow("UPDATE", bl.Product.RequestProductDetailsAdmin(productForList.ID)).Show();
-                this.Close();
-            //}
-            //catch (BO.RemoveProductThatIsInOrdersException)
-            //{
-               // new ErrorMessageWindow("Cannot Update the product because there are orders that includes that product!").Show();
-            //}               
+        {          
+                new ProductWindow(productForList.ID).Show();
+                this.Close();                  
         }
     }
 
