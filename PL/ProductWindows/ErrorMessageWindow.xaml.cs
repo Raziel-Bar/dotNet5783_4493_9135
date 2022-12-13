@@ -1,5 +1,6 @@
 ﻿using PL.ProductWindows;
 using System.Windows;
+using System.Windows.Media;
 
 namespace PL.ProductWindows
 {
@@ -12,9 +13,10 @@ namespace PL.ProductWindows
         /// a message window that alerts errors when preforming an action
         /// </summary>
         /// <param name="text">The corresponding message</param>
-        public ErrorMessageWindow(string text)
+        public ErrorMessageWindow(string title, string text)
         {
             InitializeComponent();
+            Title = title;
             ErrorMessageTextBlock.Text = text;
         }
 

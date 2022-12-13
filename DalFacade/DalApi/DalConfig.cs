@@ -2,6 +2,9 @@
 namespace DalApi;
 using System.Xml.Linq;
 
+/// <summary>
+/// the config clss which determineswhat dal source (package) we will be using
+/// </summary>
 static class DalConfig
 {
     internal static string? s_dalName;

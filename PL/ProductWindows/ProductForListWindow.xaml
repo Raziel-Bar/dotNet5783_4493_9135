@@ -20,23 +20,37 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.2">               
+            <ComboBox Name="WinerySelector" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.2">
             </ComboBox>
             <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
         </Grid>
         <ListView Name="WinesListView"  Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=6}" Foreground="White" FontFamily="Agency FB" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding ="{Binding Name}"/>
-                    <GridViewColumn Header="ID" DisplayMemberBinding ="{Binding ID}"/>
-                    <GridViewColumn Header="Category" DisplayMemberBinding ="{Binding Category}"/>
-                    <GridViewColumn Header="Price" DisplayMemberBinding ="{Binding Price}"/>
-
+                    <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="WinesListViewColumnHeader_Click">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="ID" Click="WinesListViewColumnHeader_Click">ID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding ="{Binding Category}" Width="100">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Category" Click="WinesListViewColumnHeader_Click">Category</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding ="{Binding Price}" Width="100">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Price" Click="WinesListViewColumnHeader_Click">Price</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
-
                 
             </ListView.View>
-            
+
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
@@ -46,7 +60,7 @@
                     </Style.Triggers>
                 </Style>
             </ListView.Resources>
-            
+
         </ListView>
 
         <Button Name="AddProductButton" Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="ToProductWindowAddMode" Foreground="White" BorderBrush="White" Background="{x:Null}" FontWeight="Bold">
@@ -60,7 +74,7 @@
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
-                    
+
                 </Style>
 
             </Button.Resources>

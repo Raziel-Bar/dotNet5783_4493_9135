@@ -4,7 +4,7 @@ using Dal;
 namespace BlImplementation;
 internal class Order : IOrder
 {
-    private DalApi.IDal? dal = DalApi.Factory.Get(); //new DalList()@;
+    private DalApi.IDal? dal = DalApi.Factory.Get();
 
     /// <summary>
     /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
@@ -33,7 +33,6 @@ internal class Order : IOrder
         }
         return boList;
     }
-
 
     /// <summary>
     /// gets a BO order. Meaning, gets the full details of an existing DO Order, including the missing info
@@ -89,7 +88,6 @@ internal class Order : IOrder
         catch (Exception) { throw new BO.UnexpectedException(); } // for developers!. that exception is NOT supposed to happen
     }
 
-
     /// <summary>
     /// sets a shipping date for an existing pending order
     /// </summary>
@@ -115,7 +113,6 @@ internal class Order : IOrder
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
-
 
     /// <summary>
     /// sets a delivery date for an existing already shipped order
@@ -146,7 +143,6 @@ internal class Order : IOrder
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
 
-
     /// <summary>
     /// makes an orderTracking for an existing order.
     /// </summary>
@@ -176,7 +172,6 @@ internal class Order : IOrder
         }
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order", ex); }
     }
-
 
     /// <summary>
     /// updates an already confirmed order's orderItem's details
@@ -298,17 +293,24 @@ internal class Order : IOrder
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order/OrderItem", ex); }
     }
 
-
-
-
-    // ID validity check
+    #region private utility methods
+    /// <summary>
+    /// order ID validity general checker
+    /// </summary>
+    /// <param name="id">given order id number</param>
+    /// <exception cref="BO.InvalidDataException">in case the number is negative</exception>
     private void IDCheck(int id)
     {
         if (id < 0)
-            throw new BO.InvalidDataException("Order"); // ID validity check
+            throw new BO.InvalidDataException("Order");
     }
 
+    /// <summary>
+    /// order's status calculator. 
+    /// </summary>
+    /// <param name="order">given order</param>
+    /// <returns>the current status of the order</returns>
     private BO.ORDER_STATUS? GetStatus(DO.Order order) =>
     order.DeliveryDate is not null ? BO.ORDER_STATUS.DELIVERED : order.ShipDate is not null ? BO.ORDER_STATUS.SHIPPED : BO.ORDER_STATUS.PENDING;
-
+    #endregion
 }

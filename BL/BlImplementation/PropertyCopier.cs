@@ -66,15 +66,15 @@ public static class PropertyCopier
 
             foreach (var toProperty in toProperties)
             {
-                if (fromProperty.Name == toProperty.Name)
+                if (fromProperty.Name == toProperty.Name) // we check names
                 {
 
-                    if (fromProperty.PropertyType == toProperty.PropertyType)
+                    if (fromProperty.PropertyType == toProperty.PropertyType) // and types!
                         toProperty.SetValue(to, value);
 
                     else
                     {
-                        Type typeNullAbleTo = Nullable.GetUnderlyingType(toProperty.PropertyType)!;
+                        Type typeNullAbleTo = Nullable.GetUnderlyingType(toProperty.PropertyType)!; // in case of enums conflicts (BO != DO)...
 
                         if (typeNullAbleTo is not null)
                             toProperty.SetValue(to, Enum.ToObject(typeNullAbleTo, value!));

@@ -1,8 +1,11 @@
 ﻿using BO;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace PL.ProductWindows;
@@ -25,7 +28,8 @@ public partial class ProductForListWindow : Window
     BlApi.IBl? bl = BlApi.Factory.Get();
 
     IEnumerable<ProductForList?> productForLists;
-
+    ListSortDirection direction;
+    string? sortBy = null;
     /// <summary>
     /// the list window with all prduct and their details
     /// </summary>
@@ -37,9 +41,10 @@ public partial class ProductForListWindow : Window
         productForLists = bl.Product.RequestProducts();
 
         WinesListView.ItemsSource = productForLists;
-
         WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
-
+        sortBy = "Name";
+        direction = ListSortDirection.Ascending;
+        WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
     }
 
     /// <summary>
@@ -72,11 +77,14 @@ public partial class ProductForListWindow : Window
     /// <param name="e">mouse Double click</param>
     private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
     {
-
-        if (WinesListView.SelectedItem is ProductForList productForList)
-        {          
+        BO.ProductForList item = (((FrameworkElement)e.OriginalSource).DataContext as BO.ProductForList)!;
+        if (item != null)
+        {
+            if (WinesListView.SelectedItem is ProductForList productForList)
+            {
                 new ProductWindow(productForList.ID).Show();
-                this.Close();                  
+                this.Close();
+            }
         }
     }
 
@@ -93,6 +101,28 @@ public partial class ProductForListWindow : Window
 
     private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      
+
+    }
+
+    /// <summary>
+    /// sorts the items in the list view based on column
+    /// </summary>
+    /// <param name="sender">WinesListView : ListView</param>
+    /// <param name="e">mouse double click</param>
+    private void WinesListViewColumnHeader_Click(object sender, RoutedEventArgs e)
+    {
+        GridViewColumnHeader? column = sender as GridViewColumnHeader;
+        if (sortBy == column?.Tag.ToString()) // we click the same column to flip direction
+        {
+            if (direction == ListSortDirection.Ascending) direction = ListSortDirection.Descending;
+            else direction = ListSortDirection.Ascending;
+        }
+        else
+        {
+            direction = ListSortDirection.Ascending;
+            sortBy = column?.Tag.ToString();
+        }
+        WinesListView.Items.SortDescriptions.Clear();
+        WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
     }
 }

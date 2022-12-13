@@ -21,26 +21,15 @@ public class AlreadyExistException : Exception
     public AlreadyExistException(string type) : base($"ERROR dotNet5783_DAL_ERROR_02:{type} already exists") { }
 }
 
-
-
-
-
+/// <summary>
+/// Exception for cases of failure to load the dal-config.xml or parts of it
+/// </summary>
 [Serializable]
 public class DalConfigException : Exception
 {
     public DalConfigException(string msg) : base(msg) { }
     public DalConfigException(string msg, Exception ex) : base(msg, ex) { }
 }
-
-
-
-
-
-
-
-
-
-
 
 /// <summary>
 /// Exception for cases when something that shouldn't happen happened. FOR DEVELOPERS USE ONLY

@@ -176,7 +176,6 @@ internal class Cart : ICart
     /// <exception cref="BO.NotFoundInDalException">If one of the Product doesn't exist in the Dal</exception>
     /// <exception cref="BO.StockNotEnoughtOrEmptyException">If one of the product's stock is empty so we can't add it to the cart</exception>
     /// <exception cref="BO.InvalidDataException">If one of the customer's or product's details is invalid</exception>
-    /// 
     void ICart.ConfirmOrder(BO.Cart cart)
     {
         cart.ListOfItems ??= new List<BO.OrderItem?>();

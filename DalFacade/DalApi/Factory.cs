@@ -3,6 +3,9 @@ using DO;
 using System.Reflection;
 using static DalApi.DalConfig;
 
+/// <summary>
+/// simple factory for getting the data from the DL
+/// </summary>
 public static class Factory
 {
     public static IDal? Get()

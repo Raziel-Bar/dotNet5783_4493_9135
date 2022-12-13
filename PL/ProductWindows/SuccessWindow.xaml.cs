@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace PL.ProductWindows
 {
@@ -23,6 +24,5 @@ namespace PL.ProductWindows
         /// <param name="sender">the ok button</param>
         /// <param name="e">mouse click</param>
         private void CloseWindow(object sender, RoutedEventArgs e) => this.Close();
-        
     }
 }

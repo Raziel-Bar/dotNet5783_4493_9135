@@ -17,7 +17,6 @@ namespace PL.ProductWindows
         /// </summary>
         /// <param name="state">the state of the current window (either ADD mode or UPDATE mode)</param>
         /// <param name="product">In case of UPDATE MODE: the selected product that we wish to update its details</param>
-
         public ProductWindow(int id = 0)
         {
             InitializeComponent();
@@ -47,12 +46,11 @@ namespace PL.ProductWindows
                 }
                 catch(Exception ex) 
                 {
-                    new ErrorMessageWindow(ex.Message).Show();
+                    new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
                 }
                
             }
         }
-
 
         /// <summary>
         /// the add product event
@@ -78,11 +76,19 @@ namespace PL.ProductWindows
             }
             catch (FormatException) // we do not allow empty boxes or illegal input
             {
-                new ErrorMessageWindow("Invalid input!\nSome of the textboxes are either empty or contain illegal input.").Show();
+                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").Show();
             }
-            catch (Exception ex) // in any other case we will just link the inner exception for better knowledge
+            catch (BO.InvalidDataException ex) 
             {
-                new ErrorMessageWindow(ex.Message).Show();
+                new ErrorMessageWindow("Invalid Data", ex.Message).Show();
+            }
+            catch (BO.AlreadyExistInDalException ex)
+            {
+                new ErrorMessageWindow("Existing Data Error", ex.Message).Show();
+            }
+            catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
+            {
+                new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
             }
         }
 
@@ -109,11 +115,19 @@ namespace PL.ProductWindows
             }
             catch (FormatException) // we do not allow empty boxes or illegal input
             {
-                new ErrorMessageWindow("Invalid input!\nSome of the textboxes are either empty or contain illegal input.").Show();
+                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").Show();
             }
-            catch (Exception ex) // to check if we need to split catches by exceptions or not..
+            catch (BO.InvalidDataException ex)
             {
-                new ErrorMessageWindow(ex.Message).Show();
+                new ErrorMessageWindow("Invalid Data", ex.Message).Show();
+            }
+            catch (BO.NotFoundInDalException ex)
+            {
+                new ErrorMessageWindow("Data Not Found", ex.Message).Show();
+            }
+            catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
+            {
+                new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
             }
         }
 

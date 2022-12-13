@@ -38,19 +38,7 @@ internal class Product : IProduct
             try
             {
                 DO.Product product = dal?.Product.Get(productID) ?? throw new BO.UnexpectedException();
-
                 return product.CopyPropTo(new BO.Product());
-
-                //if (dal.Product.Get(productID) is DO.Product product)
-                //{
-                //    //BO.Product retProduct = new BO.Product();
-
-                //    //PropertyCopier<DO.Product, BO.Product>.Copy(product, retProduct); // bonus
-
-                //    //return retProduct;
-                //    return product.CopyPropTo(new BO.Product());
-                //}
-                //throw new BO.NotFoundInDalException("Product");
             }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
@@ -83,9 +71,6 @@ internal class Product : IProduct
 
                 if (dal?.Product.Get(productID) is DO.Product product)
                 {
-                    // BO.ProductItem retProduct = new BO.ProductItem();
-                    //PropertyCopier<DO.Product, BO.ProductItem>.Copy(product, retProduct); // bonus
-
                     BO.ProductItem retProduct = product.CopyPropTo(new BO.ProductItem());
 
                     retProduct.Amount = amountInCart; // unique prop
@@ -111,11 +96,7 @@ internal class Product : IProduct
     {
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null && product.Category != null)
         {
-            //DO.Product product1 = new DO.Product();
-            //PropertyCopier<BO.Product, DO.Product>.Copy(product, product1);@@2
-
             DO.Product productDo = product.CopyPropToStruct(new DO.Product());
-
 
             try { dal?.Product.Add(productDo); }
             catch (DO.AlreadyExistException ex) { throw new BO.AlreadyExistInDalException("Product", ex); }
@@ -144,29 +125,6 @@ internal class Product : IProduct
         }
         else throw new BO.InvalidDataException("Product");
     }
-    /*
-        public void RemoveProductAdmin(int productID)
-    {
-        if (productID >= 100000)
-        {
-            IEnumerable<DO.OrderItem?> orderItems = dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID);
-            if (orderItems.Any())
-            {
-                foreach (var item in orderItems)
-                {
-                    var orderItem = item.CopyPropToStruct<DO.OrderItem?, DO.OrderItem>(new DO.OrderItem());
-                    if (dal.Order.Get(orderItem.OrderID).CopyPropToStruct<DO.Order?, DO.Order>(new DO.Order()).DeliveryDate != null)
-                    {
-                        throw new BO.RemoveProductThatIsInOrdersException();
-                    }
-                }
-            }
-            try { dal.Product.Delete(productID); }
-            catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
-        }
-        else throw new BO.InvalidDataException("Product");
-    } 
-    */
 
     /// <summary>
     /// Updates a Product to the database in the Dal if all conditions are met
