@@ -87,6 +87,6 @@ internal class DalOrderItem : IOrderItem
     /// </summary>
     /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing orderItems</param>
     /// <returns>the list of all orderItems that got true in the condition</returns>
-    public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func = null) =>
+    public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func) =>
         func is null ? _orderItems.Select(orderItem => orderItem) : _orderItems.Where(func);
 }

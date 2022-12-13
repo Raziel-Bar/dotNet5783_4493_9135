@@ -1,6 +1,4 @@
-﻿using BlApi;
-using BlImplementation;
-using BO;
+﻿using BO;
 using System;
 using System.Windows;
 
@@ -11,7 +9,7 @@ namespace PL.ProductWindows
     /// </summary>
     public partial class ProductWindow : Window
     {
-        IBl bl = new Bl();
+        BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
 
         /// <summary>
         /// a window for either adding or updating a product
@@ -52,7 +50,7 @@ namespace PL.ProductWindows
             try
             {
 
-                bl.Product.AddProductAdmin(new BO.Product
+                bl?.Product.AddProductAdmin(new BO.Product
                 {
                     ID = int.Parse(IdTextBox.Text),
                     Category = (BO.WINERYS)CategoryComboBox.SelectedItem,
@@ -83,7 +81,7 @@ namespace PL.ProductWindows
         {
             try
             {
-                bl.Product.UpdateProductAdmin(new BO.Product
+                bl?.Product.UpdateProductAdmin(new BO.Product
                 {
                     ID = int.Parse(IdTextBlock.Text),
                     Category = (BO.WINERYS)CategoryComboBox.SelectedItem,

@@ -7,7 +7,7 @@ namespace BlImplementation;
 /// </summary>
 internal class Product : IProduct
 {
-    private DalApi.IDal dal = new DalList();
+    private DalApi.IDal? dal = DalApi.Factory.Get(); //new DalList();
 
     public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<BO.ProductForList?, bool>? func) => productForLists.Where(func!);
 
@@ -18,7 +18,7 @@ internal class Product : IProduct
     /// list of products : type Ienumerable
     /// </returns>
     ///
-    public IEnumerable<BO.ProductForList?> RequestProducts() => dal.Product.GetList(null).CopyPropToList<DO.Product?, BO.ProductForList>();
+    public IEnumerable<BO.ProductForList?> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>()?? throw new BO.UnexpectedException();
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
@@ -37,7 +37,7 @@ internal class Product : IProduct
         {
             try
             {
-                DO.Product product = dal.Product.Get(productID) ?? throw new BO.UnexpectedException();
+                DO.Product product = dal?.Product.Get(productID) ?? throw new BO.UnexpectedException();
 
                 return product.CopyPropTo(new BO.Product());
 
@@ -81,7 +81,7 @@ internal class Product : IProduct
                 if (orderItem != null)
                     amountInCart = orderItem.Amount;
 
-                if (dal.Product.Get(productID) is DO.Product product)
+                if (dal?.Product.Get(productID) is DO.Product product)
                 {
                     // BO.ProductItem retProduct = new BO.ProductItem();
                     //PropertyCopier<DO.Product, BO.ProductItem>.Copy(product, retProduct); // bonus
@@ -117,7 +117,7 @@ internal class Product : IProduct
             DO.Product productDo = product.CopyPropToStruct(new DO.Product());
 
 
-            try { dal.Product.Add(productDo); }
+            try { dal?.Product.Add(productDo); }
             catch (DO.AlreadyExistException ex) { throw new BO.AlreadyExistInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");
@@ -136,7 +136,7 @@ internal class Product : IProduct
     {
         if (productID >= 100000)
         {
-            if (dal.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any())
+            if ( (bool)(dal?.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any()!) )
                 throw new BO.RemoveProductThatIsInOrdersException();
 
             try { dal.Product.Delete(productID); }
@@ -181,7 +181,7 @@ internal class Product : IProduct
         if (product.ID >= 100000 && product.InStock >= 0 && product.Price > 0 && product.Name != null)
         {
             DO.Product dataProduct = product.CopyPropToStruct(new DO.Product());
-            try { dal.Product.Update(dataProduct); }
+            try { dal?.Product.Update(dataProduct); }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
         else throw new BO.InvalidDataException("Product");

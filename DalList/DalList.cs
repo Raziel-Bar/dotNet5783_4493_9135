@@ -4,8 +4,12 @@ namespace Dal;
 /// <summary>
 /// Main Dal Class. Inherits Idal thus makes a combined object off all entities's methods implementations
 /// </summary>
-sealed public class DalList : IDal
+ internal /*public*/ sealed class DalList : IDal
 {
+    public static IDal Instance { get; } = new DalList();
+
+    private DalList() { }   
+
     /// <summary>
     /// DalProduct entity - "son" of IProduct. has all Product methods
     /// </summary>
