@@ -8,7 +8,7 @@
         Title="ProductWindow" Height="450" Width="800">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/ProductWindows/red-wine.jpg" Stretch="None"/>
+            <ImageBrush ImageSource="/ProductWindows/pics/red-wine.jpg" Stretch="None"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

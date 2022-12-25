@@ -8,7 +8,7 @@
         Title="ProductForListWindow" Height="640" Width="800">
     <Grid Name ="MainGrid">
         <Grid.Background>
-            <ImageBrush ImageSource="/ProductWindows/red-wine.jpg"/>
+            <ImageBrush ImageSource="/ProductWindows/pics/red-wine.jpg"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>

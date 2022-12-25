@@ -3,6 +3,7 @@ namespace Dal;
 
 /// <summary>
 /// Main Dal Class. Inherits Idal thus makes a combined object off all entities's methods implementations
+/// The class creates 1 object only at nost (Singleton)
 /// </summary>
  internal  sealed class DalList : IDal
 {

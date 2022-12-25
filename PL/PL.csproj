@@ -25,8 +25,7 @@
 
 	<ItemGroup>
 	  <Resource Include="pexels-tim-mossholder-2336117.jpg" />
-	  <Resource Include="ProductWindows\elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
-	  <Resource Include="ProductWindows\red-wine.jpg" />
+	  <Resource Include="ProductWindows\pics\red-wine.jpg" />
 	</ItemGroup>
 
 </Project>
