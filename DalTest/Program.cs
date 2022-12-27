@@ -11,7 +11,7 @@ public class Program
     /// <summary>
     /// creating an obejct from each DAL entity in order to have access to each entity's methods
     /// </summary>
-    private static IDal? dal = Factory.Get(); // new DalList();
+    private readonly static IDal? dal = Factory.Get(); // new DalList();
 
 
     /// <summary>

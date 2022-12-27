@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,9 +26,9 @@ public enum WINERYS
 /// </summary>
 public partial class ProductForListWindow : Window
 {
-    BlApi.IBl? bl = BlApi.Factory.Get();
+    readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
-    IEnumerable<ProductForList?> productForLists;
+    IEnumerable<IGrouping<BO.WINERYS?, ProductForList?>> productForLists;
     ListSortDirection direction;
     string? sortBy = null;
     /// <summary>
@@ -40,8 +41,12 @@ public partial class ProductForListWindow : Window
 
         productForLists = bl.Product.RequestProducts();
 
-        WinesListView.ItemsSource = productForLists;
+        WinesListView.ItemsSource = from _product in productForLists
+                                    from details in _product
+                                    select _product;
         WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
+
+        // BONUS we made the it so we could sort the listView (either ascending or descending!) by clicking the column headers
         sortBy = "Name";
         direction = ListSortDirection.Ascending;
         WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
@@ -54,9 +59,12 @@ public partial class ProductForListWindow : Window
     /// <param name="e">selection changed</param>
     private void WinerySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = productForLists;
+        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = from _product in productForLists
+                                                                                             from details in _product
+                                                                                             select details;
 
-        else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem);
+        else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
+        //else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem); &*&*&*&*&*&*&*&**
     }
 
     /// <summary>
@@ -105,7 +113,7 @@ public partial class ProductForListWindow : Window
     }
 
     /// <summary>
-    /// sorts the items in the list view based on column
+    /// BONUS sorts the items in the list view based on column
     /// </summary>
     /// <param name="sender">WinesListView : ListView</param>
     /// <param name="e">mouse double click</param>

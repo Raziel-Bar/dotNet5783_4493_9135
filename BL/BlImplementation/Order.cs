@@ -1,10 +1,9 @@
 ﻿using BlApi;
 using Dal;
-
 namespace BlImplementation;
 internal class Order : IOrder
 {
-    private DalApi.IDal? dal = DalApi.Factory.Get();
+    private readonly DalApi.IDal? dal = DalApi.Factory.Get();
 
     /// <summary>
     /// Adminstator action: gets a list of all orders from dal, presented as OrderForList Type.
@@ -12,15 +11,13 @@ internal class Order : IOrder
     /// <returns>List of OrderForList objects : type IEnumerable</returns>
     public IEnumerable<BO.OrderForList?> RequestOrdersListAdmin()
     {
-        IEnumerable<DO.Order?> doOrders = dal?.Order.GetList()?? throw new BO.UnexpectedException(); ; // getting the DO orders      
+        IEnumerable<DO.Order?> doOrders = dal?.Order.GetList() ?? throw new BO.UnexpectedException(); ; // getting the DO orders      
 
-        List<BO.OrderForList?> boList = new List<BO.OrderForList?>();
+        /*List<BO.OrderForList?> boList = new List<BO.OrderForList?>();
 
-        foreach (var item in doOrders) // transforming all DO orders into BO orders so that we can have the Status, amount of items and the total price
+        foreach (var order in doOrders) // transforming all DO orders into BO orders so that we can have the Status, amount of items and the total price
         {
-            if (item is DO.Order order)
-            {
-                BO.Order boOrder = RequestOrderDetails(order.ID);  // transforming DO order into BO order
+                BO.Order boOrder = RequestOrderDetails((int)order?.ID!);  // transforming DO order into BO order
 
                 BO.OrderForList boOrderForList = boOrder.CopyPropTo(new BO.OrderForList()); // bonus
 
@@ -29,8 +26,16 @@ internal class Order : IOrder
                 boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
 
                 boList.Add(boOrderForList);
-            }
-        }
+        }                                 /*               &*&*&*&*&*&*&*&*&*&   */
+        IEnumerable<BO.OrderForList?> boList = from order in doOrders
+                                               let boOrder = RequestOrderDetails((int)order?.ID!)
+                                               orderby order?.ID
+                                               select boOrder.CopyPropTo(new BO.OrderForList
+                                               {
+                                                   TotalPrice = boOrder.ListOfItems!.Sum(orderItem => orderItem!.Price * orderItem.Amount),
+                                                   Amount = boOrder.ListOfItems!.Count
+                                               });
+
         return boList;
     }
 
@@ -44,7 +49,7 @@ internal class Order : IOrder
     /// <exception cref="BO.UnexpectedException">FOR DEVELOPERS: not supposed to happen! but just in case there will be any inner error between the Dal and the Bl.</exception>
     public BO.Order RequestOrderDetails(int orderID)
     {
-         // ID validity check
+        // ID validity check
         IDCheck(orderID);
         try
         {
@@ -52,32 +57,45 @@ internal class Order : IOrder
 
             BO.Order boOrder = doOrder.CopyPropTo(new BO.Order()); // bonus // we now sets the "easy" values - the identical props
 
-            boOrder.ListOfItems = new List<BO.OrderItem?>();
 
             // Now for the ListOfitems, TotalPrice and Status //
 
             // getting a DO orderItems list for the price and amount info
             IEnumerable<DO.OrderItem?> doOrderItems = dal.OrderItem.GetList(orderItem => orderItem?.OrderID == orderID);
 
-            double totalPriceOrder = 0; // sum for the total price
+            /*
+             double totalPriceOrder = 0; // sum for the total price
 
-            foreach (var item in doOrderItems) // running over the order items
-            {
-                if (item is DO.OrderItem orderItem)
-                {
-                    BO.OrderItem boOrderItem = orderItem.CopyPropTo(new BO.OrderItem()); // Bonus
+             boOrder.ListOfItems = new List<BO.OrderItem?>();
 
-                    boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)?.Name; // unique prop
+             foreach (var item in doOrderItems) // running over the order items
+             {
+                 if (item is DO.OrderItem orderItem)
+                 {
+                     BO.OrderItem boOrderItem = orderItem.CopyPropTo(new BO.OrderItem()); // Bonus
 
-                    boOrderItem.TotalPrice = orderItem.Price * orderItem.Amount; // unique prop
+                     boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)?.Name; // unique prop
 
-                    boOrder.ListOfItems.Add(boOrderItem);
+                     boOrderItem.TotalPrice = orderItem.Price * orderItem.Amount; // unique prop
 
-                    totalPriceOrder += boOrderItem.TotalPrice;
-                }
-            }
+                     boOrder.ListOfItems.Add(boOrderItem);
 
-            boOrder.TotalPrice = totalPriceOrder; // sets the total price field
+                     totalPriceOrder += boOrderItem.TotalPrice;
+                 }
+             }                                          &*&*&*&*&*&*&*&*&*&*&**/
+
+            var temp = from doOrderItem in doOrderItems
+                       orderby dal.Product.Get((int)doOrderItem?.ProductID!)?.Name // we sort the items by their names and not their OrderItemID
+                       select doOrderItem.CopyPropTo(new BO.OrderItem
+                       {
+                           ProductName = dal.Product.Get((int)doOrderItem?.ProductID!)?.Name,
+                           TotalPrice = (double)doOrderItem?.Price! * (int)doOrderItem?.Amount!
+                       });
+            boOrder.ListOfItems = temp.ToList(); // casting our temp : Ienumrable<T> into List<T>
+
+            boOrder.TotalPrice = boOrder.ListOfItems!.Sum(boOrderItem => boOrderItem!.TotalPrice); // sum for the total price
+
+            // boOrder.TotalPrice = totalPriceOrder; // sets the total price field &*&*&*&*&*&*&*&*&*&**&*
 
             boOrder.Status = GetStatus(doOrder); // only 1 value left, the status
 
@@ -195,7 +213,7 @@ internal class Order : IOrder
     /// </BONUS_METHOD_explanation>
     public void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount)
     {
-       
+
         IDCheck(orderID);// Order ID validity check
 
         if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
@@ -209,7 +227,7 @@ internal class Order : IOrder
 
                 if (orderItem.ProductID != productID || orderItem.OrderID != orderID) throw new BO.InvalidDataException("ID"); // ID's match check
             }
-            else if(orderItemID < 0) throw new BO.InvalidDataException("ID"); // else => orderItemID == 0 => new add
+            else if (orderItemID < 0) throw new BO.InvalidDataException("ID"); // else => orderItemID == 0 => new add
 
             // preparing all data for update and some more checks
 

@@ -10,7 +10,7 @@ namespace BlImplementation;
 /// </summary>
 internal class Cart : ICart
 {
-    private DalApi.IDal? dal = DalApi.Factory.Get(); // new DalList();
+    private readonly DalApi.IDal? dal = DalApi.Factory.Get(); // new DalList();
 
     /// <summary>
     /// Adds a product to the cart if All conditions are met
@@ -186,9 +186,9 @@ internal class Cart : ICart
         bool changeInProductDetails = false;
 
         if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null ||
-            !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer");
+            !new EmailAddressAttribute().IsValid(cart.CustomerEmail)) throw new BO.InvalidDataException("Customer");        //customer's details check
 
-        //customer's details check
+
         DO.Product dataProduct;
         try
         {
@@ -226,8 +226,8 @@ internal class Cart : ICart
             CustomerEmail = cart.CustomerEmail,
             CustomerName = cart.CustomerName,
             OrderDate = DateTime.Now,
-            DeliveryDate = null,
-            ShipDate = null
+            //DeliveryDate = null,
+            //ShipDate = null
         };
 
         int id = dal?.Order.Add(order) ?? throw new BO.UnexpectedException();

@@ -7,18 +7,18 @@ namespace BlImplementation;
 /// </summary>
 internal class Product : IProduct
 {
-    private DalApi.IDal? dal = DalApi.Factory.Get(); //new DalList();
+    private readonly DalApi.IDal? dal = DalApi.Factory.Get(); //new DalList();
 
-    public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<BO.ProductForList?, bool>? func) => productForLists.Where(func!);
+    //public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<BO.ProductForList?, bool>? func) => productForLists.Where(func!); &*&*&*&*&*&*&*&*
 
     /// <summary>
-    /// makes a product's list based on the requested Dal data
+    /// makes a product's GROUPS list based on the requested Dal data
     /// </summary>
     /// <returns>
-    /// list of products : type Ienumerable
+    /// list of products : type IEnumerable<IGrouping<BO.WINERYS? ,BO.ProductForList?>> 
     /// </returns>
     ///
-    public IEnumerable<BO.ProductForList?> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>()?? throw new BO.UnexpectedException();
+    public IEnumerable<IGrouping<BO.WINERYS? ,BO.ProductForList?>> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>().GroupBy(_product => _product.Category)?? throw new BO.UnexpectedException(); //&*&*&*&*&*
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use

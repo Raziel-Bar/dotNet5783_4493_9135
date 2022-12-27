@@ -71,24 +71,25 @@ namespace PL.ProductWindows
                     InStock = int.Parse(AmountTextBox.Text)
                 });
                 new ProductForListWindow().Show();
-                new SuccessWindow("Your Product Has been added successfully!").Show();
+                new SuccessWindow("Your Product Has been added successfully!").ShowDialog();
                 this.Close();
             }
             catch (FormatException) // we do not allow empty boxes or illegal input
             {
-                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").Show();
+                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").ShowDialog();
             }
             catch (BO.InvalidDataException ex) 
             {
-                new ErrorMessageWindow("Invalid Data", ex.Message).Show();
+                new ErrorMessageWindow("Invalid Data", ex.Message).ShowDialog();
             }
             catch (BO.AlreadyExistInDalException ex)
             {
-                new ErrorMessageWindow("Existing Data Error", ex.Message).Show();
+                new ErrorMessageWindow("Existing Data Error", ex.Message).ShowDialog();
             }
             catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
             {
-                new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
+                //MessageBox.Show(ex.Message);
+                new ErrorMessageWindow("Unexpected Error!", ex.Message).ShowDialog();
             }
         }
 
@@ -110,24 +111,24 @@ namespace PL.ProductWindows
                     InStock = int.Parse(AmountTextBox.Text)
                 });
                 new ProductForListWindow().Show();
-                new SuccessWindow("Your Product Has been Updated successfully!").Show();
+                new SuccessWindow("Your Product Has been Updated successfully!").ShowDialog();
                 this.Close();
             }
             catch (FormatException) // we do not allow empty boxes or illegal input
             {
-                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").Show();
+                new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").ShowDialog();
             }
             catch (BO.InvalidDataException ex)
             {
-                new ErrorMessageWindow("Invalid Data", ex.Message).Show();
+                new ErrorMessageWindow("Invalid Data", ex.Message).ShowDialog();
             }
             catch (BO.NotFoundInDalException ex)
             {
-                new ErrorMessageWindow("Data Not Found", ex.Message).Show();
+                new ErrorMessageWindow("Data Not Found", ex.Message).ShowDialog();
             }
             catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
             {
-                new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
+                new ErrorMessageWindow("Unexpected Error!", ex.Message).ShowDialog();
             }
         }
 

@@ -116,7 +116,13 @@ Please choose one of the followling options:
             switch ((PRODUCT)option)
             {
                 case PRODUCT.GET_LIST:
-                    printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException());
+                    //printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException());
+                    var cataglog = ibl?.Product.RequestProducts() ?? throw new UnexpectedException();
+                    foreach (var product in cataglog)
+                        foreach (var details in product)
+                        {
+                            Console.WriteLine(details);
+                        }
                     break;
 
                 case PRODUCT.PRODUCT_DETAILS_CART:
@@ -277,7 +283,13 @@ Please choose one of the fowling options:
             {
                 case CART.ADD_PRODUCT:
                     Console.WriteLine("Catalog:");
-                    printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException() );
+                    //printCollection(ibl?.Product.RequestProducts() ?? throw new UnexpectedException() );
+                    var cataglog = ibl?.Product.RequestProducts() ?? throw new UnexpectedException();
+                    foreach (var product in cataglog)
+                        foreach (var details in product)
+                        {
+                            Console.WriteLine(details);
+                        }
                     Console.WriteLine("Enter product ID");
                     cart = ibl?.Cart.AddProductToCart(yourChoiceInt(), cart) ?? throw new UnexpectedException();
                     break;
