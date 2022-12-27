@@ -84,14 +84,13 @@ internal class Order : IOrder
                  }
              }                                          &*&*&*&*&*&*&*&*&*&*&**/
 
-            var temp = from doOrderItem in doOrderItems
-                       orderby dal.Product.Get((int)doOrderItem?.ProductID!)?.Name // we sort the items by their names and not their OrderItemID
-                       select doOrderItem.CopyPropTo(new BO.OrderItem
-                       {
-                           ProductName = dal.Product.Get((int)doOrderItem?.ProductID!)?.Name,
-                           TotalPrice = (double)doOrderItem?.Price! * (int)doOrderItem?.Amount!
-                       });
-            boOrder.ListOfItems = temp.ToList(); // casting our temp : Ienumrable<T> into List<T>
+            boOrder.ListOfItems = (from doOrderItem in doOrderItems
+                                   orderby dal.Product.Get((int)doOrderItem?.ProductID!)?.Name // we sort the items by their names and not their OrderItemID
+                                   select doOrderItem.CopyPropTo(new BO.OrderItem
+                                   {
+                                       ProductName = dal.Product.Get((int)doOrderItem?.ProductID!)?.Name,
+                                       TotalPrice = (double)doOrderItem?.Price! * (int)doOrderItem?.Amount!
+                                   })).ToList(); // casting our temp : Ienumrable<T> into List<T>
 
             boOrder.TotalPrice = boOrder.ListOfItems!.Sum(boOrderItem => boOrderItem!.TotalPrice); // sum for the total price
 

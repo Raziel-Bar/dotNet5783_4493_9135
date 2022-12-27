@@ -34,20 +34,14 @@ internal static class DataSource
     //}
     #endregion
 
-    #region variablesAndArrays
-    private static readonly Random _random = new Random();// random numbers maker
+    #region variablesAndLists
+    private static readonly Random _random = new();// random numbers maker
     /// <summary>
     /// defining lists
     /// </summary>
-    internal static List<Product?> _products = new List<Product?>();
-    internal static List<Order?> _orders = new List<Order?>();
-    internal static List<OrderItem?> _orderItems = new List<OrderItem?>();
-    /// <summary>
-    /// defining the adding basic methods. adds a new entity object to its appropriate list (objects will be made in the inits)
-    /// </summary>
-    private static void AddProduct(Product product) => _products.Add(product);
-    private static void AddOrder(Order order) => _orders.Add(order);
-    private static void AddOrderItem(OrderItem orderItem) => _orderItems.Add(orderItem);
+    internal static List<Product?> _products = new();
+    internal static List<Order?> _orders = new();
+    internal static List<OrderItem?> _orderItems = new();
     #endregion
 
     #region init entities
@@ -59,7 +53,7 @@ internal static class DataSource
         /// <summary>
         /// list of lists! each inner list for an ENUM WINERY category accordingly.
         /// </summary>
-        List<List<string>> categoriesAndNames = new List<List<string>>()
+        List<List<string>> categoriesAndNames = new()
         {
           new List<string>() { "Gamla Cabernet Sauvignon-Merlot -  2017", "Yarden Rom - 2014", "Yarden Katzrin - 2016" },
 
@@ -72,19 +66,18 @@ internal static class DataSource
           new List<string>()  {"BarKan Platinum Merlot 2018", "Altitude 720 Petite Verdot 2015", "Barkan Superior 2017", }
         };
 
-        int countCatgories = categoriesAndNames.Count();
+        //int countCatgories = categoriesAndNames.Count; &*&*&*&*&*
 
-        int counterOfInitialAmount = 0;
-        for (int i = 0; i < countCatgories; i++) // we count how many products are to be made in the initial list
+        int counterOfInitialAmount = categoriesAndNames.Sum(x => x.Count);
+        /*for (int i = 0; i < countCatgories; i++) // we count how many products are to be made in the initial list
         {
-            counterOfInitialAmount += categoriesAndNames[i].Count();
-        }
+            counterOfInitialAmount += categoriesAndNames[i].Count;
+        }                                                                &*&*&*&*&*&**/
         int fivePercent = (int)(counterOfInitialAmount * 0.05) == 0 ? 1 : (int)(counterOfInitialAmount * 0.05); // 5% of the products shall have 0 in stock (in case 5% is less then 1, at least 1 product will have 0 amount)
-
+/*
         int myIdNumber;
         for (int i = 0; i < countCatgories; i++)
         {
-
             foreach (var name in categoriesAndNames[i])
             {
                 Product newProduct = new Product();
@@ -114,7 +107,28 @@ internal static class DataSource
 
                 AddProduct(newProduct); // Product's ready! adding to database
             }
-        }
+        }                                           &*&*&*&*&*&*&*&*&*&*&*/
+        int i = 0;
+        _products = (from list in categoriesAndNames
+                     let x = i++
+                     from name in list
+                     select (Product?)(new Product
+                     {
+                         ID = IDMaker(),
+                         Category = (WINERYS)x,
+                         InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101),
+                         Name = name,
+                         Price = (WINERYS)x switch
+                         {
+                             WINERYS.GOLAN => _random.Next(100, 250),
+                             WINERYS.DALTON => _random.Next(70, 150),
+                             WINERYS.BARKAN => _random.Next(60, 100),
+                             WINERYS.CARMEL => _random.Next(60, 100),
+                             WINERYS.TEPERBERG => _random.Next(70, 200),
+                             _ => 0,// null option. program is not supposed to ever get here.
+                         }
+                     })).ToList();
+
     }
 
     /// <summary>
@@ -197,7 +211,7 @@ internal static class DataSource
                 newOrder.ShipDate = null;
                 newOrder.DeliveryDate = null;
             }
-            AddOrder(newOrder); // Order's ready! adding to database
+            _orders.Add(newOrder); // Order's ready! adding to database
         }
     }
 
@@ -229,10 +243,28 @@ internal static class DataSource
 
                     item.Price = product.Price;  //price for 1 unit!!  (in case we will want the final price: (double)(product.Price * item.Amount);)
 
-                    AddOrderItem(item); // Order item's ready! Adding to database...
+                    _orderItems.Add(item); // Order item's ready! Adding to database...
                 }
             }
         }
     }
     #endregion
+
+
+    static readonly List<int> col = new();
+    /// <summary>
+    /// makes IDs for products randomly but makes sure not to repeat an ID twice using the col List
+    /// </summary>
+    /// <returns>
+    /// A 6 digit Positive number
+    /// </returns>
+    private static int IDMaker()
+    {
+        int myIdNumber = _random.Next(100000, 1000000);
+
+        while (col.Exists(p => p == myIdNumber))
+            myIdNumber = _random.Next(100000, 1000000);
+        col.Add(myIdNumber);
+        return myIdNumber;
+    }
 }

@@ -15,21 +15,22 @@ namespace PL.ProductWindows
         /// <summary>
         /// a window for either adding or updating a product
         /// </summary>
-        /// <param name="state">the state of the current window (either ADD mode or UPDATE mode)</param>
-        /// <param name="product">In case of UPDATE MODE: the selected product that we wish to update its details</param>
+        /// <param name="id">The product's ID in case the window is in UPDATE mode. otherwise it's 0 which indicates the window is in ADD mode</param>
         public ProductWindow(int id = 0)
         {
             InitializeComponent();
 
             CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERYS));
 
-            if (id == 0)
+            if (id == 0) // add mode
             {
+                this.Title = "Add";
                 UpdateButton.Visibility = Visibility.Collapsed;
                 IdTextBlock.Visibility = Visibility.Collapsed;
             }
             else
             {
+                this.Title = "Update";
                 AddButton.Visibility = Visibility.Collapsed;
                 IdTextBox.Visibility = Visibility.Collapsed; // ID can't be changed
 

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Barshishat Wines" Height="450" Width="800">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/ProductWindows/pics/red-wine.jpg" Opacity="1" Stretch="None"/>
+            <ImageBrush ImageSource="/ProductWindows/pics/red-wine.jpg" Opacity="1" />
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

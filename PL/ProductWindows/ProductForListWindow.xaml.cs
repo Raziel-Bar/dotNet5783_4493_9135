@@ -43,7 +43,7 @@ public partial class ProductForListWindow : Window
 
         WinesListView.ItemsSource = from _product in productForLists
                                     from details in _product
-                                    select _product;
+                                    select details;
         WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
 
         // BONUS we made the it so we could sort the listView (either ascending or descending!) by clicking the column headers
@@ -63,7 +63,12 @@ public partial class ProductForListWindow : Window
                                                                                              from details in _product
                                                                                              select details;
 
-        else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
+        //else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
+        else WinesListView.ItemsSource = from _product in productForLists
+                                         where _product.Key == (BO.WINERYS)WinerySelector.SelectedItem
+                                         from details in _product
+                                         select details;
+
         //else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem); &*&*&*&*&*&*&*&**
     }
 
