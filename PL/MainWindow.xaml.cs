@@ -14,6 +14,7 @@ namespace PL
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
             BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
         }
 
@@ -22,7 +23,7 @@ namespace PL
         /// </summary>
         /// <param name="sender">the admin button</param>
         /// <param name="e">mouse click</param>
-        private void AdminAccess_Click(object sender, RoutedEventArgs e)
+        private void AdminAccessButton_Click(object sender, RoutedEventArgs e)
         {
             new ProductForListWindow().Show();
            
@@ -35,5 +36,15 @@ namespace PL
         /// <param name="sender">the exit button</param>
         /// <param name="e">mouse click</param>
         private void Exit(object sender, RoutedEventArgs e) => this.Close();
+
+        private void NewOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OrderTraceButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

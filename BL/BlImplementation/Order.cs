@@ -13,20 +13,6 @@ internal class Order : IOrder
     {
         IEnumerable<DO.Order?> doOrders = dal?.Order.GetList() ?? throw new BO.UnexpectedException(); ; // getting the DO orders      
 
-        /*List<BO.OrderForList?> boList = new List<BO.OrderForList?>();
-
-        foreach (var order in doOrders) // transforming all DO orders into BO orders so that we can have the Status, amount of items and the total price
-        {
-                BO.Order boOrder = RequestOrderDetails((int)order?.ID!);  // transforming DO order into BO order
-
-                BO.OrderForList boOrderForList = boOrder.CopyPropTo(new BO.OrderForList()); // bonus
-
-                boOrderForList.TotalPrice = boOrder.ListOfItems!.Sum(orderItem => orderItem!.Price * orderItem.Amount);
-
-                boOrderForList.Amount = boOrder.ListOfItems!.Count(); // unique prop
-
-                boList.Add(boOrderForList);
-        }                                 /*               &*&*&*&*&*&*&*&*&*&   */
         IEnumerable<BO.OrderForList?> boList = from order in doOrders
                                                let boOrder = RequestOrderDetails((int)order?.ID!)
                                                orderby order?.ID
