@@ -66,7 +66,7 @@ public partial class AdminWindow : Window
             Products = bl.Product.RequestProducts(),
             Orders = bl.Order.RequestOrdersListAdmin()!
         };
-        DataContext = this;
+        DataContext = data;
 
         WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
         // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
@@ -187,10 +187,12 @@ public partial class AdminWindow : Window
     {
         UpperGridProduct.Visibility = Visibility.Collapsed;
         UpperGridOrder.Visibility = Visibility.Visible;
+        AddProductButton.Visibility = Visibility.Collapsed;
     }
 
     private void ProductList_Click(object sender, RoutedEventArgs e)
     {
+        AddProductButton.Visibility = Visibility.Visible;
         UpperGridOrder.Visibility = Visibility.Collapsed;
         UpperGridProduct.Visibility = Visibility.Visible;
     }
