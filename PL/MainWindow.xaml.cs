@@ -1,5 +1,6 @@
 ﻿using PL.ProductWindows;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PL
 {
@@ -25,8 +26,7 @@ namespace PL
         /// <param name="e">mouse click</param>
         private void AdminAccessButton_Click(object sender, RoutedEventArgs e)
         {
-            new AdminWindow().Show();
-           
+            new AdminVerificationWindow().ShowDialog();          
             this.Close();
         }
 

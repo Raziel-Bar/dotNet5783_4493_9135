@@ -42,6 +42,22 @@ public class MyData : DependencyObject
     // Using a DependencyProperty as the backing store for orders.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ordersProperty =
         DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(MyData));
+
+
+
+    public List<ProductForList?>? ProductsList
+    {
+        get { return (List<ProductForList?>?)GetValue(ProductsListProperty); }
+        set { SetValue(ProductsListProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ProductsListProperty =
+        DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(MyData));
+
+
+    
+    public Array? Categories { get; set; }
 }
 
 /// <summary>
@@ -64,11 +80,14 @@ public partial class AdminWindow : Window
         data = new()
         {
             Products = bl.Product.RequestProducts(),
-            Orders = bl.Order.RequestOrdersListAdmin()!
+            Orders = bl.Order.RequestOrdersListAdmin()!,
+            Categories = Enum.GetValues(typeof(WINERYS))
         };
+        data.ProductsList = (from _product in data.Products
+                             from details in _product
+                             select details).ToList();
         DataContext = data;
 
-        WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
         // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
         sortBy = "Name";
         direction = ListSortDirection.Ascending;
@@ -83,15 +102,14 @@ public partial class AdminWindow : Window
     /// <param name="e">selection changed</param>
     private void WinerySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = data.Products;
+        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) data.ProductsList = (from _product in data.Products
+                                                                                      from details in _product
+                                                                                      select details).ToList();
+        else data.ProductsList = (from _product in data.Products
+                                 from details in _product
+                                 where details.Category == (BO.WINERYS)WinerySelector.SelectedItem
+                                 select details).ToList();
 
-        //else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
-        else WinesListView.ItemsSource = from _product in data.Products
-                                         from details in _product
-                                         where details.Category == (BO.WINERYS)WinerySelector.SelectedItem
-                                         select details;
-
-        //else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem); &*&*&*&*&*&*&*&**
     }
 
     /// <summary>
