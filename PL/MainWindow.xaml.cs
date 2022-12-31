@@ -25,7 +25,7 @@ namespace PL
         /// <param name="e">mouse click</param>
         private void AdminAccessButton_Click(object sender, RoutedEventArgs e)
         {
-            new ProductForListWindow().Show();
+            new AdminWindow().Show();
            
             this.Close();
         }

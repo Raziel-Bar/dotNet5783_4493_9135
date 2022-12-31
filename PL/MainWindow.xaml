@@ -14,7 +14,7 @@
     </Window.Resources>
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/ProductWindows/pics/red-wine.jpg" Opacity="1" />
+            <ImageBrush ImageSource="/pics/red-wine.jpg" Opacity="1" />
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

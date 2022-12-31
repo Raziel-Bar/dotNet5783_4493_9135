@@ -1,0 +1,144 @@
+﻿<Window x:Class="PL.ProductWindows.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.ProductWindows"
+        mc:Ignorable="d"
+        Title="Catalog" Height="640" Width="800">
+    <Grid Name ="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="/pics/red-wine.jpg"/>
+        </Grid.Background>
+
+        <Grid Name="UpperGridProduct" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40*"/>
+                <RowDefinition Height="500*"/>
+            </Grid.RowDefinitions>
+            
+            <Grid Name="UpperRulerProductGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions >
+
+                <ComboBox Name="WinerySelector" ItemsSource="{Binding ElementName=ggg}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
+                <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
+            </Grid>
+            
+            <ListView Name="WinesListView" Grid.Row="1" ItemsSource="{Binding Products}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Name" Click="WinesListViewColumnHeader_Click">Name</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="ID" Click="WinesListViewColumnHeader_Click">ID</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding Category}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Category" Click="WinesListViewColumnHeader_Click">Category</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding Price}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Price" Click="WinesListViewColumnHeader_Click">Price</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF853636"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Resources>
+            </ListView>
+        </Grid>
+
+        <Grid Name="UpperGridOrder" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40*"/>
+                <RowDefinition Height="500*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Name="UpperRulerOrderGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto" IsEnabled="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions >
+
+                <ComboBox Name="WinerySelectorFake" IsEnabled="False" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
+                <Label Name="CategoryheaderFake" IsEnabled="False" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
+            </Grid>
+
+            <ListView Name="OrdersListView" Grid.Row="1" d:ItemsSource="{d:SampleData}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding ="{Binding Status}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Status" Click="OrdersListViewColumnHeader_Click">Status</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="ID" Click="OrdersListViewColumnHeader_Click">ID</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding CustomerName}" Width="300">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="CustomerName" Click="OrdersListViewColumnHeader_Click">Customer Name</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding Amount}" Width="150">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Amount" Click="OrdersListViewColumnHeader_Click">Amount of items</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding ="{Binding TotalPrice}" Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="TotalPrice" Click="OrdersListViewColumnHeader_Click">Total Price</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF853636"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Resources>
+            </ListView>
+        </Grid>
+
+        <Grid x:Name="LowerGrid" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="BackButton" Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
+            <Button Name="OrdersListViewButton" Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Name="ProductsListViewButton" Content="Catalog" Grid.Column="2" Width="150" HorizontalAlignment="Center" Click="ProductList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Name="AddProductButton" Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
+        </Grid>
+    </Grid>
+</Window>

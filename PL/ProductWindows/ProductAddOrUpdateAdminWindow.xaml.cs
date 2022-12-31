@@ -1,6 +1,7 @@
 ﻿using BO;
 using DO;
 using System;
+using System.Media;
 using System.Windows;
 
 namespace PL.ProductWindows
@@ -8,7 +9,7 @@ namespace PL.ProductWindows
     /// <summary>
     /// Interaction logic for ProductWindow.xaml
     /// </summary>
-    public partial class ProductWindow : Window
+    public partial class ProductAddOrUpdateAdminWindow : Window
     {
         BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
 
@@ -16,7 +17,7 @@ namespace PL.ProductWindows
         /// a window for either adding or updating a product
         /// </summary>
         /// <param name="id">The product's ID in case the window is in UPDATE mode. otherwise it's 0 which indicates the window is in ADD mode</param>
-        public ProductWindow(int id = 0)
+        public ProductAddOrUpdateAdminWindow(int id = 0)
         {
             InitializeComponent();
 
@@ -71,7 +72,7 @@ namespace PL.ProductWindows
                     Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)
                 });
-                new ProductForListWindow().Show();
+                new AdminWindow().Show();
                 new SuccessWindow("Your Product Has been added successfully!").ShowDialog();
                 this.Close();
             }
@@ -111,8 +112,8 @@ namespace PL.ProductWindows
                     Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)
                 });
-                new ProductForListWindow().Show();
                 new SuccessWindow("Your Product Has been Updated successfully!").ShowDialog();
+                new AdminWindow().Show();
                 this.Close();
             }
             catch (FormatException) // we do not allow empty boxes or illegal input
@@ -140,7 +141,7 @@ namespace PL.ProductWindows
         /// <param name="e">mouse click</param>
         private void BackToMainWindow(object sender, RoutedEventArgs e)
         {
-            new ProductForListWindow().Show();
+            new AdminWindow().Show();
             this.Close();
         }
 
