@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="ProductWindows\pics\red-wine.jpg" />
+	  <Resource Include="pics\red-wine.jpg" />
 	</ItemGroup>
 
 </Project>

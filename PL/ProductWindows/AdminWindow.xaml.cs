@@ -21,35 +21,61 @@ public enum WINERYS
     ALL,
 }
 
+public class MyData : DependencyObject // ???????
+{
+    public List<BO.ProductForList?>? Products
+    {
+        get { return (List<BO.ProductForList?>?)GetValue(productsProperty); }
+        set { SetValue(productsProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for products.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty productsProperty =
+        DependencyProperty.Register("Products", typeof(List<IGrouping<BO.WINERYS?, BO.ProductForList?>>), typeof(MyData), new PropertyMetadata(0));
+
+    public IEnumerable<OrderForList>? Orders
+    {
+        get { return (IEnumerable<OrderForList>?)GetValue(ordersProperty); }
+        set { SetValue(ordersProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for orders.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ordersProperty =
+        DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(MyData), new PropertyMetadata(0));
+}
+
 /// <summary>
 /// Interaction logic for ProductForListWindow.xaml
 /// </summary>
-public partial class ProductForListWindow : Window
+public partial class AdminWindow : Window
 {
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
-
-    IEnumerable<IGrouping<BO.WINERYS?, ProductForList?>> productForLists;
+    MyData data;
+    //bonus
     ListSortDirection direction;
     string? sortBy = null;
+
     /// <summary>
     /// the list window with all prduct and their details
     /// </summary>
-    public ProductForListWindow()
+    public AdminWindow()
     {
-
         InitializeComponent();
+        data = new() // ??????
+        {
+            Products = (List<ProductForList?>?)(from _product in bl.Product.RequestProducts()
+                       from details in _product
+                       select details),
+            Orders = bl.Order.RequestOrdersListAdmin()!
+        };
+        MainGrid.DataContext = data;
 
-        productForLists = bl.Product.RequestProducts();
-
-        WinesListView.ItemsSource = from _product in productForLists
-                                    from details in _product
-                                    select details;
-        WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
-
-        // BONUS we made the it so we could sort the listView (either ascending or descending!) by clicking the column headers
+        WinerySelector.DataContext = Enum.GetValues(typeof(WINERYS));
+        // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
         sortBy = "Name";
         direction = ListSortDirection.Ascending;
         WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
+        OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
     }
 
     /// <summary>
@@ -59,15 +85,13 @@ public partial class ProductForListWindow : Window
     /// <param name="e">selection changed</param>
     private void WinerySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = from _product in productForLists
-                                                                                             from details in _product
-                                                                                             select details;
+        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = data.Products;
 
         //else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
-        else WinesListView.ItemsSource = from _product in productForLists
-                                         where _product.Key == (BO.WINERYS)WinerySelector.SelectedItem
+       /* else WinesListView.ItemsSource = from _product in data.Products
                                          from details in _product
-                                         select details;
+                                         where details.Category == (BO.WINERYS)WinerySelector.SelectedItem
+                                         select details;*/
 
         //else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem); &*&*&*&*&*&*&*&**
     }
@@ -79,7 +103,7 @@ public partial class ProductForListWindow : Window
     /// <param name="e">mouse click</param>
     private void ToProductWindowAddMode(object sender, RoutedEventArgs e)
     {
-        new ProductWindow().Show();
+        new ProductAddOrUpdateAdminWindow().Show();
         this.Close();
     }
 
@@ -95,7 +119,7 @@ public partial class ProductForListWindow : Window
         {
             if (WinesListView.SelectedItem is ProductForList productForList)
             {
-                new ProductWindow(productForList.ID).Show();
+                new ProductAddOrUpdateAdminWindow(productForList.ID).Show();
                 this.Close();
             }
         }
@@ -137,5 +161,39 @@ public partial class ProductForListWindow : Window
         }
         WinesListView.Items.SortDescriptions.Clear();
         WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
+    }
+
+    /// <summary>
+    /// BONUS sorts the items in the list view based on column
+    /// </summary>
+    /// <param name="sender">WinesListView : ListView</param>
+    /// <param name="e">mouse double click</param>
+    private void OrdersListViewColumnHeader_Click(object sender, RoutedEventArgs e)
+    {
+        GridViewColumnHeader? column = sender as GridViewColumnHeader;
+        if (sortBy == column?.Tag.ToString()) // we click the same column to flip direction
+        {
+            if (direction == ListSortDirection.Ascending) direction = ListSortDirection.Descending;
+            else direction = ListSortDirection.Ascending;
+        }
+        else
+        {
+            direction = ListSortDirection.Ascending;
+            sortBy = column?.Tag.ToString();
+        }
+        OrdersListView.Items.SortDescriptions.Clear();
+        OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
+    }
+
+    private void OrderList_Click(object sender, RoutedEventArgs e)
+    {
+        UpperGridProduct.Visibility = Visibility.Collapsed;
+        UpperGridOrder.Visibility = Visibility.Visible;
+    }
+
+    private void ProductList_Click(object sender, RoutedEventArgs e)
+    {
+        UpperGridOrder.Visibility = Visibility.Collapsed;
+        UpperGridProduct.Visibility = Visibility.Visible;
     }
 }
