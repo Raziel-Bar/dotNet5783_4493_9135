@@ -21,17 +21,17 @@ public enum WINERYS
     ALL,
 }
 
-public class MyData : DependencyObject // ???????
+public class MyData : DependencyObject
 {
-    public List<BO.ProductForList?>? Products
+    public IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>? Products
     {
-        get { return (List<BO.ProductForList?>?)GetValue(productsProperty); }
+        get { return (IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>?)GetValue(productsProperty); }
         set { SetValue(productsProperty, value); }
     }
 
     // Using a DependencyProperty as the backing store for products.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty productsProperty =
-        DependencyProperty.Register("Products", typeof(List<IGrouping<BO.WINERYS?, BO.ProductForList?>>), typeof(MyData), new PropertyMetadata(0));
+        DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>), typeof(MyData));
 
     public IEnumerable<OrderForList>? Orders
     {
@@ -41,7 +41,7 @@ public class MyData : DependencyObject // ???????
 
     // Using a DependencyProperty as the backing store for orders.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ordersProperty =
-        DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(MyData), new PropertyMetadata(0));
+        DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(MyData));
 }
 
 /// <summary>
@@ -61,16 +61,14 @@ public partial class AdminWindow : Window
     public AdminWindow()
     {
         InitializeComponent();
-        data = new() // ??????
+        data = new()
         {
-            Products = (List<ProductForList?>?)(from _product in bl.Product.RequestProducts()
-                       from details in _product
-                       select details),
+            Products = bl.Product.RequestProducts(),
             Orders = bl.Order.RequestOrdersListAdmin()!
         };
-        MainGrid.DataContext = data;
+        DataContext = this;
 
-        WinerySelector.DataContext = Enum.GetValues(typeof(WINERYS));
+        WinerySelector.ItemsSource = Enum.GetValues(typeof(WINERYS));
         // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
         sortBy = "Name";
         direction = ListSortDirection.Ascending;
@@ -88,10 +86,10 @@ public partial class AdminWindow : Window
         if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) WinesListView.ItemsSource = data.Products;
 
         //else WinesListView.ItemsSource = productForLists.Where(_product => _product.Key == (BO.WINERYS)WinerySelector.SelectedItem);
-       /* else WinesListView.ItemsSource = from _product in data.Products
+        else WinesListView.ItemsSource = from _product in data.Products
                                          from details in _product
                                          where details.Category == (BO.WINERYS)WinerySelector.SelectedItem
-                                         select details;*/
+                                         select details;
 
         //else WinesListView.ItemsSource = bl?.Product.RequestProductsByCondition(productForLists, product => product?.Category == (BO.WINERYS)WinerySelector.SelectedItem); &*&*&*&*&*&*&*&**
     }
