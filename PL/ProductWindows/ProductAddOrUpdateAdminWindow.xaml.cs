@@ -1,5 +1,6 @@
 ﻿using BO;
 using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,6 +34,7 @@ public partial class ProductAddOrUpdateAdminWindow : Window
     public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(ProductAddOrUpdateAdminWindowData), typeof(ProductAddOrUpdateAdminWindow));
     public ProductAddOrUpdateAdminWindowData Data { get => (ProductAddOrUpdateAdminWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
+
     /// <summary>
     /// a window for either adding or updating a product
     /// </summary>
@@ -50,19 +52,7 @@ public partial class ProductAddOrUpdateAdminWindow : Window
             updateMode = id != 0 ? Visibility.Visible : Visibility.Hidden
         };
         InitializeComponent();
-        // all old details are shown
-      /*  try
-        {
-            BO.Product product = bl?.Product.RequestProductDetailsAdmin(id) ?? throw new BO.UnexpectedException();
-
-        }
-        catch (Exception ex)
-        {
-            new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
-        }*/
-
     }
-
 
     /// <summary>
     /// the add product event
@@ -73,18 +63,14 @@ public partial class ProductAddOrUpdateAdminWindow : Window
     {
         try
         {
-            bl?.Product.AddProductAdmin(Data.MyProduct);
+            bl?.Product.AddProductAdmin(Data.MyProduct!);
             new SuccessWindow("Your Product Has been added successfully!").ShowDialog();
+            new AdminWindow().Show();
             this.Close();
-        }
-
-        catch (FormatException) // we do not allow empty boxes or illegal input
-        {
-            new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").ShowDialog();
         }
         catch (BO.InvalidDataException)
         {
-            new ErrorMessageWindow("Invalid Data", "Invalid input!\nMake sure that the ID is at least 6 digits and that all other numbers are not negative.").ShowDialog();
+            new ErrorMessageWindow("Invalid Data", "ID must contain at least 6 digits").ShowDialog();
         }
         catch (BO.AlreadyExistInDalException)
         {
@@ -105,23 +91,15 @@ public partial class ProductAddOrUpdateAdminWindow : Window
     {
         try
         {
-            bl?.Product.UpdateProductAdmin(Data.MyProduct);
+            bl?.Product.UpdateProductAdmin(Data.MyProduct!);
             new SuccessWindow("Your Product Has been Updated successfully!").ShowDialog();
             new AdminWindow().Show();
             this.Close();
         }
-        catch (FormatException) // we do not allow empty boxes or illegal input
+        /*catch (BO.NotFoundInDalException)
         {
-            new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").ShowDialog();
-        }
-        catch (BO.InvalidDataException ex)
-        {
-            new ErrorMessageWindow("Invalid Data", ex.Message).ShowDialog();
-        }
-        catch (BO.NotFoundInDalException ex)
-        {
-            new ErrorMessageWindow("Data Not Found", ex.Message).ShowDialog();
-        }
+            new ErrorMessageWindow("Data Not Found", "Data Not Found").ShowDialog();
+        }*/
         catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
         {
             new ErrorMessageWindow("Unexpected Error!", ex.Message).ShowDialog();
@@ -139,8 +117,24 @@ public partial class ProductAddOrUpdateAdminWindow : Window
         this.Close();
     }
 
-    private void SelectionChanged_Category(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+
+    // BONUS Using RegEx to make binding Validations to our input
+
+    /// <summary>
+    /// forces text to be only digits and decimal point
+    /// </summary>
+    private void IsDoublePreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
-        Data.MyProduct!.Category = (BO.WINERIES)((ComboBox)sender).SelectedItem;
+        Regex regex = new("[^.0-9]");
+        e.Handled = regex.IsMatch(e.Text);
+    }
+
+    /// <summary>
+    /// forces text to be only digits
+    /// </summary>
+    private void IsIntPreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        Regex regex = new("[^0-9]+");
+        e.Handled = regex.IsMatch(e.Text);
     }
 }

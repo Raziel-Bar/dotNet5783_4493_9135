@@ -9,18 +9,14 @@ using System.Windows;
 
 namespace PL.Converter;
 
-internal class vsibility
+[ValueConversion(typeof(DateTime?), typeof(Visibility))]
+internal class NullDateToHidden : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        string text = (string)value;
-        return !string.IsNullOrWhiteSpace(text) ? Visibility.Collapsed : Visibility.Visible;
-    }
+        => (DateTime?)value != null ? Visibility.Hidden : Visibility.Visible;
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new NotImplementedException();
 }
 
 

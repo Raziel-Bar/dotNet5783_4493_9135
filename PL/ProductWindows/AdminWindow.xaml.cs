@@ -141,14 +141,10 @@ public partial class AdminWindow : Window
         this.Close();
     }
 
-    private void WinesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-
-    }
-
     private void OrderList_Click(object sender, RoutedEventArgs e)
     {
-       
-       new OrderListAdminWindow().ShowDialog();
+        new OrderListAdminWindow().Show(); 
+        this.Close();
     }
+    
 }

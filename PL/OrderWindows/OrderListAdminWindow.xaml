@@ -8,8 +8,6 @@
         mc:Ignorable="d"
         Title="Orders" Height="640" Width="800">
 
-    
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

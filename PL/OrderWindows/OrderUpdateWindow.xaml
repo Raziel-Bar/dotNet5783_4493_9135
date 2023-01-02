@@ -3,16 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.OrderWindows"
-        xmlns:vsibility="clr-namespace:PL.vsibility"
-        
-       
+        xmlns:local="clr-namespace:PL.Converter"
         mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource self}}"
+        DataContext="{Binding Order1, RelativeSource={RelativeSource self}}"
         Title="OrderUpdateWindow" Height="450" Width="800">
 
     <Window.Resources>
-
+        <local:NullDateToHidden x:Key="NullDateToHidden"/>
         <Style TargetType="Label">
             <Setter Property="Background" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -59,42 +56,43 @@
             </Grid.RowDefinitions>
 
             <Label Content="Customer Name"/>
-            <TextBlock Text="{Binding Order1.CustomerName}"  />
+            <TextBlock Text="{Binding CustomerName}"  />
 
             <Label Grid.Row="1" Content="Customer Address"/>
-            <TextBlock Grid.Row="1" Text="{Binding Order1.CustomerAddress}"  />
+            <TextBlock Grid.Row="1" Text="{Binding CustomerAddress}"  />
 
 
             <Label Grid.Row="2" Content="Customer Email"/>
-            <TextBlock Grid.Row="2" Text="{Binding Order1.CustomerEmail}"  />
+            <TextBlock Grid.Row="2" Text="{Binding CustomerEmail}"  />
 
 
             <Label  Grid.Column="1" Grid.Row="0" Content="Status"/>
-            <TextBlock  Grid.Column="1" Grid.Row="0"  Text="{Binding Order1.Status}"/>
+            <TextBlock  Grid.Column="1" Grid.Row="0"  Text="{Binding Status}"/>
 
             <Label  Grid.Column="1" Grid.Row="1" Content="ID"/>
-            <TextBlock Grid.Column="1" Grid.Row="1"  Text="{Binding Order1.ID}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1"  Text="{Binding ID}"/>
 
             <Label  Grid.Column="1" Grid.Row="2" Content="Total Price"/>
-            <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding Order1.TotalPrice}"/>
+            <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding TotalPrice}"/>
 
             <Label  Grid.Column="2" Grid.Row="0" Content="Order Date"/>
-            <TextBlock Grid.Column="2" Grid.Row="0"  Text="{Binding Order1.OrderDate}"/>
+            <TextBlock Grid.Column="2" Grid.Row="0"  Text="{Binding OrderDate}"/>
 
             <Label  Grid.Column="2" Grid.Row="1" Content="Ship Date"  />
-            <TextBlock Grid.Column="2" Grid.Row="1"  Text="{Binding Order1.ShipDate}"/>
+            <TextBlock Grid.Column="2" Grid.Row="1"  Text="{Binding ShipDate, Mode=TwoWay}"/>
 
             <Label  Grid.Column="2" Grid.Row="2" Content="Delivery Date" />
-            <TextBlock Grid.Column="2" Grid.Row="2"  Text="{Binding Order1.DeliveryDate}"/>
+            <TextBlock Grid.Column="2" Grid.Row="2"  Text="{Binding DeliveryDate, Mode=TwoWay}"/>
 
         </Grid>
+        <CheckBox Name="UpdateCheckbox" Content="Press to enable update" Foreground="White" Margin="16,210,620,181" Grid.RowSpan="2"/>
 
-        <Button Content="Back" Grid.Row="1" Margin="10,172,740,15"  Style="{StaticResource ButtonStyleLowerRuler}"  />
+        <Button Content="Back" Grid.Row="1" Margin="39,155,711,32"  Click="BackToOrderList_Button_Click"  Style="{StaticResource ButtonStyle1}" FontSize="10"/>
 
-        <Button Grid.Row="1" Content="Update Ship" Style="{StaticResource ButtonStyle1}" Margin="10,24,650,145" FontSize="18" Visibility="{Binding Converter={StaticResource vsibility}}" />
-        
+        <Button Name="updateShipDateButton" Grid.Row="1" Content="Update Ship" Style="{StaticResource ButtonStyle1}" Margin="10,24,620,145" FontSize="18" Visibility="{Binding ShipDate, Converter={StaticResource NullDateToHidden}}" Click="UpdateShipDate" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}"/>
+        <Button Grid.Row="1" Content="Update Delivery" Style="{StaticResource ButtonStyle1}" Margin="10,85,620,84" FontSize="18" Visibility="{Binding DeliveryDate, Converter={StaticResource NullDateToHidden}}" Click="UpdateDeliveryDate" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}"/>
 
-        <ListView ItemsSource="{Binding Order1.ListOfItems}" Foreground="White" FontFamily="Calibri" FontSize="18"  FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="464" Height="197" Grid.Row="1" Margin="309,5,0,0">
+        <ListView ItemsSource="{Binding ListOfItems}" Foreground="White" FontFamily="Calibri" FontSize="18"  FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="557" Height="197" Grid.Row="1" Margin="216,5,0,0">
 
             <ListView.View>
                 <GridView>

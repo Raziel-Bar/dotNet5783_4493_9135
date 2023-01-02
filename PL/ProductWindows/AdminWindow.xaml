@@ -31,8 +31,8 @@
                 <ComboBox ItemsSource="{Binding Categories}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WINERIESelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
                 <Label Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
             </Grid>
-            
-            <ListView Grid.Row="1" ItemsSource="{Binding ProductsList, Mode=TwoWay}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+
+            <ListView Grid.Row="1" ItemsSource="{Binding ProductsList, Mode=TwoWay}" MouseDoubleClick="ToProductWindowUpdateMode" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">

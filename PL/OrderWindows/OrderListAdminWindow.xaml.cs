@@ -1,4 +1,5 @@
 ﻿using BO;
+using PL.ProductWindows;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,13 +20,14 @@ public partial class OrderListAdminWindow : Window
     {
         Orders = new ObservableCollection<BO.OrderForList>(bl.Order.RequestOrdersListAdmin()!);
 
-        // Data = new() { Orders = bl.Order.RequestOrdersListAdmin()! };
-       // Data = new(bl);
         InitializeComponent();
     }
 
-    private void BackToMainWindow(object sender, RoutedEventArgs e) => this.Close();
-
+    private void BackToMainWindow(object sender, RoutedEventArgs e)
+    {
+        new AdminWindow().Show();
+        this.Close();
+    }
 
     private void ToOrderWindowUpdateMode(object sender, MouseButtonEventArgs e)
     {
