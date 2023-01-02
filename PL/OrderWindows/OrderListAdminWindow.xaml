@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.OrderWindows"
-        DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
+        DataContext="{Binding RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
         Title="Orders" Height="640" Width="800">
+
+    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -17,32 +20,32 @@
         </Grid.Background>
 
         <Grid Grid.Row="0">
-            <ListView Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+            <ListView  Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToOrderWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Status}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Status" Click="OrdersListViewColumnHeader_Click">Status</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="Status" >Status</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="ID" Click="OrdersListViewColumnHeader_Click">ID</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="ID" >ID</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding CustomerName}" Width="300">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="CustomerName" Click="OrdersListViewColumnHeader_Click">Customer Name</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="CustomerName" >Customer Name</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding Amount}" Width="150">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Amount" Click="OrdersListViewColumnHeader_Click">Amount of items</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="Amount" >Amount of items</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding TotalPrice}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="TotalPrice" Click="OrdersListViewColumnHeader_Click">Total Price</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="TotalPrice" >Total Price</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                     </GridView>

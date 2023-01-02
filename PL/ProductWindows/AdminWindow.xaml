@@ -37,22 +37,22 @@
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Name" Click="WinesListViewColumnHeader_Click">Name</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="Name">Name</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="ID" Click="WinesListViewColumnHeader_Click">ID</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="ID" >ID</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding Category}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Category" Click="WinesListViewColumnHeader_Click">Category</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="Category" >Category</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding Price}" Width="100">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Price" Click="WinesListViewColumnHeader_Click">Price</GridViewColumnHeader>
+                                <GridViewColumnHeader Tag="Price" >Price</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                     </GridView>

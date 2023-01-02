@@ -105,7 +105,7 @@ public partial class AdminWindow : Window
     /// <param name="e">mouse click</param>
     private void ToProductWindowAddMode(object sender, RoutedEventArgs e)
     {
-        new ProductAddOrUpdateAdminWindow().Show();
+        new ProductAddOrUpdateAdminWindow(bl).Show();
         this.Close();
     }
 
@@ -117,12 +117,14 @@ public partial class AdminWindow : Window
     private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
     {
         var selected = ((ListView)sender).SelectedItem;
+
         BO.ProductForList item = (((FrameworkElement)e.OriginalSource).DataContext as BO.ProductForList)!;
+
         if (item != null)
         {
             if (selected is ProductForList productForList)
             {
-                new ProductAddOrUpdateAdminWindow(productForList.ID).Show();
+                new ProductAddOrUpdateAdminWindow(bl, productForList.ID).Show();
                 this.Close();
             }
         }
@@ -146,6 +148,7 @@ public partial class AdminWindow : Window
 
     private void OrderList_Click(object sender, RoutedEventArgs e)
     {
-        new OrderListAdminWindow().ShowDialog();
+       
+       new OrderListAdminWindow().ShowDialog();
     }
 }

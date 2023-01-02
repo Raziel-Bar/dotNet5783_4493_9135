@@ -27,7 +27,7 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Label Content="ID:" Grid.Row="1" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox Grid.Row="1" IsEnabled="{Binding MyProduct.ID}" Text="{Binding MyProduct.ID}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" IsReadOnly= "{Binding MyProduct.ID}" Text="{Binding MyProduct.ID}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
         <!--TextBlock Name="UpdateModeTextBlock" Text="{Binding MyProduct.ID}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/-->
 
         <Label Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold" />
@@ -49,7 +49,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Content="Update" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Foreground="White" Background="{x:Null}" FontWeight="Bold" BorderBrush="White">
+        <Button Content="Update" Visibility="{Binding updateMode}" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Foreground="White" Background="{x:Null}" FontWeight="Bold" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>

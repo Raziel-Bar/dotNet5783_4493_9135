@@ -1,50 +1,42 @@
 ﻿using BO;
-using PL.ProductWindows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+namespace PL.OrderWindows;
 
-namespace PL.OrderWindows
+
+/// <summary>
+/// Interaction logic for OrderListAdminWindow.xaml
+/// </summary>
+public partial class OrderListAdminWindow : Window
 {
-    public class OrderListAdminWindowData : DependencyObject
-    {
-        public IEnumerable<OrderForList>? Orders
-        {
-            get { return (IEnumerable<OrderForList>?)GetValue(ordersProperty); }
-            set { SetValue(ordersProperty, value); }
-        }
+    readonly BlApi.IBl? bl = BlApi.Factory.Get();
+    public ObservableCollection<OrderForList> Orders { set; get; }
 
-        // Using a DependencyProperty as the backing store for orders.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ordersProperty =
-            DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(OrderListAdminWindowData));
+
+    public OrderListAdminWindow()
+    {
+        Orders = new ObservableCollection<BO.OrderForList>(bl.Order.RequestOrdersListAdmin()!);
+
+        // Data = new() { Orders = bl.Order.RequestOrdersListAdmin()! };
+       // Data = new(bl);
+        InitializeComponent();
     }
 
-    /// <summary>
-    /// Interaction logic for OrderListAdminWindow.xaml
-    /// </summary>
-    public partial class OrderListAdminWindow : Window
+    private void BackToMainWindow(object sender, RoutedEventArgs e) => this.Close();
+
+
+    private void ToOrderWindowUpdateMode(object sender, MouseButtonEventArgs e)
     {
-        readonly BlApi.IBl? bl = BlApi.Factory.Get();
-
-        public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(OrderListAdminWindowData), typeof(AdminWindow));
-        public OrderListAdminWindowData Data { get => (OrderListAdminWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
-
-        public OrderListAdminWindow()
-        {
-            Data = new() { Orders = bl.Order.RequestOrdersListAdmin()! };
-            InitializeComponent();
-        }
-        private void BackToMainWindow(object sender, RoutedEventArgs e) => this.Close();
-
+        var selected = (OrderForList)(((ListView)sender).SelectedItem);
+        new OrderUpdateWindow(bl, selected.ID).Show();
+        this.Close();
     }
+
 }
+
+
+
+
+
