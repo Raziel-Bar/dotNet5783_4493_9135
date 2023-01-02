@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
+        DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         Title="Catalog" Height="640" Width="800">
-    <Window.DataContext>
-        <local:MyData/>
-    </Window.DataContext>
     <Grid Name ="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -18,23 +16,23 @@
             <ImageBrush ImageSource="/pics/red-wine.jpg"/>
         </Grid.Background>
 
-        <Grid Name="UpperGridProduct" Visibility="Visible">
+        <Grid Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="500*"/>
             </Grid.RowDefinitions>
             
-            <Grid Name="UpperRulerProductGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+            <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions >
 
-                <ComboBox Name="WinerySelector" ItemsSource="{Binding Categories}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
-                <Label Name="Categoryheader" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
+                <ComboBox ItemsSource="{Binding Categories}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WINERIESelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
+                <Label Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
             </Grid>
             
-            <ListView Name="WinesListView" Grid.Row="1" ItemsSource="{Binding ProductsList, Mode=TwoWay}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+            <ListView Grid.Row="1" ItemsSource="{Binding ProductsList, Mode=TwoWay}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">
@@ -72,23 +70,23 @@
             </ListView>
         </Grid>
 
-        <Grid Name="UpperGridOrder" Visibility="Collapsed">
+        <Grid Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="500*"/>
             </Grid.RowDefinitions>
 
-            <Grid Name="UpperRulerOrderGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto" IsEnabled="False">
+            <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto" IsEnabled="False">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions >
 
-                <ComboBox Name="WinerySelectorFake" IsEnabled="False" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WinerySelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
-                <Label Name="CategoryheaderFake" IsEnabled="False" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
+                <ComboBox IsEnabled="False" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WINERIESelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
+                <Label IsEnabled="False" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
             </Grid>
 
-            <ListView Name="OrdersListView" Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
+            <ListView Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Status}" Width="100">
@@ -131,17 +129,18 @@
             </ListView>
         </Grid>
 
-        <Grid x:Name="LowerGrid" Grid.Row="2">
+        <!-- This is my longest Grid!!!  -->
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="BackButton" Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
-            <Button Name="OrdersListViewButton" Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
-            <Button Name="ProductsListViewButton" Content="Catalog" Grid.Column="2" Width="150" HorizontalAlignment="Center" Click="ProductList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
-            <Button Name="AddProductButton" Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
+            <Button Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
+            <Button Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Content="Catalog" Grid.Column="2" Width="150" HorizontalAlignment="Center" Click="ProductList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
         </Grid>
     </Grid>
 </Window>

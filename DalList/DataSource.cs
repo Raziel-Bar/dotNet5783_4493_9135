@@ -46,7 +46,7 @@ internal static class DataSource
 
     #region init entities
     /// <summary>
-    /// The maker of the default database of products - wines of 5 different winerys
+    /// The maker of the default database of products - wines of 5 different WINERIES
     /// </summary>
     private static void InitProduct()
     {
@@ -89,7 +89,7 @@ internal static class DataSource
 
                 newProduct.ID = myIdNumber;
 
-                newProduct.Category = (WINERYS)i;
+                newProduct.Category = (WINERIES)i;
 
                 newProduct.InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101); // first 5% are getting 0 in stock
 
@@ -97,11 +97,11 @@ internal static class DataSource
 
                 newProduct.Price = newProduct.Category switch
                 {
-                    WINERYS.GOLAN => _random.Next(100, 250),
-                    WINERYS.DALTON => _random.Next(70, 150),
-                    WINERYS.BARKAN => _random.Next(60, 100),
-                    WINERYS.CARMEL => _random.Next(60, 100),
-                    WINERYS.TEPERBERG => _random.Next(70, 200),
+                    WINERIES.GOLAN => _random.Next(100, 250),
+                    WINERIES.DALTON => _random.Next(70, 150),
+                    WINERIES.BARKAN => _random.Next(60, 100),
+                    WINERIES.CARMEL => _random.Next(60, 100),
+                    WINERIES.TEPERBERG => _random.Next(70, 200),
                     _ => 0,// null option. program is not supposed to ever get here.
                 };
 
@@ -115,16 +115,16 @@ internal static class DataSource
                      select (Product?)(new Product
                      {
                          ID = IDMaker(),
-                         Category = (WINERYS)x,
+                         Category = (WINERIES)x,
                          InStock = fivePercent-- > 0 ? 0 : _random.Next(1, 101),
                          Name = name,
-                         Price = (WINERYS)x switch
+                         Price = (WINERIES)x switch
                          {
-                             WINERYS.GOLAN => _random.Next(100, 250),
-                             WINERYS.DALTON => _random.Next(70, 150),
-                             WINERYS.BARKAN => _random.Next(60, 100),
-                             WINERYS.CARMEL => _random.Next(60, 100),
-                             WINERYS.TEPERBERG => _random.Next(70, 200),
+                             WINERIES.GOLAN => _random.Next(100, 250),
+                             WINERIES.DALTON => _random.Next(70, 150),
+                             WINERIES.BARKAN => _random.Next(60, 100),
+                             WINERIES.CARMEL => _random.Next(60, 100),
+                             WINERIES.TEPERBERG => _random.Next(70, 200),
                              _ => 0,// null option. program is not supposed to ever get here.
                          }
                      })).ToList();

@@ -145,7 +145,7 @@ Enter your choice: ");
             catgory = yourChoiceInt();
         }
 
-        newProduct.Category = (WINERYS)catgory;
+        newProduct.Category = (WINERIES)catgory;
 
         Console.WriteLine("Please enter the amount in stock: ");
         newProduct.InStock = yourChoiceInt();
@@ -218,7 +218,7 @@ Enter your choice: ");
                             Console.WriteLine("Error. Please enter a valid option: ");
                             catgory = yourChoiceInt();
                         }
-                        productUpdate.Category = (WINERYS)catgory;
+                        productUpdate.Category = (WINERIES)catgory;
                         break;
                 };
             } while (changeChoice != 0);

@@ -13,7 +13,7 @@ public interface IProduct
     /// list of products : type Ienumerable
     /// </returns>
    // public IEnumerable<ProductForList?> RequestProducts();
-    public IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>> RequestProducts(/*Func<ProductForList?, bool>? func*/);
+    public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>> RequestProducts(/*Func<ProductForList?, bool>? func*/);
 
     //public IEnumerable<BO.ProductForList?> RequestProductsByCondition(IEnumerable<BO.ProductForList?> productForLists, Func<ProductForList?, bool>? func);
 

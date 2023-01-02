@@ -27,7 +27,7 @@ public class Product
     /// <summary>
     /// The catergory that shows which winery is the product from (or either we discuss a feature product. category: ELSE)
     /// </summary>
-    public WINERYS? Category { get; set; }
+    public WINERIES? Category { get; set; }
 
     /// <summary>
     /// The product's quantity in the stock

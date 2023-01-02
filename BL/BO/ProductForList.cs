@@ -22,7 +22,7 @@ public class ProductForList
     /// <summary>
     /// The product's category
     /// </summary>
-    public WINERYS? Category { get; set; }
+    public WINERIES? Category { get; set; }
     public override string ToString() => this.ToStringProperty();
     //public override string ToString() => $@"
     //    Product ID: {ID}: {Name}
