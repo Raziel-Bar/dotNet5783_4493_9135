@@ -25,7 +25,7 @@ public class ProductItem
     /// <summary>
     /// The product's category
     /// </summary>
-    public WINERYS? Category { get; set; }
+    public WINERIES? Category { get; set; }
 
     /// <summary>
     /// checker to know whether the product's amount in stock is empty or not

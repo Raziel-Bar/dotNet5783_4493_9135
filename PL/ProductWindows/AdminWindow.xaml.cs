@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace PL.ProductWindows;
 
-public enum WINERYS
+public enum WINERIES
 {
     GOLAN,
     DALTON,
@@ -23,15 +23,15 @@ public enum WINERYS
 
 public class MyData : DependencyObject
 {
-    public IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>? Products
+    public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>? Products
     {
-        get { return (IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>?)GetValue(productsProperty); }
-        set { SetValue(productsProperty, value); }
+        get => (IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>?)GetValue(productsProperty);
+        set => SetValue(productsProperty, value);
     }
 
     // Using a DependencyProperty as the backing store for products.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty productsProperty =
-        DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERYS?, BO.ProductForList?>>), typeof(MyData));
+        DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>), typeof(MyData));
 
     public IEnumerable<OrderForList>? Orders
     {
@@ -66,7 +66,9 @@ public class MyData : DependencyObject
 public partial class AdminWindow : Window
 {
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
-    MyData data;
+
+    public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(MyData), typeof(AdminWindow));
+    public MyData Data { get => (MyData)GetValue(DataDep); set => SetValue(DataDep, value); }
     //bonus
     ListSortDirection direction;
     string? sortBy = null;
@@ -77,39 +79,31 @@ public partial class AdminWindow : Window
     public AdminWindow()
     {
         InitializeComponent();
-        data = new()
+        Data = new()
         {
             Products = bl.Product.RequestProducts(),
             Orders = bl.Order.RequestOrdersListAdmin()!,
-            Categories = Enum.GetValues(typeof(WINERYS))
+            Categories = Enum.GetValues(typeof(WINERIES))
         };
-        data.ProductsList = (from _product in data.Products
-                             from details in _product
-                             select details).ToList();
-        DataContext = data;
+        Data.ProductsList = Data.Products.SelectMany(p => p).ToList();
 
         // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
         sortBy = "Name";
         direction = ListSortDirection.Ascending;
-        WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
-        OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
+        //WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
+        //OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
     }
 
     /// <summary>
     /// filter for list view
     /// </summary>
-    /// <param name="sender">the WinerySelector combo box</param>
+    /// <param name="sender">the WINERIESelector combo box</param>
     /// <param name="e">selection changed</param>
-    private void WinerySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void WINERIESelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if ((WINERYS)WinerySelector.SelectedItem == WINERYS.ALL) data.ProductsList = (from _product in data.Products
-                                                                                      from details in _product
-                                                                                      select details).ToList();
-        else data.ProductsList = (from _product in data.Products
-                                 from details in _product
-                                 where details.Category == (BO.WINERYS)WinerySelector.SelectedItem
-                                 select details).ToList();
-
+        var selected = ((ComboBox)sender).SelectedItem;
+        if ((WINERIES)selected == WINERIES.ALL) Data.ProductsList = Data.Products!.SelectMany(p => p).ToList();
+        else Data.ProductsList = Data.Products!.FirstOrDefault(g => g.Key == (BO.WINERIES?)selected)?.ToList() ?? new();
     }
 
     /// <summary>

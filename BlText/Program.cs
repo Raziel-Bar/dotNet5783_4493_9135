@@ -194,7 +194,7 @@ Enter your choice: ");
             catgory = yourChoiceInt();
         }
 
-        newProduct.Category = (WINERYS)catgory;
+        newProduct.Category = (WINERIES)catgory;
 
         Console.WriteLine("Please enter the amount in stock: ");
 

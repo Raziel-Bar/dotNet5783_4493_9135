@@ -13,10 +13,10 @@ internal class Product : IProduct
     /// makes a product's GROUPS list based on the requested Dal data
     /// </summary>
     /// <returns>
-    /// list of products : type IEnumerable<IGrouping<BO.WINERYS? ,BO.ProductForList?>> 
+    /// list of products : type IEnumerable<IGrouping<BO.WINERIES? ,BO.ProductForList?>> 
     /// </returns>
     ///
-    public IEnumerable<IGrouping<BO.WINERYS? ,BO.ProductForList?>> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>().GroupBy(_product => _product.Category)?? throw new BO.UnexpectedException();
+    public IEnumerable<IGrouping<BO.WINERIES? ,BO.ProductForList?>> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>().GroupBy(_product => _product.Category)?? throw new BO.UnexpectedException();
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use

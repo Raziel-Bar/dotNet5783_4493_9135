@@ -21,7 +21,7 @@ namespace PL.ProductWindows
         {
             InitializeComponent();
 
-            CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERYS));
+            CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERIES));
 
             if (id == 0) // add mode
             {
@@ -67,7 +67,7 @@ namespace PL.ProductWindows
                 bl?.Product.AddProductAdmin(new BO.Product
                 {
                     ID = int.Parse(IdTextBox.Text),
-                    Category = (BO.WINERYS)CategoryComboBox.SelectedItem,
+                    Category = (BO.WINERIES)CategoryComboBox.SelectedItem,
                     Name = NameTextBox.Text,
                     Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)
@@ -107,7 +107,7 @@ namespace PL.ProductWindows
                 bl?.Product.UpdateProductAdmin(new BO.Product
                 {
                     ID = int.Parse(IdTextBlock.Text),
-                    Category = (BO.WINERYS)CategoryComboBox.SelectedItem,
+                    Category = (BO.WINERIES)CategoryComboBox.SelectedItem,
                     Name = NameTextBox.Text,
                     Price = double.Parse(PriceTextBox.Text),
                     InStock = int.Parse(AmountTextBox.Text)

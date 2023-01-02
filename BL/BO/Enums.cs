@@ -7,7 +7,7 @@
 /// The category of the product, in our case, wine - which winery is the product from.
 /// Needed in Bl too for the BO entities
 /// </summary>
-public enum WINERYS
+public enum WINERIES
 {
     GOLAN,
     DALTON,
