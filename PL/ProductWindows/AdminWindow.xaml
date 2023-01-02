@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         Title="Catalog" Height="640" Width="800">
-    <Grid Name ="MainGrid">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -70,77 +70,15 @@
             </ListView>
         </Grid>
 
-        <Grid Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40*"/>
-                <RowDefinition Height="500*"/>
-            </Grid.RowDefinitions>
-
-            <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto" IsEnabled="False">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions >
-
-                <ComboBox IsEnabled="False" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="WINERIESelector_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
-                <Label IsEnabled="False" Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
-            </Grid>
-
-            <ListView Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding ="{Binding Status}" Width="100">
-                            <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Status" Click="OrdersListViewColumnHeader_Click">Status</GridViewColumnHeader>
-                            </GridViewColumn.Header>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
-                            <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="ID" Click="OrdersListViewColumnHeader_Click">ID</GridViewColumnHeader>
-                            </GridViewColumn.Header>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding ="{Binding CustomerName}" Width="300">
-                            <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="CustomerName" Click="OrdersListViewColumnHeader_Click">Customer Name</GridViewColumnHeader>
-                            </GridViewColumn.Header>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding ="{Binding Amount}" Width="150">
-                            <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="Amount" Click="OrdersListViewColumnHeader_Click">Amount of items</GridViewColumnHeader>
-                            </GridViewColumn.Header>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding ="{Binding TotalPrice}" Width="100">
-                            <GridViewColumn.Header>
-                                <GridViewColumnHeader Tag="TotalPrice" Click="OrdersListViewColumnHeader_Click">Total Price</GridViewColumnHeader>
-                            </GridViewColumn.Header>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-
-                <ListView.Resources>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF853636"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.Resources>
-            </ListView>
-        </Grid>
-
-        <!-- This is my longest Grid!!!  -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
             <Button Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
-            <Button Content="Catalog" Grid.Column="2" Width="150" HorizontalAlignment="Center" Click="ProductList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
-            <Button Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
+            <Button Content="Add new Product" Grid.Column="2" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" Visibility="{Binding }" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
         </Grid>
     </Grid>
 </Window>

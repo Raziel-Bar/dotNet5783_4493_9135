@@ -1,17 +1,38 @@
 ﻿using BO;
 using DO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Media;
 using System.Windows;
 
 namespace PL.ProductWindows
 {
+    public class ProductAddOrUpdateAdminWindowData : DependencyObject
+    {
+        public BO.Product? MyProduct
+        {
+            get => (BO.Product?)GetValue(productsProperty);
+            set => SetValue(productsProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for products.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty productsProperty =
+            DependencyProperty.Register("MyProduct", typeof(BO.Product), typeof(ProductAddOrUpdateAdminWindowData));
+
+
+        public Array? Categories { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for ProductWindow.xaml
     /// </summary>
     public partial class ProductAddOrUpdateAdminWindow : Window
     {
-        BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
+        readonly BlApi.IBl? bl = BlApi.Factory.Get();
+
+        public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(ProductAddOrUpdateAdminWindowData), typeof(ProductAddOrUpdateAdminWindow));
+        public ProductAddOrUpdateAdminWindowData Data { get => (ProductAddOrUpdateAdminWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
         /// <summary>
         /// a window for either adding or updating a product
@@ -20,8 +41,11 @@ namespace PL.ProductWindows
         public ProductAddOrUpdateAdminWindow(int id = 0)
         {
             InitializeComponent();
-
-            CategoryComboBox.ItemsSource = Enum.GetValues(typeof(BO.WINERIES));
+            Data = new()
+            {
+                MyProduct = id == 0 ? null : bl?.Product.RequestProductDetailsAdmin(id),
+                Categories = Enum.GetValues(typeof(WINERIES))
+            };
 
             if (id == 0) // add mode
             {

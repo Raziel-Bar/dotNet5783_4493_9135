@@ -17,10 +17,10 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Name="HeaderTextBlock"  Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Text="Please Enter Password" Margin="2,2,2,2" FontSize="16" Foreground="white"/>
-        <PasswordBox Name="AdminVerificationPasswordBox" Grid.Row="1" Margin="20,2" MaxLength="4" KeyDown="EnterKeyCheck"/>
-        <TextBlock Name="WrongPasswordTextBlock" Visibility="Hidden" Grid.Row="2" TextAlignment="Center" TextWrapping="Wrap" Text="Wrong Password (Hint: 1234)" Margin="2,2,2,2" FontSize="10" Foreground="red" FontStyle="Italic"/>
-        <Button Name="VerifyButton" Content="Verify" Grid.Row="3" Height="30" Width="50" HorizontalAlignment="center" Margin="2,2,2,2" Click="VerifyPassword_Click" Style="{StaticResource ButtonStyleLowerRuler}">
+        <TextBlock Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Text="Please Enter Password" Margin="2,2,2,2" FontSize="16" Foreground="white"/>
+        <PasswordBox Grid.Row="1" Margin="20,2" MaxLength="4" KeyDown="EnterKeyCheck"/>
+        <TextBlock Grid.Row="2" TextAlignment="Center" TextWrapping="Wrap" Text="Wrong Password (Hint: 1234)" Margin="2,2,2,2" FontSize="10" Foreground="red" FontStyle="Italic"/>
+        <Button Content="Verify" Grid.Row="3" Height="30" Width="50" HorizontalAlignment="center" Margin="2,2,2,2" Click="VerifyPassword_Click" Style="{StaticResource ButtonStyleLowerRuler}">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>

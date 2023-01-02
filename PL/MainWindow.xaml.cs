@@ -15,8 +15,6 @@ namespace PL
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
-            BlApi.IBl? bl = BlApi.Factory.Get(); //new Bl();
         }
 
         /// <summary>
@@ -26,7 +24,8 @@ namespace PL
         /// <param name="e">mouse click</param>
         private void AdminAccessButton_Click(object sender, RoutedEventArgs e)
         {
-            new AdminVerificationWindow().ShowDialog();          
+            //new AdminVerificationWindow().ShowDialog();
+            new AdminWindow().Show(); // to be deleted once enabling the verify window
             this.Close();
         }
 

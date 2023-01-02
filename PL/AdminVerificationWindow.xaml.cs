@@ -29,10 +29,10 @@ namespace PL
 
         private void VerifyPassword_Click(object sender, RoutedEventArgs e)
         {
-            if (AdminVerificationPasswordBox.Password != password)
+            var pwInput = (PasswordBox)sender;
+            if (pwInput.Password != password)
             {
                 SystemSounds.Beep.Play();
-                WrongPasswordTextBlock.Visibility = Visibility.Visible;
             }
             else
             {

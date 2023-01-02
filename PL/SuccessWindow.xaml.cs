@@ -13,6 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+public class SuccessWindowData
+{
+    public string? TextMessage { get; set; }
+}
+
 namespace PL
 {
     /// <summary>
@@ -20,15 +25,19 @@ namespace PL
     /// </summary>
     public partial class SuccessWindow : Window
     {
+        public SuccessWindowData Data { get; set; }
+        
         /// <summary>
         /// a message window that confirms the success of an action
         /// </summary>
         /// <param name="text">The corresponding message</param>
         public SuccessWindow(string text)
         {
-            SystemSounds.Beep.Play();
+            SystemSounds.Beep.Play(); // check later
             InitializeComponent();
-            SuccessTextBlock.Text = text;
+            Data = new () { 
+                TextMessage = text
+            };
         }
 
         /// <summary>

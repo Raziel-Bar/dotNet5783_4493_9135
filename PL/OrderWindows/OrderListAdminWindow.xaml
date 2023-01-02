@@ -1,43 +1,45 @@
-﻿<Window x:Class="PL.OrderForListWindows.OrdersForListWindow"
+﻿<Window x:Class="PL.OrderWindows.OrderListAdminWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.OrderForListWindows"
+        xmlns:local="clr-namespace:PL.OrderWindows"
+        DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="OrdersForListWindow" Height="450" Width="800">
+        Title="Orders" Height="640" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <Grid.Background>
             <ImageBrush ImageSource="/pics/red-wine.jpg"/>
         </Grid.Background>
 
-        <ListView Name="OrdersListView" Grid.Row="1" ItemsSource="{Binding OrdersForList}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" MouseDoubleClick="OrdersListView_MouseDoubleClick" SelectionChanged="WinesListView_SelectionChanged">
+        <Grid Grid.Row="0">
+            <ListView Grid.Row="1" ItemsSource="{Binding Orders}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" MouseDoubleClick="ToProductWindowUpdateMode"  BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="WinesListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Status}" Width="100">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Status" Click="OrdersListViewColumnHeader_Click">Status</GridViewColumnHeader>
                             </GridViewColumn.Header>
-                            
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding ="{Binding ID}" Width="100">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="ID" Click="OrdersListViewColumnHeader_Click">ID</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        
                         <GridViewColumn DisplayMemberBinding ="{Binding CustomerName}" Width="300">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="CustomerName" Click="OrdersListViewColumnHeader_Click">Customer Name</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        
                         <GridViewColumn DisplayMemberBinding ="{Binding Amount}" Width="150">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="Amount" Click="OrdersListViewColumnHeader_Click">Amount of items</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        
                         <GridViewColumn DisplayMemberBinding ="{Binding TotalPrice}" Width="100">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Tag="TotalPrice" Click="OrdersListViewColumnHeader_Click">Total Price</GridViewColumnHeader>
@@ -56,5 +58,19 @@
                     </Style>
                 </ListView.Resources>
             </ListView>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
+            <!--Button Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Content="Catalog" Grid.Column="2" Width="150" HorizontalAlignment="Center" Click="ProductList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" Visibility="{Binding }" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/-->
+        </Grid>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using BO;
+using PL.OrderWindows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ public enum WINERIES
     ALL,
 }
 
-public class MyData : DependencyObject
+public class AdminWindowData : DependencyObject
 {
     public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>? Products
     {
@@ -31,7 +32,7 @@ public class MyData : DependencyObject
 
     // Using a DependencyProperty as the backing store for products.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty productsProperty =
-        DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>), typeof(MyData));
+        DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>), typeof(AdminWindowData));
 
     public IEnumerable<OrderForList>? Orders
     {
@@ -41,7 +42,7 @@ public class MyData : DependencyObject
 
     // Using a DependencyProperty as the backing store for orders.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ordersProperty =
-        DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(MyData));
+        DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(AdminWindowData));
 
 
 
@@ -53,7 +54,7 @@ public class MyData : DependencyObject
 
     // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ProductsListProperty =
-        DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(MyData));
+        DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(AdminWindowData));
 
 
     
@@ -67,11 +68,8 @@ public partial class AdminWindow : Window
 {
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
-    public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(MyData), typeof(AdminWindow));
-    public MyData Data { get => (MyData)GetValue(DataDep); set => SetValue(DataDep, value); }
-    //bonus
-    ListSortDirection direction;
-    string? sortBy = null;
+    public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(AdminWindowData), typeof(AdminWindow));
+    public AdminWindowData Data { get => (AdminWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
     /// <summary>
     /// the list window with all prduct and their details
@@ -86,12 +84,6 @@ public partial class AdminWindow : Window
             Categories = Enum.GetValues(typeof(WINERIES))
         };
         Data.ProductsList = Data.Products.SelectMany(p => p).ToList();
-
-        // BONUS we made the code below so we could sort the listView (either ascending or descending!) by clicking the column headers
-        sortBy = "Name";
-        direction = ListSortDirection.Ascending;
-        //WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
-        //OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
     }
 
     /// <summary>
@@ -124,10 +116,11 @@ public partial class AdminWindow : Window
     /// <param name="e">mouse Double click</param>
     private void ToProductWindowUpdateMode(object sender, MouseButtonEventArgs e)
     {
+        var selected = ((ListView)sender).SelectedItem;
         BO.ProductForList item = (((FrameworkElement)e.OriginalSource).DataContext as BO.ProductForList)!;
         if (item != null)
         {
-            if (WinesListView.SelectedItem is ProductForList productForList)
+            if (selected is ProductForList productForList)
             {
                 new ProductAddOrUpdateAdminWindow(productForList.ID).Show();
                 this.Close();
@@ -151,61 +144,8 @@ public partial class AdminWindow : Window
 
     }
 
-    /// <summary>
-    /// BONUS sorts the items in the list view based on column
-    /// </summary>
-    /// <param name="sender">WinesListView : ListView</param>
-    /// <param name="e">mouse double click</param>
-    private void WinesListViewColumnHeader_Click(object sender, RoutedEventArgs e)
-    {
-        GridViewColumnHeader? column = sender as GridViewColumnHeader;
-        if (sortBy == column?.Tag.ToString()) // we click the same column to flip direction
-        {
-            if (direction == ListSortDirection.Ascending) direction = ListSortDirection.Descending;
-            else direction = ListSortDirection.Ascending;
-        }
-        else
-        {
-            direction = ListSortDirection.Ascending;
-            sortBy = column?.Tag.ToString();
-        }
-        WinesListView.Items.SortDescriptions.Clear();
-        WinesListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
-    }
-
-    /// <summary>
-    /// BONUS sorts the items in the list view based on column
-    /// </summary>
-    /// <param name="sender">WinesListView : ListView</param>
-    /// <param name="e">mouse double click</param>
-    private void OrdersListViewColumnHeader_Click(object sender, RoutedEventArgs e)
-    {
-        GridViewColumnHeader? column = sender as GridViewColumnHeader;
-        if (sortBy == column?.Tag.ToString()) // we click the same column to flip direction
-        {
-            if (direction == ListSortDirection.Ascending) direction = ListSortDirection.Descending;
-            else direction = ListSortDirection.Ascending;
-        }
-        else
-        {
-            direction = ListSortDirection.Ascending;
-            sortBy = column?.Tag.ToString();
-        }
-        OrdersListView.Items.SortDescriptions.Clear();
-        OrdersListView.Items.SortDescriptions.Add(new SortDescription(sortBy, direction));
-    }
-
     private void OrderList_Click(object sender, RoutedEventArgs e)
     {
-        UpperGridProduct.Visibility = Visibility.Collapsed;
-        UpperGridOrder.Visibility = Visibility.Visible;
-        AddProductButton.Visibility = Visibility.Collapsed;
-    }
-
-    private void ProductList_Click(object sender, RoutedEventArgs e)
-    {
-        AddProductButton.Visibility = Visibility.Visible;
-        UpperGridOrder.Visibility = Visibility.Collapsed;
-        UpperGridProduct.Visibility = Visibility.Visible;
+        new OrderListAdminWindow().ShowDialog();
     }
 }

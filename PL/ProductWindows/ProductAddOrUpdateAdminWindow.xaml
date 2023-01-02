@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.ProductWindows"
+        DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
         Title="ProductWindow" Height="450" Width="800">
     <Grid>
@@ -25,30 +26,30 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <Label Name="IdLabel" Content="ID:" Grid.Row="1" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox Name="IdTextBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
-        <TextBlock Name="IdTextBlock" Text="Sample" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
+        <Label Content="ID:" Grid.Row="1" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
+        <TextBox Grid.Row="1" IsEnabled="{Binding MyProduct.ID}" Text="{Binding MyProduct.ID}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <!--TextBlock Name="UpdateModeTextBlock" Text="{Binding MyProduct.ID}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/-->
 
-        <Label Name="CategoryLabel" Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold" />
-        <ComboBox Name="CategoryComboBox" SelectedIndex="0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold" />
+        <ComboBox SelectedIndex="0" ItemsSource="{Binding Categories}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Label Name="NameLabel" Content="Name:" Grid.Row="3" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox Name="NameTextBox" MaxLength="30" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Content="Name:" Grid.Row="3" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
+        <TextBox MaxLength="30" Text="{Binding MyProduct.Name}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Label Name="PriceLabel" Content="Price:" Grid.Row="4" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox Name="PriceTextBox" MaxLength="10" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Content="Price:" Grid.Row="4" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
+        <TextBox MaxLength="10" Text="{Binding MyProduct.Price}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Label Name="AmountLabel" Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0" FontWeight="Bold" Foreground="White"/>
-        <TextBox Name="AmountTextBox" MaxLength="5" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0" FontWeight="Bold" Foreground="White"/>
+        <TextBox MaxLength="5" Text="{Binding MyProduct.InStock}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Button Name="AddButton" Content="Add" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Foreground="White" FontWeight="Bold" Background="{x:Null}" BorderBrush="White">
+        <Button Content="Add" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Foreground="White" FontWeight="Bold" Background="{x:Null}" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Name="UpdateButton" Content="Update" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Foreground="White" Background="{x:Null}" FontWeight="Bold" BorderBrush="White">
+        <Button Content="Update" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Foreground="White" Background="{x:Null}" FontWeight="Bold" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
@@ -56,7 +57,7 @@
             </Button.Resources>
         </Button>
 
-        <Button Name="BackButton" Content="Back" Grid.Row="6" HorizontalAlignment="Left" Height="30" Width="65" Margin="27,150,0,25" Padding="5" Click="BackToMainWindow" Background="{x:Null}" Foreground="White" FontWeight="Bold" BorderBrush="White">
+        <Button Content="Back" Grid.Row="6" HorizontalAlignment="Left" Height="30" Width="65" Margin="27,150,0,25" Padding="5" Click="BackToMainWindow" Background="{x:Null}" Foreground="White" FontWeight="Bold" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
