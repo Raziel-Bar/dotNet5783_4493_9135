@@ -37,11 +37,11 @@
             <ImageBrush ImageSource="/pics/red-wine.jpg" Opacity="1" />
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="159*"/>
+            <ColumnDefinition Width="241*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,533,0">
+        <Grid Grid.Column="0" Margin="0,0,2,0">
 
 
             <Grid.ColumnDefinitions>
@@ -94,11 +94,13 @@
 
             <StackPanel Grid.Column="1" Grid.Row="7" Margin="0,0,0,0">
                 <TextBlock x:Name="DeliveryDateTB" Text="{Binding Order.DeliveryDate}" FontWeight="Bold" TextAlignment="Center" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                <Button FontSize="6" Content="Update" Click="DeliveryDateClick" Visibility="{Binding Text, Converter={StaticResource visibilityToText}, ElementName=DeliveryDateTB}" Style="{StaticResource ButtonStyleLowerRuler}"/>
+                <Button FontSize="6" Content="Update" Click="DeliveryDateClick" Visibility="{Binding Text, Converter={StaticResource visibilityToText}, ElementName=DeliveryDateTB} " Style="{StaticResource ButtonStyleLowerRuler}"/>
             </StackPanel>
 
             <Label Name="TotalPriceLabel" Content="Total Price:" Grid.Row="8"/>
             <TextBlock Name="TotalPriceTB" Text="{Binding Order.TotalPrice}" Grid.Column="1" Grid.Row="8" TextAlignment="Center"  />
+
+            <Button Content="Back" Grid.Row="8" Style="{StaticResource ButtonStyleLowerRuler}" Margin="10,107,44,-87" FontWeight="Bold" FontStyle="Normal"></Button>
 
         </Grid>
 
