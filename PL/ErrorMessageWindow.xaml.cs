@@ -19,6 +19,7 @@ namespace PL
     public class ErrorMessageWindowData
     {
         public string? TextMessage { get; set; }
+        public string? Title { get; set; }
     }
 
     /// <summary>
@@ -34,12 +35,13 @@ namespace PL
         public ErrorMessageWindow(string title, string text)
         {
             SystemSounds.Hand.Play();
-            InitializeComponent();
-            Title = title;
+
             Data = new()
             {
-                TextMessage = text
+                TextMessage = text,
+                Title = title
             };
+            InitializeComponent();
         }
 
         /// <summary>

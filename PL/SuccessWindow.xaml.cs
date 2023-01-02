@@ -34,10 +34,10 @@ namespace PL
         public SuccessWindow(string text)
         {
             SystemSounds.Beep.Play(); // check later
-            InitializeComponent();
             Data = new () { 
                 TextMessage = text
             };
+            InitializeComponent();
         }
 
         /// <summary>

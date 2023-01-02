@@ -95,7 +95,7 @@ public partial class AdminWindow : Window
     {
         var selected = ((ComboBox)sender).SelectedItem;
         if ((WINERIES)selected == WINERIES.ALL) Data.ProductsList = Data.Products!.SelectMany(p => p).ToList();
-        else Data.ProductsList = Data.Products!.FirstOrDefault(g => g.Key == (BO.WINERIES?)selected)?.ToList() ?? new();
+        else Data.ProductsList = Data.Products!.FirstOrDefault(g => g.Key == (BO.WINERIES)selected)?.ToList() ?? new();
     }
 
     /// <summary>

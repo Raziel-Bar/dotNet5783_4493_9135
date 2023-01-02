@@ -27,22 +27,21 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Label Content="ID:" Grid.Row="1" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox Grid.Row="1" IsReadOnly= "{Binding MyProduct.ID}" Text="{Binding MyProduct.ID}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
-        <!--TextBlock Name="UpdateModeTextBlock" Text="{Binding MyProduct.ID}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/-->
+        <TextBox Grid.Row="1" IsReadOnly= "{Binding isReadOnlyID}" Text="{Binding MyProduct.ID, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Content="Category:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold" />
-        <ComboBox SelectedIndex="0" ItemsSource="{Binding Categories}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <ComboBox SelectedIndex="0" ItemsSource="{Binding Categories, Mode=TwoWay}" SelectionChanged="SelectionChanged_Category" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Content="Name:" Grid.Row="3" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox MaxLength="30" Text="{Binding MyProduct.Name}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <TextBox MaxLength="30" Text="{Binding MyProduct.Name, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Content="Price:" Grid.Row="4" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox MaxLength="10" Text="{Binding MyProduct.Price}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <TextBox MaxLength="10" Text="{Binding MyProduct.Price, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0" FontWeight="Bold" Foreground="White"/>
-        <TextBox MaxLength="5" Text="{Binding MyProduct.InStock}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <TextBox MaxLength="5" Text="{Binding MyProduct.InStock, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
-        <Button Content="Add" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Foreground="White" FontWeight="Bold" Background="{x:Null}" BorderBrush="White">
+        <Button Content="Add" Visibility="{Binding addMode}" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Foreground="White" FontWeight="Bold" Background="{x:Null}" BorderBrush="White">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
@@ -64,9 +63,6 @@
                 </Style>
             </Button.Resources>
         </Button>
-
-
-
 
     </Grid>
 </Window>

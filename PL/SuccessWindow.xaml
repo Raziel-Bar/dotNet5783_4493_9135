@@ -18,7 +18,7 @@
                 <GradientStop Color="PaleGreen" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{Binding TextMessage, Mode=OneTime}"  Margin="2,2,2,2" FontSize="16" Foreground="Green">
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{Binding TextMessage}"  Margin="2,2,2,2" FontSize="16" Foreground="Green">
         </TextBlock>
         <Button Grid.Row="1" Height="30" Width="50" Content="OK" HorizontalAlignment="Center" Margin="2,2,2,2" Click="CloseWindow"  BorderThickness="1" BorderBrush="Black" Foreground="Black">
             <Button.Resources>

@@ -1,6 +1,7 @@
 ﻿using BO;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PL.ProductWindows;
 
@@ -18,6 +19,8 @@ public class ProductAddOrUpdateAdminWindowData : DependencyObject
     public Array? Categories { get; set; }
     public Visibility updateMode { get; set; }
     public Visibility addMode { get; set; }
+
+    public bool isReadOnlyID { get; set; }
 }
 
 /// <summary>
@@ -37,17 +40,18 @@ public partial class ProductAddOrUpdateAdminWindow : Window
     public ProductAddOrUpdateAdminWindow(BlApi.IBl? bl, int id = 0)
     {
         this.bl = bl;
-        InitializeComponent();
+        
         Data = new()
         {
-            MyProduct = id == 0 ? null : bl?.Product.RequestProductDetailsAdmin(id),
-            Categories = Enum.GetValues(typeof(WINERIES)),
-            addMode = id == 0 ? Visibility : Visibility.Hidden,
-            updateMode = id != 0 ? Visibility : Visibility.Hidden
+            isReadOnlyID = id == 0 ? false : true,
+            MyProduct = id == 0 ? new() : bl?.Product.RequestProductDetailsAdmin(id),
+            Categories = Enum.GetValues(typeof(BO.WINERIES)),
+            addMode = id == 0 ? Visibility.Visible : Visibility.Hidden,
+            updateMode = id != 0 ? Visibility.Visible : Visibility.Hidden
         };
-
+        InitializeComponent();
         // all old details are shown
-        try
+      /*  try
         {
             BO.Product product = bl?.Product.RequestProductDetailsAdmin(id) ?? throw new BO.UnexpectedException();
 
@@ -55,7 +59,7 @@ public partial class ProductAddOrUpdateAdminWindow : Window
         catch (Exception ex)
         {
             new ErrorMessageWindow("Unexpected Error!", ex.Message).Show();
-        }
+        }*/
 
     }
 
@@ -78,17 +82,16 @@ public partial class ProductAddOrUpdateAdminWindow : Window
         {
             new ErrorMessageWindow("Input Error", "Invalid input!\nSome of the textboxes are either empty or contain wrong format input.").ShowDialog();
         }
-        catch (BO.InvalidDataException ex)
+        catch (BO.InvalidDataException)
         {
-            new ErrorMessageWindow("Invalid Data", ex.Message).ShowDialog();
+            new ErrorMessageWindow("Invalid Data", "Invalid input!\nMake sure that the ID is at least 6 digits and that all other numbers are not negative.").ShowDialog();
         }
-        catch (BO.AlreadyExistInDalException ex)
+        catch (BO.AlreadyExistInDalException)
         {
-            new ErrorMessageWindow("Existing Data Error", ex.Message).ShowDialog();
+            new ErrorMessageWindow("Existing Data Error", "That Product already exists! Try a different ID").ShowDialog();
         }
         catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
         {
-            //MessageBox.Show(ex.Message);
             new ErrorMessageWindow("Unexpected Error!", ex.Message).ShowDialog();
         }
     }
@@ -136,5 +139,8 @@ public partial class ProductAddOrUpdateAdminWindow : Window
         this.Close();
     }
 
-
+    private void SelectionChanged_Category(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        Data.MyProduct!.Category = (BO.WINERIES)((ComboBox)sender).SelectedItem;
+    }
 }
