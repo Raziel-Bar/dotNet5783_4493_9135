@@ -45,7 +45,8 @@ namespace PL
 
         private void OrderTraceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            new OrderTrackingWindow().Show();
+            this.Close();
         }
     }
 }
