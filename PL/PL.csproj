@@ -14,6 +14,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="OrderWindows\icons8-tracking-48.png" />
+	  <None Remove="OrderWindows\view.png" />
 	  <None Remove="ProductWindows\elisha-terada-MDJvfXJGnRM-unsplash.jpg" />
 	  <None Remove="ProductWindows\red-wine.jpg" />
 	</ItemGroup>
@@ -23,6 +25,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="pics\view.png" />
+	  <Resource Include="pics\icons8-tracking-48.png" />
 	  <Resource Include="pics\red-wine.jpg" />
 	</ItemGroup>
 

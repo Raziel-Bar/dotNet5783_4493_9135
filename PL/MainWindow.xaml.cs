@@ -1,4 +1,5 @@
-﻿using PL.ProductWindows;
+﻿using PL.OrderWindows;
+using PL.ProductWindows;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -43,7 +44,8 @@ namespace PL
 
         private void OrderTraceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            new OrderTrackingWindow().Show();
+            this.Close();
         }
     }
 }
