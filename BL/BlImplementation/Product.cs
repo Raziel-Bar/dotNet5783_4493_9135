@@ -16,7 +16,7 @@ internal class Product : IProduct
     /// list of products : type IEnumerable<IGrouping<BO.WINERIES? ,BO.ProductForList?>> 
     /// </returns>
     ///
-    public IEnumerable<IGrouping<BO.WINERIES? ,BO.ProductForList?>> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>().GroupBy(_product => _product.Category)?? throw new BO.UnexpectedException();
+    public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>> RequestProducts() => dal?.Product.GetList().CopyPropToList<DO.Product?, BO.ProductForList>().GroupBy(_product => _product.Category) ?? throw new BO.UnexpectedException();
 
     /// <summary>
     /// Makes a request to Dal for getting a product's details for administrative use
@@ -60,12 +60,17 @@ internal class Product : IProduct
         {
             try
             {
-                cart.ListOfItems ??= new List<BO.OrderItem?>();
                 int amountInCart = 0;
 
-                BO.OrderItem? orderItem = cart.ListOfItems.FirstOrDefault(item => item!.ProductID == productID);
-                if (orderItem != null)
-                    amountInCart = orderItem.Amount;
+                if (cart is not null)
+                {
+                    cart.ListOfItems ??= new List<BO.OrderItem?>();
+
+                    BO.OrderItem? orderItem = cart.ListOfItems.FirstOrDefault(item => item!.ProductID == productID);
+                    if (orderItem != null)
+                        amountInCart = orderItem.Amount;
+                }
+
 
                 if (dal?.Product.Get(productID) is DO.Product product)
                 {
@@ -76,6 +81,7 @@ internal class Product : IProduct
                     return retProduct;
                 }
                 throw new BO.NotFoundInDalException("Product");
+
             }
             catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Product", ex); }
         }
@@ -115,7 +121,7 @@ internal class Product : IProduct
     {
         if (productID >= 100000)
         {
-            if ( (bool)(dal?.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any()!) )
+            if ((bool)(dal?.OrderItem.GetList(orderItem => orderItem?.ProductID == productID).Any()!))
                 throw new BO.RemoveProductThatIsInOrdersException();
 
             try { dal.Product.Delete(productID); }

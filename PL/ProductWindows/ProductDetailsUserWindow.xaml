@@ -5,8 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
+        DataContext="{Binding Product, RelativeSource={RelativeSource self}}"
         Title="ProductDetailsUserWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalContentAlignment" Value = "Left"/>
+            <Setter Property="Margin" Value="0,5,645,10"/>
+            <Setter Property="RenderTransformOrigin" Value="0.419,0.867"/>
+
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="165,13,0,0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid.Background>
+            <ImageBrush ImageSource="/pics/red-wine.jpg"/>
+        </Grid.Background>
+
+        <Label Content="Product ID: "/>
+        <TextBlock Text="{Binding ID}"/>
+
+        <Label Grid.Row="1" Content="Product Name:" />
+        <TextBlock Grid.Row="1" Text="{Binding Name}" />
+
+        <Label Grid.Row="2" Content="Product Price:" />
+        <TextBlock Grid.Row="2"  Text="{Binding Price}" />
+
+        <Label Grid.Row="3" Content="Product Category:" Margin="0,5,605,10" />
+        <TextBlock Grid.Row="3"  Text="{Binding Category}" Margin="200,13,0,0" />
+
+        <Label Grid.Row="4" Content="Product Available:" Margin="0,5,615,10" />
+        <TextBlock Grid.Row="4"  Text="{Binding Available}" Margin="185,15,0,0" />
+
+        <Label Grid.Row="5" Content="Product Amount:" Margin="0,5,605,10" />
+        <TextBlock Grid.Row="5"  Text="{Binding Amount}" Margin="185,15,0,0" />
+
+        <Button Content="Back"  Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" FontSize="15" Click="BackToOrders" Style="{StaticResource ButtonStyle1}" Margin="10,68,0,10" Width="68"/>
+
     </Grid>
 </Window>

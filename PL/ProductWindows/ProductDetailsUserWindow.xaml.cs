@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BO;
+using PL.OrderWindows;
+
 namespace PL.ProductWindows
 {
     /// <summary>
@@ -19,14 +21,31 @@ namespace PL.ProductWindows
     /// </summary>
     public partial class ProductDetailsUserWindow : Window
     {
-        ProductItem product;
+        public ProductItem Product 
+        {
+            get { return (ProductItem)GetValue(ProductProperty); }
+            set { SetValue(ProductProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Product.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ProductProperty =
+            DependencyProperty.Register("Product", typeof(ProductItem), typeof(ProductDetailsUserWindow));
+
+
+
         Cart cart;
         BlApi.IBl blP;
         public ProductDetailsUserWindow(BlApi.IBl bl, int id)
         {
             blP = bl;
-            product =  
+            Product = blP.Product.RequestProductDetailsUser(id,cart);
             InitializeComponent();
+        }
+
+        private void BackToOrders(object sender, RoutedEventArgs e)
+        {
+            new NewOrderWindow().Show();
+            this.Close();
         }
     }
 }
