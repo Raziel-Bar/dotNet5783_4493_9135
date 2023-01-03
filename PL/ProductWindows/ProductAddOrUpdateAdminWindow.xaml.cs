@@ -1,5 +1,6 @@
 ﻿using BO;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -96,10 +97,10 @@ public partial class ProductAddOrUpdateAdminWindow : Window
             new AdminWindow().Show();
             this.Close();
         }
-        /*catch (BO.NotFoundInDalException)
+        catch (BO.InvalidDataException)
         {
-            new ErrorMessageWindow("Data Not Found", "Data Not Found").ShowDialog();
-        }*/
+            new ErrorMessageWindow("Invalid Data", "ID must contain at least 6 digits").ShowDialog();
+        }
         catch (Exception ex)// in any other case we will just link the inner exception for better knowledge
         {
             new ErrorMessageWindow("Unexpected Error!", ex.Message).ShowDialog();
@@ -121,14 +122,31 @@ public partial class ProductAddOrUpdateAdminWindow : Window
     // BONUS Using RegEx to make binding Validations to our input
 
     /// <summary>
-    /// forces text to be only digits and decimal point
+    /// forces text to be only digits with 1 decimal point (optional)
     /// </summary>
-    private void IsDoublePreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    private void IsDoublePreviewTextInput(object sender, TextChangedEventArgs e)
     {
-        Regex regex = new("[^.0-9]");
-        e.Handled = regex.IsMatch(e.Text);
-    }
+        string isNumber = @"^\d*\.?\d*$";
+        TextBox text = (TextBox)sender;
 
+        Match match = Regex.Match(text.Text, isNumber);
+
+        if (text.Text == "" || text.Text.All(t => t =='0'))
+        {
+            text.Text = "1";
+        }
+
+        if (!match.Success)
+        {
+            if (text.Text.Length > 1)
+                text.Text = text.Text.Substring(0, text.Text.Length - 1);
+            else
+                text.Text = "";
+
+            text.Select(text.Text.Length, 0); //set cursor to the end 
+                                              //of the string
+        }
+    }
     /// <summary>
     /// forces text to be only digits
     /// </summary>
@@ -137,4 +155,6 @@ public partial class ProductAddOrUpdateAdminWindow : Window
         Regex regex = new("[^0-9]+");
         e.Handled = regex.IsMatch(e.Text);
     }
+
+ 
 }

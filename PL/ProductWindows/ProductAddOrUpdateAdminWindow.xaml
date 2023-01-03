@@ -36,7 +36,7 @@
         <TextBox MaxLength="30" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Text="{Binding MyProduct.Name, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
         <Label Content="Price:" Grid.Row="4" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-        <TextBox MaxLength="10" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Text="{Binding MyProduct.Price, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" PreviewTextInput="IsDoublePreviewTextInput"/>
+        <TextBox MaxLength="10" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Text="{Binding MyProduct.Price, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" TextChanged="IsDoublePreviewTextInput"/>
 
         <Label Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0" FontWeight="Bold" Foreground="White"/>
         <TextBox MaxLength="5" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Text="{Binding MyProduct.InStock, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" PreviewTextInput="IsIntPreviewTextInput"/>
