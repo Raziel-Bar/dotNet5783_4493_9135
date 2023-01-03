@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using BO;
 namespace PL.ProductWindows
 {
     /// <summary>
@@ -19,8 +19,13 @@ namespace PL.ProductWindows
     /// </summary>
     public partial class ProductDetailsUserWindow : Window
     {
-        public ProductDetailsUserWindow()
+        ProductItem product;
+        Cart cart;
+        BlApi.IBl blP;
+        public ProductDetailsUserWindow(BlApi.IBl bl, int id)
         {
+            blP = bl;
+            product =  
             InitializeComponent();
         }
     }

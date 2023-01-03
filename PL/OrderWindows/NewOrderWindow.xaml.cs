@@ -76,7 +76,8 @@ namespace PL.OrderWindows
             {
                 if (selected is ProductForList productForList)
                 {
-                    new ProductDetailsUserWindow().ShowDialog();                    
+
+                    new ProductDetailsUserWindow(bl,productForList.ID).ShowDialog();                    
                 }
             }
         }

@@ -7,7 +7,25 @@
         DataContext="{Binding data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
         Title="Tracker" Height="450" Width="400">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value = "Left"/>
+        </Style>
+
+
+    </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+
+
         <Grid.Background>
             <ImageBrush ImageSource="/pics/red-wine.jpg"/>
         </Grid.Background>
@@ -17,22 +35,22 @@
             <RowDefinition Height="4*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Content="ID:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="140,0,0,0"/>
-        <TextBlock Grid.Row="0" Text="{Binding Order.ID}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="178,0,0,0" Width="auto"/>
+        <Label Content="ID:" VerticalAlignment="Center" Margin="60,0,0,0" Grid.Column="1"/>
+        <Label Content="{Binding Order.ID}"   VerticalAlignment="Center" Margin="98,0,0,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="1" Content="Status:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="119,0,0,0"/>
-        <Label Grid.Row="1" Content="{Binding Order.Status}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="178,0,0,0" Width="auto"/>
+        <Label Grid.Row="1" Content="Status:"   VerticalAlignment="Center" Margin="39,0,0,0" Grid.Column="1"/>
+        <Label Grid.Row="1" Content="{Binding Order.Status}"  VerticalAlignment="Center" Margin="98,0,0,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Order date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="94,24,0,0"/>
-        <Label Grid.Row="2" Content="{Binding OrderDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,24,0,0" Width="auto"/>
+        <Label Grid.Row="2" Content="Order date:"  VerticalAlignment="Top" Margin="14,24,0,0" Grid.Column="1"/>
+        <Label Grid.Row="2" Content="{Binding OrderDateStr}"  VerticalAlignment="Top" Margin="98,24,0,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Shipping date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="77,72,0,0"/>
-        <Label Grid.Row="2" Content="{Binding ShipDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,72,0,0" Width="auto"/>
+        <Label Grid.Row="2" Content="Shipping date:" VerticalAlignment="Top" Margin="77,72,0,0" Grid.ColumnSpan="2"/>
+        <Label Grid.Row="2" Content="{Binding ShipDateStr}"  VerticalAlignment="Top" Margin="98,72,0,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Delivery date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="82,118,0,0"/>
-        <Label Grid.Row="2" Content="{Binding DeliveryDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,118,0,0" Width="auto"/>
+        <Label Grid.Row="2" Content="Delivery date:"   VerticalAlignment="Top" Margin="2,118,0,0" Grid.Column="1"/>
+        <Label Grid.Row="2" Content="{Binding DeliveryDateStr}"   VerticalAlignment="Top" Margin="98,118,0,0" Width="auto" Grid.Column="1"/>
 
-        <Button Grid.Row="3" Content="OK" Style="{StaticResource ButtonStyleLowerRuler}" Click="CloseWindow"/>
+        <Button Grid.Row="3" FontSize="18" Content="OK" Style="{StaticResource ButtonStyle1}" Click="CloseWindow" Grid.Column="1" Margin="80,10,160,10"/>
 
     </Grid>
 </Window>
