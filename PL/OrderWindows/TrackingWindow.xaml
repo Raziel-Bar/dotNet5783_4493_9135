@@ -4,14 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.OrderWindows"
+        DataContext="{Binding data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="TrackingWindow" Height="450" Width="800">
+        Title="Tracker" Height="450" Width="400">
     <Grid>
-        
-        
-        
-        
-        
-        
+        <Grid.Background>
+            <ImageBrush ImageSource="/pics/red-wine.jpg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="ID:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="140,0,0,0"/>
+        <TextBlock Grid.Row="0" Text="{Binding Order.ID}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="178,0,0,0" Width="auto"/>
+
+        <Label Grid.Row="1" Content="Status:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="119,0,0,0"/>
+        <Label Grid.Row="1" Content="{Binding Order.Status}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="178,0,0,0" Width="auto"/>
+
+        <Label Grid.Row="2" Content="Order date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="94,24,0,0"/>
+        <Label Grid.Row="2" Content="{Binding OrderDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,24,0,0" Width="auto"/>
+
+        <Label Grid.Row="2" Content="Shipping date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="77,72,0,0"/>
+        <Label Grid.Row="2" Content="{Binding ShipDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,72,0,0" Width="auto"/>
+
+        <Label Grid.Row="2" Content="Delivery date:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="82,118,0,0"/>
+        <Label Grid.Row="2" Content="{Binding DeliveryDateStr}" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="178,118,0,0" Width="auto"/>
+
+        <Button Grid.Row="3" Content="OK" Style="{StaticResource ButtonStyleLowerRuler}" Click="CloseWindow"/>
+
     </Grid>
 </Window>
