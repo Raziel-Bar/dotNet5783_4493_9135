@@ -42,10 +42,6 @@ namespace PL.ProductWindows
             InitializeComponent();
         }
 
-        private void BackToOrders(object sender, RoutedEventArgs e)
-        {
-            new NewOrderWindow().Show();
-            this.Close();
-        }
+        private void BackToOrders(object sender, RoutedEventArgs e) => this.Close();
     }
 }
