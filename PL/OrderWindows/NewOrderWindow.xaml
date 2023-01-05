@@ -16,6 +16,10 @@
         </CollectionViewSource-->
     </Window.Resources>
     <Grid>
+
+
+
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -25,12 +29,16 @@
         </Grid.Background>
 
         <Grid Grid.Row="0" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="151*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="500*"/>
             </Grid.RowDefinitions>
 
-            <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+            <Grid Height="auto" Grid.Row="0" Width="auto" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -45,7 +53,9 @@
                 <Label Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
             </Grid>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding ProductsList, Mode=TwoWay}" Visibility="{Binding ElementName=SingleViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" MouseDoubleClick="ProductDetails" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}">
+            <ListView ItemsSource="{Binding ProductsList, Mode=TwoWay}" Visibility="{Binding ElementName=SingleViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" MouseDoubleClick="ProductDetails" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
+
+
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding ="{Binding Name}" Width="360">
@@ -68,9 +78,11 @@
                                 <GridViewColumnHeader Tag="Price" >Price</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
+
                     </GridView>
                 </ListView.View>
-
+               
+                
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Triggers>
@@ -82,7 +94,7 @@
                 </ListView.Resources>
             </ListView>
 
-            <ListView Grid.Row="1" ScrollViewer.CanContentScroll="False" ItemsSource="{Binding Products, Mode=TwoWay}" Visibility="{Binding ElementName=GroupViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" MouseDoubleClick="ProductDetails" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}">
+            <ListView ScrollViewer.CanContentScroll="False" ItemsSource="{Binding Products, Mode=TwoWay}" Visibility="{Binding ElementName=GroupViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
 
                 <ListView.View>
                     <GridView>
@@ -90,7 +102,7 @@
                         <GridViewColumn Header="Items" Width="500">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ListView ItemsSource="{Binding}" Background="{x:Null}" Foreground="White"/>
+                                    <ListView    ItemsSource="{Binding}" Background="{x:Null}" Foreground="White" MouseDoubleClick="ProductDetails" VerticalAlignment="Center" HorizontalAlignment="Left" Height="350"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -120,8 +132,16 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <Button Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
-            <Button Content="Confirm" Grid.Column="2" Width="150" HorizontalAlignment="Right" Click="ConfirmOrder" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,10"/>
+
+            <Button  Content="Your cart" Grid.Column="1"  Width="140" Click="GoTocart" Style="{StaticResource ButtonStyleLowerRuler}"  />
+
+
+            <Button Content="Confirm" Grid.Column="2" Width="140" HorizontalAlignment="Left" Click="ConfirmOrder" Style="{StaticResource ButtonStyleLowerRuler}" RenderTransformOrigin="0.428,0.551" Margin="107,10,0,10"/>
         </Grid>
     </Grid>
+
+
+
 </Window>
