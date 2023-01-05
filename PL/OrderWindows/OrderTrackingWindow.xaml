@@ -6,21 +6,20 @@
         xmlns:local="clr-namespace:PL.OrderWindows"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource self}}"
-        Title="OrderTrackingWindow" Height="450" Width="800">
+        Title="OrderTrackingWindow" MinHeight="200" Height="200" Width="530" MinWidth="530">
     <Grid>
 
         <Grid.Background>
             <ImageBrush ImageSource="/pics/red-wine.jpg"/>
         </Grid.Background>
-
-        <Label Content="Enter order ID" Foreground="White" FontSize="22" Margin="298,39,298,341" Height="54" FontWeight="Bold" RenderTransformOrigin="0.304,0.463" />
-        <TextBox  HorizontalAlignment="Left" Width="200" Height="21" Margin="275,93,0,0" VerticalAlignment="Top"  Text="{Binding id, Mode=TwoWay}"/>
-        <Button Content= "Order Tracking" Style="{StaticResource ButtonStyle1}"  FontSize="10" Click="TrackingOrder_Click" Margin="230,141,425,245"/>
-        <Button Content= "View Order" Style="{StaticResource ButtonStyle1}"  FontSize="10" Click="ViewOrder_Click" Margin="390,141,265,245"/>
-        <Button Content="Back" FontSize="20" Style="{StaticResource ButtonStyle1}" Click="BackToMainWindow" Margin="75,317,625,56"/>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Margin="40,0" Content="Enter order ID:" Foreground="White" FontSize="30" Height="54" FontWeight="Bold" />
+        <TextBox Grid.Row="0" Margin="0,0,40,0" HorizontalAlignment="right" Width="200" Height="40" FontSize="30" Text="{Binding id, Mode=TwoWay}"/>
+        <Button Grid.Row="1" Margin="0,0,130,0" Content= "Order Tracking" HorizontalAlignment="Right" Style="{StaticResource ButtonStyleLowerRuler}"  FontSize="15" Click="TrackingOrder_Click" Width="132"/>
+        <Button Grid.Row="1" Margin="0,0,10,0" Content= "View Order" HorizontalAlignment="Right" Style="{StaticResource ButtonStyleLowerRuler}"  FontSize="15" Click="ViewOrder_Click"  Width="105"/>
+        <Button Grid.Row="1" Content="Back" HorizontalAlignment="Left" FontSize="15" Style="{StaticResource ButtonStyleLowerRuler}" Click="BackToMainWindow" />
     </Grid>
-
-
-
 </Window>

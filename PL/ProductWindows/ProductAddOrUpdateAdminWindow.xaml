@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.ProductWindows"
         DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="ProductWindow" Height="450" Width="800">
+        Title="ProductWindow" MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/pics/red-wine.jpg"/>
@@ -41,15 +41,15 @@
         <Label Content="In stock:" Grid.Row="5" HorizontalAlignment="left" Margin="250,0,0,0" FontWeight="Bold" Foreground="White"/>
         <TextBox MaxLength="5" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Text="{Binding MyProduct.InStock, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" PreviewTextInput="IsIntPreviewTextInput"/>
 
-        <Button Content="Add" Visibility="{Binding addMode}" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Style="{StaticResource ButtonStyleLowerRuler}">
+        <Button Name="addButton" Content="Add" Visibility="{Binding addMode}" Grid.Row="6" Height="20" Width="40" HorizontalAlignment="right" Margin="0,0,20,0" Click="AddProductEvent" Style="{StaticResource ButtonStyleLowerRuler}">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <CheckBox Name="UpdateCheckbox" Content="Press to enable update" Grid.Row="6" Grid.Column="1" Foreground="White" Margin="25,25,294,149"/>
-        <Button Content="Update" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Visibility="{Binding updateMode}" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Style="{StaticResource ButtonStyleLowerRuler}">
+        <CheckBox Name="UpdateCheckbox" Visibility="{Binding updateMode}" IsChecked="{Binding ElementName=addButton, Path=IsVisible, Mode=OneWay}" Content="Press to enable update" Grid.Row="6" Grid.Column="1" Foreground="White" Margin="25,25,294,149"/>
+        <Button Name="updateButton" Content="Update" IsEnabled="{Binding ElementName=UpdateCheckbox, Path=IsChecked}" Visibility="{Binding updateMode}" Grid.Row="6" Grid.Column="1" Height="20" Width="60" HorizontalAlignment="left" Margin="20,0" Click="UpdateProductEvent" Style="{StaticResource ButtonStyleLowerRuler}">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="5"/>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL"
         DataContext="{Binding Data, RelativeSource = {RelativeSource self}}"
         mc:Ignorable="d"
-        Title="Success" Height="150" Width="300" MaxWidth="400">
+        Title="Success" MinHeight="150" Height="150" Width="300" MinWidth="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

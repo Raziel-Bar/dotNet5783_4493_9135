@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.OrderWindows"
         DataContext="{Binding data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="Tracker" Height="450" Width="400">
+        Title="Tracker" MinHeight="280" Height="280" Width="400" MinWidth="400">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Background" Value="{x:Null}"/>
@@ -20,8 +20,8 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
 
@@ -32,25 +32,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Label Content="ID:" VerticalAlignment="Center" Margin="60,0,0,0" Grid.Column="1"/>
-        <Label Content="{Binding Order.ID}"   VerticalAlignment="Center" Margin="98,0,0,0" Width="auto" Grid.Column="1"/>
+        <Label Content="ID:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0"/>
+        <Label Content="{Binding Order.ID}" VerticalAlignment="Center" HorizontalAlignment="left" Margin="20,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="1" Content="Status:"   VerticalAlignment="Center" Margin="39,0,0,0" Grid.Column="1"/>
-        <Label Grid.Row="1" Content="{Binding Order.Status}"  VerticalAlignment="Center" Margin="98,0,0,0" Width="auto" Grid.Column="1"/>
+        <Label Grid.Row="1" Content="Status:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0"/>
+        <Label Grid.Row="1" Content="{Binding Order.Status}"  VerticalAlignment="Center" HorizontalAlignment="left" Margin="20,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Order date:"  VerticalAlignment="Top" Margin="14,24,0,0" Grid.Column="1"/>
-        <Label Grid.Row="2" Content="{Binding OrderDateStr}"  VerticalAlignment="Top" Margin="98,24,0,0" Width="auto" Grid.Column="1"/>
+        <Label Grid.Row="2" Content="Order date:" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="0"/>
+        <Label Grid.Row="2" Content="{Binding OrderDateStr}"  VerticalAlignment="Center" HorizontalAlignment="left" Margin="20,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Shipping date:" VerticalAlignment="Top" Margin="77,72,0,0" Grid.ColumnSpan="2"/>
-        <Label Grid.Row="2" Content="{Binding ShipDateStr}"  VerticalAlignment="Top" Margin="98,72,0,0" Width="auto" Grid.Column="1"/>
+        <Label Grid.Row="3" Content="Shipping date:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0"/>
+        <Label Grid.Row="3" Content="{Binding ShipDateStr}"  VerticalAlignment="Center" HorizontalAlignment="left" Margin="20,0" Width="auto" Grid.Column="1"/>
 
-        <Label Grid.Row="2" Content="Delivery date:"   VerticalAlignment="Top" Margin="2,118,0,0" Grid.Column="1"/>
-        <Label Grid.Row="2" Content="{Binding DeliveryDateStr}"   VerticalAlignment="Top" Margin="98,118,0,0" Width="auto" Grid.Column="1"/>
+        <Label Grid.Row="4" Content="Delivery date:" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="0"/>
+        <Label Grid.Row="4" Content="{Binding DeliveryDateStr}" VerticalAlignment="Center" HorizontalAlignment="left" Margin="20,0" Width="auto" Grid.Column="1"/>
 
-        <Button Grid.Row="3" FontSize="18" Content="OK" Style="{StaticResource ButtonStyle1}" Click="CloseWindow" Grid.Column="1" Margin="80,10,160,10"/>
+        <Button Grid.Row="5" FontSize="15" Content="OK" Style="{StaticResource ButtonStyleLowerRuler}" Click="CloseWindow" HorizontalAlignment="Right" Grid.Column="1"/>
 
     </Grid>
 </Window>

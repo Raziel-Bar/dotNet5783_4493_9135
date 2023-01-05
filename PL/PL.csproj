@@ -26,9 +26,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="pics\red-shopping-cart.png" />
-	  <Resource Include="pics\view.png" />
-	  <Resource Include="pics\icons8-tracking-48.png" />
 	  <Resource Include="pics\red-wine.jpg" />
 	</ItemGroup>
 

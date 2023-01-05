@@ -6,20 +6,11 @@
         xmlns:local="clr-namespace:PL.Converter"
         DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="Catalog" Height="640" Width="800">
+        Title="Catalog" MinHeight="640" Height="640" MinWidth="850">
     <Window.Resources>
         <local:IsCheckedToVisible x:Key="IsCheckedToVisible"/>
-        <!--CollectionViewSource x:Key="GroupedItems" Source="{Binding ProductsList}" >
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Category" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource-->
     </Window.Resources>
     <Grid>
-
-
-
-
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -44,17 +35,16 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions >
 
-                <ComboBox ItemsSource="{Binding Categories}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="ComboBox_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
+                <ComboBox ItemsSource="{Binding Categories}" IsEnabled="{Binding ElementName=SingleListView, Path=IsVisible}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Margin="4,4,4,4" SelectionChanged="ComboBox_SelectionChanged" Opacity="0.5" Foreground="black" FontSize="15" Background="Red" FontFamily="Imprint MT Shadow"/>
                 <StackPanel Margin="0,5,0,0">
-                    <RadioButton GroupName="view" Name="SingleViewRadioButton" Height="17" Width="362" Content="Single view"  Foreground="White"/>
-                    <RadioButton GroupName="view" Name="GroupViewRadioButton" Content="Group view" Width="362" Height="19" IsChecked="True" Foreground="White"/>
+                    <RadioButton GroupName="view" Name="SingleViewRadioButton" Height="17" Width="362" Content="Single view" IsChecked="True" Foreground="White"/>
+                    <RadioButton GroupName="view" Name="GroupViewRadioButton" Content="Group view" Width="362" Height="19"  Foreground="White"/>
                 </StackPanel>
 
                 <Label Content="Wineries:" HorizontalAlignment="Right" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#FF923737" FontFamily="Blackadder ITC" />
             </Grid>
 
-            <ListView ItemsSource="{Binding ProductsList, Mode=TwoWay}" Visibility="{Binding ElementName=SingleViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" MouseDoubleClick="ProductDetails" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
-
+            <ListView ScrollViewer.CanContentScroll="False" Name="SingleListView" ItemsSource="{Binding ProductsList, Mode=TwoWay}" Visibility="{Binding ElementName=SingleViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" MouseDoubleClick="ProductDetails" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
 
                 <ListView.View>
                     <GridView>
@@ -78,7 +68,38 @@
                                 <GridViewColumnHeader Tag="Price" >Price</GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
+                        <GridViewColumn Width="100">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Visibility="Collapsed"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="ADD" Click="Add1ToCart" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
+                        <GridViewColumn Width="200">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Visibility="Collapsed"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="Set Amount" Width="150" Click="UpdateAmount" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Width="150">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Visibility="Collapsed"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="Remove" Width="100" Click="RemoveItem" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
                
@@ -94,15 +115,58 @@
                 </ListView.Resources>
             </ListView>
 
-            <ListView ScrollViewer.CanContentScroll="False" ItemsSource="{Binding Products, Mode=TwoWay}" Visibility="{Binding ElementName=GroupViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
+            <ListView Name="GroupListView" ScrollViewer.CanContentScroll="False" ItemsSource="{Binding Products, Mode=TwoWay}" Visibility="{Binding ElementName=GroupViewRadioButton, Path=IsChecked, Converter={StaticResource IsCheckedToVisible}}" Foreground="White" FontFamily="Calibri" FontSize="18" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="2" Margin="0,43,0,0" Grid.RowSpan="2">
 
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Group" DisplayMemberBinding="{Binding Key}" Width="100"/>
-                        <GridViewColumn Header="Items" Width="500">
+                        <GridViewColumn Header="Items" Width="auto">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ListView    ItemsSource="{Binding}" Background="{x:Null}" Foreground="White" MouseDoubleClick="ProductDetails" VerticalAlignment="Center" HorizontalAlignment="Left" Height="350"/>
+                                    <ListView ScrollViewer.CanContentScroll="False" ItemsSource="{Binding}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" MouseDoubleClick="ProductDetails" VerticalAlignment="Center" HorizontalAlignment="Left" Height="auto" Width="auto">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn DisplayMemberBinding="{Binding}">
+                                                    <GridViewColumn.Header>
+                                                        <GridViewColumnHeader Visibility="Collapsed"/>
+                                                    </GridViewColumn.Header>
+                                                </GridViewColumn>
+                                                
+                                                <GridViewColumn Width="100">
+                                                    <GridViewColumn.Header>
+                                                        <GridViewColumnHeader Visibility="Collapsed"/>
+                                                    </GridViewColumn.Header>
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="ADD" Click="Add1ToCart" Tag="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+
+                                                <GridViewColumn Width="200">
+                                                    <GridViewColumn.Header>
+                                                        <GridViewColumnHeader Visibility="Collapsed"/>
+                                                    </GridViewColumn.Header>
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="Set Amount" Width="150" Click="UpdateAmount" Tag="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+
+                                                <GridViewColumn Width="150">
+                                                    <GridViewColumn.Header>
+                                                        <GridViewColumnHeader Visibility="Collapsed"/>
+                                                    </GridViewColumn.Header>
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button Style="{StaticResource ButtonStyleLowerRuler}" Content="Remove" Width="100" Click="RemoveItem" Tag="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
         DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
-        Title="Catalog" Height="640" Width="800">
+        Title="Catalog" MinHeight="640" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

@@ -39,7 +39,7 @@ namespace PL
 
         private void NewOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            new NewOrderWindow().Show();
+            new NewOrderWindow(new()).Show();
             this.Close();
         }
 

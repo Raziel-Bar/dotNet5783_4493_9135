@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.ProductWindows"
         mc:Ignorable="d"
         DataContext="{Binding Product, RelativeSource={RelativeSource self}}"
-        Title="ProductDetailsUserWindow" Height="450" Width="800">
+        Title="ProductDetailsUserWindow" MinHeight="450" MinWidth="800">
 
     <Window.Resources>
         <Style TargetType="Label">

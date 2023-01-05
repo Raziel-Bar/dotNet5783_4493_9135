@@ -1,4 +1,5 @@
 ﻿using BO;
+using Microsoft.VisualBasic;
 using PL.ProductWindows;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PL.OrderWindows;
 
@@ -34,18 +37,7 @@ public class NewOrderWindowData : DependencyObject
         DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(NewOrderWindowData));
 
 
-/*        public Dictionary<BO.WINERIES, List<ProductForList?>?> GroupsToShow
-    {
-        get { return (Dictionary<BO.WINERIES, List<ProductForList?>?>)GetValue(GroupsToShowProperty); }
-        set { SetValue(GroupsToShowProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for GroupsToShow.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty GroupsToShowProperty =
-        DependencyProperty.Register("GroupsToShow", typeof(Dictionary<BO.WINERIES, List<ProductForList?>?>), typeof(NewOrderWindowData));
-
-    public Dictionary<BO.WINERIES, List<ProductForList?>?>? Groups { get; set; }
-*/        public Array? Categories { get; set; }
+        public Array? Categories { get; set; }
 }
 
 /// <summary>
@@ -58,25 +50,27 @@ public partial class NewOrderWindow : Window
     public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(NewOrderWindowData), typeof(NewOrderWindow));
     public NewOrderWindowData Data { get => (NewOrderWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
-    Cart cart; 
+    public Cart cart
+    {
+        get { return (Cart)GetValue(cartProperty); }
+        set { SetValue(cartProperty, value); }
+    }
 
-    public NewOrderWindow()
+    // Using a DependencyProperty as the backing store for cart.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty cartProperty =
+        DependencyProperty.Register("cart", typeof(Cart), typeof(CartDetails));
+
+
+    public NewOrderWindow(Cart _cart)
     {
         InitializeComponent();
         Data = new()
         {
             Products = bl.Product.RequestProducts(),
             Categories = Enum.GetValues(typeof(PL.ProductWindows.WINERIES)),
-            //Groups = new(),
-            //GroupsToShow = new()
         };
         Data.ProductsList = Data.Products.SelectMany(p => p).ToList();
-        /*foreach (BO.WINERIES category in Enum.GetValues(typeof(BO.WINERIES)))
-        {
-            Data.Groups.Add(category, Data.Products!.FirstOrDefault(g => g.Key == category)?.ToList());
-            Data.GroupsToShow.Add(category, Data.Products!.FirstOrDefault(g => g.Key == category)?.ToList());
-        }*/
-
+        cart = _cart;
     }
 
     private void BackToMainWindow(object sender, RoutedEventArgs e)
@@ -87,7 +81,8 @@ public partial class NewOrderWindow : Window
 
     private void ConfirmOrder(object sender, RoutedEventArgs e)
     {
-
+        new UserDetailsWindow(cart).Show();
+        this.Close();
     }
 
     private void ProductDetails(object sender, MouseButtonEventArgs e)
@@ -100,7 +95,7 @@ public partial class NewOrderWindow : Window
         {
             if (selected is ProductForList productForList)
             {
-                new ProductDetailsUserWindow(bl, productForList.ID).ShowDialog();
+                new ProductDetailsUserWindow(bl!, productForList.ID).ShowDialog();
             }
         }
     }
@@ -119,16 +114,108 @@ public partial class NewOrderWindow : Window
         else
         {
             Data.ProductsList = Data.Products!.FirstOrDefault(g => g.Key == (BO.WINERIES)selected)?.ToList() ?? new();
-            /*Data.GroupsToShow.Clear();
-            Data.GroupsToShow = new()
-            {
-                { (BO.WINERIES)selected, Data.Products!.FirstOrDefault(g => g.Key == (BO.WINERIES)selected)?.ToList() }
-            };*/
         }
     }
 
     private void GoTocart(object sender, RoutedEventArgs e)
     {
-        new CartWindow(cart).Show();
+        new CartDetails(cart).ShowDialog();
+    }
+
+    private void Add1ToCart(object sender, RoutedEventArgs e)
+    {
+        Button button = (Button)sender;
+        var item = button!.Tag as ProductForList;
+        try
+        {
+            bl!.Cart.AddProductToCart(item!.ID, cart);
+
+            // Save the original style and content
+            Style originalStyle = button.Style;
+            object originalContent = button.Content;
+
+            // Create a new style based on the original style
+            Style clickedStyle = new Style(typeof(Button), originalStyle);
+            clickedStyle.Setters.Add(new Setter(Button.BackgroundProperty, Brushes.Red));
+            clickedStyle.Setters.Add(new Setter(Button.ForegroundProperty, Brushes.White));
+
+            // Apply the new style and content to the button
+            button.Style = clickedStyle;
+            button.Content = "Added";
+
+            // Create a timer to restore the original style and content after 3 seconds
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(3);
+            timer.Tick += (s, a) =>
+            {
+                // Restore the original style and content
+                button.Style = originalStyle;
+                button.Content = originalContent;
+                timer.Stop();
+            };
+            timer.Start();
+
+        }
+        catch (BO.StockNotEnoughtOrEmptyException) { new ErrorMessageWindow("Out of stock", "Sorry!\nItem is out of stock.").Show(); }
+        catch (Exception ex) { new ErrorMessageWindow("Unexpected Error", ex.Message).Show(); }
+    }
+
+    private void UpdateAmount(object sender, RoutedEventArgs e)
+    {
+        Button button = (Button)sender;
+        var item = button!.Tag as ProductForList;
+        string input = Interaction.InputBox("Enter Amount:", "Input", "", -1, -1);
+        try
+        {
+            bl!.Cart.UpdateProductInCart(item!.ID, cart, Convert.ToInt32(input));
+        }
+        catch (BO.StockNotEnoughtOrEmptyException) { new ErrorMessageWindow("Out of stock", "Sorry!\nItem is out of stock.").Show(); }
+        catch (BO.ProductNotFoundInCartException) 
+        {
+            bl!.Cart.AddProductToCart(item!.ID, cart);
+            bl!.Cart.UpdateProductInCart(item!.ID, cart, Convert.ToInt32(input));
+        }
+        catch (BO.InvalidDataException) { new ErrorMessageWindow("Invalid Data", "Make sure your input is a non negative number").Show(); }
+        catch (Exception ex) { new ErrorMessageWindow("Unexpected Error", ex.Message).Show(); }
+
+    }
+
+    private void RemoveItem(object sender, RoutedEventArgs e)
+    {
+        Button button = (Button)sender;
+        var item = button!.Tag as ProductForList;
+        try
+        {
+            bl!.Cart.UpdateProductInCart(item!.ID, cart, 0);
+
+            // Save the original style and content
+            Style originalStyle = button.Style;
+            object originalContent = button.Content;
+
+            // Create a new style based on the original style
+            Style clickedStyle = new Style(typeof(Button), originalStyle);
+            clickedStyle.Setters.Add(new Setter(Button.BackgroundProperty, Brushes.Red));
+            clickedStyle.Setters.Add(new Setter(Button.ForegroundProperty, Brushes.White));
+
+            // Apply the new style and content to the button
+            button.Style = clickedStyle;
+            button.Content = "Removed";
+
+            // Create a timer to restore the original style and content after 3 seconds
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(3);
+            timer.Tick += (s, a) =>
+            {
+                // Restore the original style and content
+                button.Style = originalStyle;
+                button.Content = originalContent;
+                timer.Stop();
+            };
+            timer.Start();
+
+        }
+        catch (BO.StockNotEnoughtOrEmptyException) { new ErrorMessageWindow("Out of stock", "Sorry!\nItem is out of stock.").Show(); }
+        catch (BO.ProductNotFoundInCartException) { }
+        catch (Exception ex) { new ErrorMessageWindow("Unexpected Error", ex.Message).Show(); }
     }
 }

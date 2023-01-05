@@ -7,50 +7,46 @@
         mc:Ignorable="d"
         DataContext="{Binding cart, RelativeSource={RelativeSource self}}"
         
-        Title="UserDetailsWindow" Height="450" Width="800">
+        Title="Customer Details" MinHeight="100" Height="180" MinWidth="300" Width="300">
     <Grid>
-        <Grid>
-            <Grid.Background>
-                <ImageBrush ImageSource="/pics/red-wine.jpg"/>
-            </Grid.Background>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="3*"/>
+        <Grid.Background>
+            <ImageBrush ImageSource="/pics/red-wine.jpg"/>
+        </Grid.Background>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Content="Name:" Grid.Row="0" HorizontalAlignment="right" Margin="0,20,0,0" Foreground="White" FontWeight="Bold"/>
+        <TextBox Grid.Row="0" Text="{Binding CustomerName, Mode=TwoWay}" Grid.Column="1" Margin="10,20,0,0" HorizontalAlignment="Left" Width="120" Height="20" VerticalAlignment="Center" />
+
+        <Label Content="Email:" Grid.Row="1" HorizontalAlignment="right"  Foreground="White" FontWeight="Bold" />
+        <TextBox Grid.Row="1" Text="{Binding CustomerEmail, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" />
 
 
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Name:" Grid.Row="1" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-            <TextBox Grid.Row="1" Text="{Binding CustomerName, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" PreviewTextInput="IsIntPreviewTextInput"/>
-
-            <Label Content="Email:" Grid.Row="2" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold" />
-            <TextBox Grid.Row="2" Text="{Binding CustomerEmail, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center" PreviewTextInput="IsIntPreviewTextInput"/>
-
-
-            <Label Content="Address:" Grid.Row="3" HorizontalAlignment="left" Margin="250,0,0,0" Foreground="White" FontWeight="Bold"/>
-            <TextBox MaxLength="30" Text="{Binding CustomerAddress, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
+        <Label Content="Address:" Grid.Row="2" HorizontalAlignment="right"  Foreground="White" FontWeight="Bold"/>
+        <TextBox MaxLength="30" Text="{Binding CustomerAddress, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="20" Margin="10,0" VerticalAlignment="Center"/>
 
 
 
-            <Button Content="Confirm" Grid.Column="1" Grid.Row="6"  Style="{StaticResource ButtonStyle}" Margin="45,10,385,227"  ></Button>
-            
+        <Button Content="Confirm" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Right" Style="{StaticResource ButtonStyleLowerRuler}" Click="Confirm" Width="88"   ></Button>
 
-            <Button Content="Back" Grid.Row="6" HorizontalAlignment="Left" Height="30" Width="65" Margin="27,150,0,25" Padding="5" Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
 
-        </Grid>
+        <Button Content="Back" Click="BackToPreviousWindow" Grid.Row="3" HorizontalAlignment="Left" Height="30" Width="65" Padding="5" Style="{StaticResource ButtonStyleLowerRuler}">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+
     </Grid>
 </Window>

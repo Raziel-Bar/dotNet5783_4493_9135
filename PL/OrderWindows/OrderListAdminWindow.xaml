@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.OrderWindows"
         DataContext="{Binding RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
-        Title="Orders" Height="640" Width="800">
+        Title="Orders" MinHeight="640" Height="640" Width="800" MinWidth="800">
 
     <Grid>
         <Grid.RowDefinitions>
