@@ -109,6 +109,7 @@ internal class Cart : ICart
     {
         try
         {
+            
             if (productID < 100000) throw new BO.InvalidDataException("Product"); // productID validity check
 
             if (newAmount < 0) throw new BO.InvalidDataException("amount"); // amount validity check
@@ -121,9 +122,17 @@ internal class Cart : ICart
 
             if (_orderItem is null) throw new BO.ProductNotFoundInCartException(); // product exist in cart check
 
+            if (newAmount == _orderItem.Amount) return cart;
+
             int difference = _orderItem.Amount - newAmount; // we save the difference in the amounts
 
             cart.ListOfItems.Remove(cart.ListOfItems.First(item => item!.ProductID == productID)); // removing old item
+            if (newAmount == 0) // removing item
+            {
+                cart.TotalPrice -= _orderItem.TotalPrice;
+                return cart;
+            }
+           
 
             _orderItem.Amount = newAmount; //setting new amount
 
@@ -135,11 +144,6 @@ internal class Cart : ICart
                 cart.TotalPrice -= difference * _orderItem.Price;
                 cart.ListOfItems.Add(_orderItem);
             }
-            else // removing the item entirely
-            {
-                cart.TotalPrice -= _orderItem.TotalPrice;
-            }
-
             return cart;
         }
         catch (DO.NotFoundException ex)

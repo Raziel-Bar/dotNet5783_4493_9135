@@ -187,7 +187,7 @@ public partial class NewOrderWindow : Window
         try
         {
             bl!.Cart.UpdateProductInCart(item!.ID, cart, 0);
-
+            
             // Save the original style and content
             Style originalStyle = button.Style;
             object originalContent = button.Content;
