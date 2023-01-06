@@ -35,8 +35,9 @@ namespace PL.ProductWindows
 
         Cart cart;
         BlApi.IBl blP;
-        public ProductDetailsUserWindow(BlApi.IBl bl, int id)
+        public ProductDetailsUserWindow(BlApi.IBl bl, int id, Cart cart2)
         {
+            cart = cart2; 
             blP = bl;
             Product = blP.Product.RequestProductDetailsUser(id,cart);
             InitializeComponent();

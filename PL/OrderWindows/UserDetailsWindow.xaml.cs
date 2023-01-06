@@ -22,8 +22,12 @@ namespace PL.OrderWindows;
 /// </summary>
 public partial class UserDetailsWindow : Window
 {
+    // Reference to the business logic layer
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
+    /// <summary>
+    /// Gets or sets the cart for this window. (for the biding)
+    /// </summary>
     public Cart cart
     {
         get { return (Cart)GetValue(cartProperty); }
@@ -33,12 +37,23 @@ public partial class UserDetailsWindow : Window
     // Using a DependencyProperty as the backing store for Product.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty cartProperty =
         DependencyProperty.Register("cart", typeof(Cart), typeof(ConfirmationWindow));
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserDetailsWindow"/> class.
+    /// </summary>
+    /// <param name="_cart">The cart for this window.</param>
     public UserDetailsWindow(BO.Cart _cart)
     {
         cart = _cart;
         InitializeComponent();
     }
 
+
+    /// <summary>
+    /// Confirms the order.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void Confirm(object sender, RoutedEventArgs e)
     {
         if (cart.CustomerName == null || cart.CustomerAddress == null || cart.CustomerEmail == null || !new EmailAddressAttribute().IsValid(cart.CustomerEmail))
@@ -52,6 +67,11 @@ public partial class UserDetailsWindow : Window
         }
     }
 
+    /// <summary>
+    /// Goes back to the previous window.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void BackToPreviousWindow(object sender, RoutedEventArgs e)
     {
         new NewOrderWindow(cart).Show();

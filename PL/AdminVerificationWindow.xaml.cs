@@ -14,39 +14,54 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace PL
+namespace PL;
+
+/// <summary>
+/// Interaction logic for AdminVerificationWindow.xaml
+/// </summary>
+public partial class AdminVerificationWindow : Window
 {
     /// <summary>
-    /// Interaction logic for AdminVerificationWindow.xaml
+    /// The correct password for the administrator.
     /// </summary>
-    public partial class AdminVerificationWindow : Window
+    private string password = "1234";
+
+
+    public AdminVerificationWindow()
     {
-        private string password = "1234";
-        public AdminVerificationWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void VerifyPassword_Click(object sender, RoutedEventArgs e)
-        {
-            var pwInput = (PasswordBox)sender;
-            if (pwInput.Password != password)
-            {
-                SystemSounds.Beep.Play();
-            }
-            else
-            {
-                new AdminWindow().Show();
-                this.Close();
-            }
-        }
 
-        private void EnterKeyCheck(object sender, KeyEventArgs e)
+    /// <summary>
+    /// Verifies the password entered by the user.
+    /// </summary>
+    /// <param name="sender">The password input box.</param>
+    /// <param name="e">The click event arguments.</param>
+    private void VerifyPassword_Click(object sender, RoutedEventArgs e)
+    {
+        var pwInput = (PasswordBox)sender;
+        if (pwInput.Password != password)
         {
-            if (e.Key == Key.Enter)
-            {
-                VerifyPassword_Click(sender, e);
-            }
+            SystemSounds.Beep.Play();
+        }
+        else
+        {
+            new AdminWindow().Show();
+            this.Close();
+        }
+    }
+
+    /// <summary>
+    /// Verifies the password when the Enter key is pressed.
+    /// </summary>
+    /// <param name="sender">The password input box.</param>
+    /// <param name="e">The key event arguments.</param>
+    private void EnterKeyCheck(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            VerifyPassword_Click(sender, e);
         }
     }
 }

@@ -14,8 +14,16 @@ using System.Windows.Threading;
 
 namespace PL.OrderWindows;
 
+/// <summary>
+/// This class represents the data for the NewOrderWindow.
+/// It has a property for a list of products, a property for a list of categories,
+/// and a property for a list of products in list format.
+/// </summary>
 public class NewOrderWindowData : DependencyObject
 {
+    /// <summary>
+    /// Gets or sets the list of products for the window.
+    /// </summary>
     public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>? Products
     {
         get => (IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>?)GetValue(productsProperty);
@@ -26,6 +34,9 @@ public class NewOrderWindowData : DependencyObject
     public static readonly DependencyProperty productsProperty =
         DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>), typeof(NewOrderWindowData));
 
+    /// <summary>
+    /// Gets or sets the list of products in list format for the window.
+    /// </summary>
     public List<ProductForList?>? ProductsList
     {
         get { return (List<ProductForList?>?)GetValue(ProductsListProperty); }
@@ -36,72 +47,107 @@ public class NewOrderWindowData : DependencyObject
     public static readonly DependencyProperty ProductsListProperty =
         DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(NewOrderWindowData));
 
-
-        public Array? Categories { get; set; }
+    /// <summary>
+    /// Gets or sets the list of categories for the window.
+    /// </summary>
+    public Array? Categories { get; set; }
 }
+
 
 /// <summary>
 /// Interaction logic for NewOrderWindow.xaml
 /// </summary>
 public partial class NewOrderWindow : Window
 {
+    /// <summary>
+    /// This field stores a reference to the business logic layer.
+    /// </summary>
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
+    /// <summary>
+    /// Dependency property to hold the data for this window
+    /// </summary>
     public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(NewOrderWindowData), typeof(NewOrderWindow));
     public NewOrderWindowData Data { get => (NewOrderWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
+    /// <summary>
+    /// Property for the cart
+    /// </summary>
     public Cart cart
     {
         get { return (Cart)GetValue(cartProperty); }
         set { SetValue(cartProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for cart.  This enables animation, styling, binding, etc...
+    /// <summary>
+    /// Using a DependencyProperty as the backing store for cart.  This enables animation, styling, binding, etc...
+    /// </summary>
     public static readonly DependencyProperty cartProperty =
         DependencyProperty.Register("cart", typeof(Cart), typeof(CartDetails));
 
-
+    /// <summary>
+    /// Constructor for the window
+    /// </summary>
+    /// <param name="_cart">The cart for this order</param>
     public NewOrderWindow(Cart _cart)
     {
         InitializeComponent();
+        // Initialize the Data property with product and category information
+
         Data = new()
         {
             Products = bl.Product.RequestProducts(),
             Categories = Enum.GetValues(typeof(PL.ProductWindows.WINERIES)),
         };
+        // Initialize the ProductsList property with a list of all products
         Data.ProductsList = Data.Products.SelectMany(p => p).ToList();
         cart = _cart;
     }
 
+    /// <summary>
+    /// Event handler for the "Back to Main Window" button click.
+    /// Opens the main window and closes this one.
+    /// </summary>
     private void BackToMainWindow(object sender, RoutedEventArgs e)
     {
         new MainWindow().Show();
         this.Close();
     }
 
+    /// <summary>
+    /// Event handler for the "Confirm Order" button click.
+    /// Opens the UserDetailsWindow and closes this one.
+    /// </summary>
     private void ConfirmOrder(object sender, RoutedEventArgs e)
     {
         new UserDetailsWindow(cart).Show();
         this.Close();
     }
 
+    /// <summary>
+    /// Event handler for the mouse button click on a product in the list view.
+    /// Opens the ProductDetailsUserWindow for the selected product.
+    /// </summary>
     private void ProductDetails(object sender, MouseButtonEventArgs e)
     {
+        // Get the selected item in the list view
         var selected = ((ListView)sender).SelectedItem;
 
+        // Get the product for the selected item
         BO.ProductForList item = (((FrameworkElement)e.OriginalSource).DataContext as BO.ProductForList)!;
 
         if (item != null)
         {
             if (selected is ProductForList productForList)
             {
-                new ProductDetailsUserWindow(bl!, productForList.ID).ShowDialog();
+                new ProductDetailsUserWindow(bl!, productForList.ID,cart).ShowDialog();
             }
         }
     }
 
     /// <summary>
-    /// filter for list view
+    /// Event handler for the selection change of the category combo box.
+    /// Filters the products list view to show only products in the selected category.
     /// </summary>
     private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -117,11 +163,20 @@ public partial class NewOrderWindow : Window
         }
     }
 
+
+    /// <summary>
+    /// Event handler for the "Go to Cart" button click.
+    /// Opens the CartDetails window.
+    /// </summary>
     private void GoTocart(object sender, RoutedEventArgs e)
     {
         new CartDetails(cart).ShowDialog();
     }
 
+    /// <summary>
+    /// Event handler for the "Add to Cart" button click.
+    /// Adds one of the product to the cart, and updates the button's style and content temporarily to indicate that the product was added.
+    /// </summary>
     private void Add1ToCart(object sender, RoutedEventArgs e)
     {
         Button button = (Button)sender;
@@ -160,6 +215,13 @@ public partial class NewOrderWindow : Window
         catch (Exception ex) { new ErrorMessageWindow("Unexpected Error", ex.Message).Show(); }
     }
 
+
+
+    /// <summary>
+    /// Updates the amount of a product in the cart.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void UpdateAmount(object sender, RoutedEventArgs e)
     {
         Button button = (Button)sender;
@@ -169,8 +231,11 @@ public partial class NewOrderWindow : Window
         {
             bl!.Cart.UpdateProductInCart(item!.ID, cart, Convert.ToInt32(input));
         }
+        // Show an error message if the product is out of stock
         catch (BO.StockNotEnoughtOrEmptyException) { new ErrorMessageWindow("Out of stock", "Sorry!\nItem is out of stock.").Show(); }
-        catch (BO.ProductNotFoundInCartException) 
+
+        // If the product is not found in the cart, add it and then update its amount
+        catch (BO.ProductNotFoundInCartException)
         {
             bl!.Cart.AddProductToCart(item!.ID, cart);
             bl!.Cart.UpdateProductInCart(item!.ID, cart, Convert.ToInt32(input));
@@ -180,6 +245,12 @@ public partial class NewOrderWindow : Window
 
     }
 
+
+    /// <summary>
+    /// Removes an item from the cart.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void RemoveItem(object sender, RoutedEventArgs e)
     {
         Button button = (Button)sender;
@@ -187,7 +258,7 @@ public partial class NewOrderWindow : Window
         try
         {
             bl!.Cart.UpdateProductInCart(item!.ID, cart, 0);
-            
+
             // Save the original style and content
             Style originalStyle = button.Style;
             object originalContent = button.Content;

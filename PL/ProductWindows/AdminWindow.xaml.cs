@@ -12,6 +12,10 @@ using System.Windows.Input;
 
 namespace PL.ProductWindows;
 
+
+/// <summary>
+/// for the category option (all)
+/// </summary>
 public enum WINERIES
 {
     GOLAN,
@@ -22,8 +26,15 @@ public enum WINERIES
     ALL,
 }
 
+/// <summary>
+/// Gets or sets the categories.
+/// </summary>
 public class AdminWindowData : DependencyObject
 {
+
+    /// <summary>
+    /// Gets or sets the products.
+    /// </summary>
     public IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>? Products
     {
         get => (IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>?)GetValue(productsProperty);
@@ -34,6 +45,10 @@ public class AdminWindowData : DependencyObject
     public static readonly DependencyProperty productsProperty =
         DependencyProperty.Register("Products", typeof(IEnumerable<IGrouping<BO.WINERIES?, BO.ProductForList?>>), typeof(AdminWindowData));
 
+
+    /// <summary>
+    /// Gets or sets the orders.
+    /// </summary>
     public IEnumerable<OrderForList>? Orders
     {
         get { return (IEnumerable<OrderForList>?)GetValue(ordersProperty); }
@@ -45,7 +60,9 @@ public class AdminWindowData : DependencyObject
         DependencyProperty.Register("Orders", typeof(IEnumerable<OrderForList>), typeof(AdminWindowData));
 
 
-
+    /// <summary>
+    /// Gets or sets the list of products.
+    /// </summary>
     public List<ProductForList?>? ProductsList
     {
         get { return (List<ProductForList?>?)GetValue(ProductsListProperty); }
@@ -57,7 +74,9 @@ public class AdminWindowData : DependencyObject
         DependencyProperty.Register("ProductsList", typeof(List<ProductForList?>), typeof(AdminWindowData));
 
 
-    
+    /// <summary>
+    /// Gets or sets the categories.
+    /// </summary>
     public Array? Categories { get; set; }
 }
 
@@ -66,9 +85,15 @@ public class AdminWindowData : DependencyObject
 /// </summary>
 public partial class AdminWindow : Window
 {
+    // Reference to the business logic layer
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
+
     public static readonly DependencyProperty DataDep = DependencyProperty.Register(nameof(Data), typeof(AdminWindowData), typeof(AdminWindow));
+
+    /// <summary>
+    /// Gets or sets the data for the AdminWindow.
+    /// </summary>
     public AdminWindowData Data { get => (AdminWindowData)GetValue(DataDep); set => SetValue(DataDep, value); }
 
     /// <summary>
@@ -143,8 +168,8 @@ public partial class AdminWindow : Window
 
     private void OrderList_Click(object sender, RoutedEventArgs e)
     {
-        new OrderListAdminWindow().Show(); 
+        new OrderListAdminWindow().Show();
         this.Close();
     }
-    
+
 }

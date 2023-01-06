@@ -18,34 +18,57 @@ using BlApi;
 namespace PL.OrderWindows;
 
 /// <summary>
-/// Interaction logic for ConfirmationWindow.xaml
+/// This class represents the window for confirming an order.
 /// </summary>
 public partial class ConfirmationWindow : Window
 {
+    /// <summary>
+    /// This field stores a reference to the business logic layer.
+    /// </summary>
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
+
+    /// <summary>
+    /// This is a dependency property that represents the cart to be confirmed.
+    /// </summary>
     public Cart ConfirmCart
     {
         get { return (Cart)GetValue(ConfirmCartProperty); }
         set { SetValue(ConfirmCartProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for Product.  This enables animation, styling, binding, etc...
+    /// <summary>
+    /// This is the backing store for the ConfirmCart dependency property.
+    /// </summary>
     public static readonly DependencyProperty ConfirmCartProperty =
         DependencyProperty.Register("ConfirmCart", typeof(Cart), typeof(ConfirmationWindow));
 
-
-    public ConfirmationWindow(Cart Ecart)
+    /// <summary>
+    /// This is the constructor for the ConfirmationWindow class.
+    /// It initializes the ConfirmCart property and the window's UI.
+    /// </summary>
+    /// <param name="cart">The cart to be confirmed.</param>
+    public ConfirmationWindow(Cart cart)
     {
-        ConfirmCart = Ecart;
+        ConfirmCart = cart;
         InitializeComponent();
     }
 
+    /// <summary>
+    /// This event handler is called when the "Back to Orders" button is clicked.
+    /// It opens the NewOrderWindow and closes the ConfirmationWindow.
+    /// </summary>
     private void BackToOrders(object sender, RoutedEventArgs e)
     {
         new NewOrderWindow(ConfirmCart).Show();
         this.Close();
     }
 
+    /// <summary>
+    /// This event handler is called when the "Confirm" button is clicked.
+    /// It attempts to confirm the order by calling the ConfirmOrder method on the business logic layer.
+    /// If the method throws an exception, it shows an error message to the user.
+    /// If the method succeeds, it shows a success message to the user and opens the MainWindow.
+    /// </summary>
     private void FinalConfirm(object sender, RoutedEventArgs e)
     {
         try

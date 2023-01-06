@@ -37,12 +37,26 @@ namespace PL
         /// <param name="e">mouse click</param>
         private void Exit(object sender, RoutedEventArgs e) => this.Close();
 
+        /// <summary>
+        /// Event handler for when the "New Order" button is clicked.
+        /// Opens a new window for creating a new order.
+        /// Closes the current window.
+        /// </summary>
+        /// <param name="sender">The button that was clicked.</param>
+        /// <param name="e">The event arguments for the button click event.</param>
         private void NewOrderButton_Click(object sender, RoutedEventArgs e)
         {
             new NewOrderWindow(new()).Show();
             this.Close();
         }
 
+        /// <summary>
+        /// Event handler for when the "Order Trace" button is clicked.
+        /// Opens a new window for tracking an order.
+        /// Closes the current window.
+        /// </summary>
+        /// <param name="sender">The button that was clicked.</param>
+        /// <param name="e">The event arguments for the button click event.</param>
         private void OrderTraceButton_Click(object sender, RoutedEventArgs e)
         {
             new OrderTrackingWindow().Show();

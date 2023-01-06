@@ -9,12 +9,13 @@ namespace PL.OrderWindows;
 /// </summary>
 public partial class OrderTrackingWindow : Window
 {
+    // A reference to the business logic layer
     readonly BlApi.IBl? bl = BlApi.Factory.Get();
 
-    //public ObservableCollection<OrderForList> Orders { set; get; }
 
 
 
+    // Dependency property to hold the order id
     public int id
     {
         get { return (int)GetValue(idProperty); }
@@ -34,6 +35,11 @@ public partial class OrderTrackingWindow : Window
     }
 
 
+    /// <summary>
+    /// Event handler for the "Tracking Order" button click.
+    /// Opens the TrackingWindow for the order with the specified id.
+    /// Shows an error message if no order with the specified id exists.
+    /// </summary>
     private void TrackingOrder_Click(object sender, RoutedEventArgs e)
     {
         try 
@@ -46,6 +52,12 @@ public partial class OrderTrackingWindow : Window
         }
     }
 
+
+    /// <summary>
+    /// Event handler for the "View Order" button click.
+    /// Opens the OrderDetailsUser window for the order with the specified id.
+    /// Shows an error message if no order with the specified id exists.
+    /// </summary>
     private void ViewOrder_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -58,9 +70,14 @@ public partial class OrderTrackingWindow : Window
         }
     }
 
+    /// <summary>
+    /// Event handler for the "Back to Main Window" button click.
+    /// Opens the main window and closes this one.
+    /// </summary>
     private void BackToMainWindow(object sender, RoutedEventArgs e)
     {
         new MainWindow().Show();
         this.Close();
     }
+
 }
