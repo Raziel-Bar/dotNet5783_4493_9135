@@ -120,7 +120,7 @@
                     </Style>
                 </ListView.Resources>
             </ListView>
-            <Button Content="Confirm" Grid.Row="1" HorizontalAlignment="Right" Click="FinalConfirm" Style="{StaticResource ButtonStyleLowerRuler}"/>
+            <Button Content="Confirm" Grid.Row="1" HorizontalAlignment="Left" Click="FinalConfirm" Style="{StaticResource ButtonStyleLowerRuler}" Margin="433,10,0,10" Width="75" RenderTransformOrigin="0.338,0.5"/>
 
         </Grid>
     </Grid>
