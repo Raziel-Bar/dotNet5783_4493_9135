@@ -26,7 +26,6 @@ public partial class AdminVerificationWindow : Window
     /// </summary>
     private string password = "1234";
 
-
     public AdminVerificationWindow()
     {
         InitializeComponent();
@@ -40,8 +39,10 @@ public partial class AdminVerificationWindow : Window
     /// <param name="e">The click event arguments.</param>
     private void VerifyPassword_Click(object sender, RoutedEventArgs e)
     {
-        var pwInput = (PasswordBox)sender;
-        if (pwInput.Password != password)
+        Button button = (Button)sender;
+        PasswordBox passwordBox = (PasswordBox)button.Tag;
+        string pwInput = passwordBox.Password;
+        if (pwInput != password)
         {
             SystemSounds.Beep.Play();
         }

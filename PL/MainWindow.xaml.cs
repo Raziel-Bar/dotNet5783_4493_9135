@@ -25,8 +25,8 @@ namespace PL
         /// <param name="e">mouse click</param>
         private void AdminAccessButton_Click(object sender, RoutedEventArgs e)
         {
-            //new AdminVerificationWindow().ShowDialog();
-            new AdminWindow().Show(); // to be deleted once enabling the verify window
+            new AdminVerificationWindow().ShowDialog();
+            //new AdminWindow().Show(); // to be deleted once enabling the verify window
             this.Close();
         }
 
