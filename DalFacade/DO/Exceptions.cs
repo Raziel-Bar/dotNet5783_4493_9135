@@ -39,3 +39,9 @@ public class UnexpectedException : Exception
 {
     public UnexpectedException() : base("ALERT UNEXPECTED ECEPTION!!!!") { }
 }
+
+[Serializable]
+public class XMLFileLoadCreateException : Exception
+{
+    public XMLFileLoadCreateException(string path, Exception ex) : base($"ERROR dotNet5783_DAL_ERROR_04:\n fail to create xml file: {path}", ex) { }
+}
