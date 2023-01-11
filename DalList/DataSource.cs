@@ -13,6 +13,7 @@ internal static class DataSource
     static DataSource()
     {
         s_Initialize();
+
     }
     /// <summary>
     /// The empty ctor calls all entities inits

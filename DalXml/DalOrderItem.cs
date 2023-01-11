@@ -1,11 +1,7 @@
 ﻿using DalApi;
 using DO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Xml.Linq;
+using static Dal.XmlTools;
 namespace Dal;
 
 internal class DalOrderItem : IOrderItem
@@ -22,14 +18,15 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the order item already exists in the list
     /// </exception>
-    public int Add(OrderItem newOrderItem)
+    public int Add(OrderItem newOrderItem) // to check throw
     {
-        /*newOrderItem.OrderItemID = getRunNumberOrderItemID; // ID is given here
 
-        _orderItems.Add(newOrderItem);
+        XElement orderItemElment = LoadListFromXMLElment("");
+        XElement newXElement = itemToXelement(newOrderItem, "OrderItem");
+        orderItemElment.Add(newXElement);
+        saveListToXMLElment(orderItemElment, "");
 
-        return newOrderItem.OrderItemID;*/
-        return 0;
+        return 0;// to return the run numbers
     }
 
     /// <summary>
@@ -44,10 +41,8 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the given item does not exist in the list
     /// </exception>
-    public OrderItem? Get(int orderItemId)// => Get(item => item?.OrderItemID == orderItemId);
-    {
-        return null;
-    }
+    public OrderItem? Get(int orderItemId) => Get(item => item?.OrderItemID == orderItemId);
+
 
     /// <summary>
     /// deletes an order item from the list
@@ -58,7 +53,17 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="Exception">
     /// In case the order item does not exist in the list
     /// </exception>
-    public void Delete(int orderItemId) { }// => _orderItems.Remove(Get(orderItemId));
+    public void Delete(int orderItemId)
+    {
+
+        XElement xElement = LoadListFromXMLElment("");
+
+        XElement xElementToDelete = xElement.Elements().FirstOrDefault(e => e.Element("OrderItemID").Value == orderItemId.ToString()) ?? throw new NotFoundException("Order item");
+
+        xElementToDelete.Remove();
+
+        saveListToXMLElment(xElement, "");
+    }
 
     /// <summary>
     /// Updates a specific order item's details
@@ -71,8 +76,8 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public void Update(OrderItem updateOrderItem)
     {
-       /* Delete(updateOrderItem.OrderItemID);
-        _orderItems.Add(updateOrderItem);*/
+        Delete(updateOrderItem.OrderItemID);
+        Add(updateOrderItem);
     }
 
     /// <summary>
@@ -83,10 +88,7 @@ internal class DalOrderItem : IOrderItem
     /// <exception cref="NotFoundException">In case we didn't find an orderItem that fits the condition</exception>
     public OrderItem? Get(Func<OrderItem?, bool>? func)
     {
-        /*if (_orderItems.FirstOrDefault(func!) is OrderItem orderItem)
-            return orderItem;
-        throw new NotFoundException("Order item");*/
-        return null;
+        return GetList(func).FirstOrDefault() ?? throw new NotFoundException("Order item");
     }
 
     /// <summary>
@@ -94,10 +96,11 @@ internal class DalOrderItem : IOrderItem
     /// </summary>
     /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing orderItems</param>
     /// <returns>the list of all orderItems that got true in the condition</returns>
-    public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func)/* =>
-        func is null ? _orderItems.Select(orderItem => orderItem) : _orderItems.Where(func);*/
+    public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func)// to check throw
     {
-        return null;
+        XElement xElement = LoadListFromXMLElment("");
+        IEnumerable<OrderItem?> items = xelementToItems<OrderItem?>(xElement);
+        return func is null ? items.Select(o => o) : items.Where(func);
     }
 
 }

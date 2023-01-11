@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Dal;
@@ -18,8 +20,38 @@ public static class XmlTools
 
     #region Save\Load with XElement 
 
+    public static void saveListToXMLElment(XElement rootElem, string entity)
+    {
+        string filePath = $"{S_DIR + entity}.xml";
+        try
+        {
+            rootElem.Save(filePath);
+        }
+        catch (Exception ex)
+        {
+            // DO.XMLFileLoadCreateException(filePath, $"fail to creat xml file: {filePath}", ex)
+            throw new Exception($"fail to creat xml file: {filePath}", ex);
+        }
+    }
 
+    public static XElement LoadListFromXMLElment(string entity)
+    {
+        string filePath = $"{S_DIR + entity}.xml";
+        try
+        {
+            if (File.Exists(filePath))
+                return XElement.Load(filePath);
+            XElement rootElem = new(entity);
+            rootElem.Save(filePath);
+            return rootElem;
+        }
+        catch (Exception ex)
+        {
+            // DO.XMLFileLoadCreateException(filePath, $"fail to load xml file: {filePath}", ex)
+            throw new Exception($"fail to load xml file: {filePath}", ex);
+        }
 
+    }
     #endregion
 
     #region Save\Load with Xml Serialier
@@ -43,7 +75,7 @@ public static class XmlTools
         }
     }
 
-    public static List<T> LoadListToXMLSerializer<T>(string entity)
+    public static List<T> LoadListFromXMLSerializer<T>(string entity)
     {
         string filePath = $"{S_DIR + entity}.xml";
         try
@@ -62,6 +94,44 @@ public static class XmlTools
         }
     }
 
+
     #endregion
+
+    #region xmlConvertor
+
+    internal static XElement itemToXelement<Item>(Item item, string name)
+    {
+        IEnumerable<PropertyInfo> items = item!.GetType().GetProperties();
+
+        IEnumerable<XElement> xElements = from propInfo in items
+                                          select new XElement(propInfo.Name, propInfo.GetValue(item)!.ToString());
+
+        return new XElement(name, xElements);
+    }
+
+    internal static Item xelementToItem<Item>(XElement xElement) where Item : new()
+    {
+        Item newItem = new Item();
+
+        IEnumerable<XElement> elements = xElement.Elements();
+
+        Dictionary<string, PropertyInfo> items = newItem.GetType().GetProperties().ToDictionary(k => k.Name, v => v);
+
+        foreach (var item in elements)
+        {
+            items[item.Name.LocalName].SetValue(newItem, item.Value);
+        }
+
+        return newItem;
+    }
+
+    internal static IEnumerable<Item> xelementToItems<Item>(XElement xElement) where Item : new()
+    {
+        return from element in xElement.Elements()
+               select xelementToItem<Item>(element);
+    }
+    #endregion
+
+  
 
 }

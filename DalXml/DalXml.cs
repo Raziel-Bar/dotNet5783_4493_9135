@@ -1,14 +1,14 @@
 ﻿using DalApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Dal;
 
 sealed internal class DalXml : IDal
 {
+    public static IDal Instance { get; } = new DalXml();
+
+    private DalXml() { }
+
     public IProduct Product { get; } = new Dal.DalProduct();
 
     public IOrder Order { get; } = new Dal.DalOrder();

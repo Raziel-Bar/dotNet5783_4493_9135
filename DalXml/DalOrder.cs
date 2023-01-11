@@ -1,15 +1,13 @@
 ﻿using DalApi;
 using DO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Dal;
 
 internal class DalOrder : IOrder
 {
+    const string s_orders = @"orders";
+
     /// <summary>
     /// Adds a new order to the _orders array
     /// </summary>
@@ -24,10 +22,15 @@ internal class DalOrder : IOrder
     /// </exception>
     public int Add(Order newOrder)
     {
-        /*newOrder.ID = getRunNumberOrderID; // ID is given here
-        _orders.Add(newOrder);
-        return newOrder.ID;*/
-        return 0;
+        
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        //newOrder.ID = runNumber;
+        listOrders.Add(newOrder);
+
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+        return newOrder.ID;
+
+
     }
 
     /// <summary>
@@ -42,10 +45,8 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist
     /// </exception>
-    public Order? Get(int orderId)// => Get(order => order?.ID == orderId);
-    {
-        return null;
-    }
+    public Order? Get(int orderId) => Get(order => order?.ID == orderId);
+
 
     /// <summary>
     /// deletes an order from the _orders array
@@ -58,6 +59,11 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Delete(int orderId)// => _orders.Remove(Get(orderId));
     {
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        
+        listOrders.Remove(Get(orderId));
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+
     }
 
     /// <summary>
@@ -71,8 +77,11 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Update(Order orderUpdate)
     {
-        /*Delete(orderUpdate.ID);
-        _orders.Add(orderUpdate);*/
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        Delete(orderUpdate.ID);
+        listOrders.Add(orderUpdate);
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+
     }
 
     /// <summary>
@@ -80,10 +89,16 @@ internal class DalOrder : IOrder
     /// </summary>
     /// <param name="func">the condition. a function that returns bool and receives order. in case func == null - we simply get the full list of all existing orders</param>
     /// <returns>the list of all orders that got true in the condition</returns>
-    public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null)/* =>
-        func is null ? _orders.Select(order => order) : _orders.Where(func);*/
+    public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null)
     {
-        return null;
+
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        if (func is null)
+
+            return listOrders.Select(ord => ord).OrderBy(ord => ord?.ID);
+        else
+
+            return listOrders.Where(func).OrderBy(ord => ord?.ID);
     }
 
     /// <summary>
@@ -94,11 +109,16 @@ internal class DalOrder : IOrder
     /// <exception cref="NotFoundException">In case we didn't find an order that fits the condition</exception>
     public Order? Get(Func<Order?, bool>? func)
     {
-        /*if (_orders.FirstOrDefault(func!) is Order order)
-            return order;
+        
+       var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        if (func is null)
+            throw new NotFoundException("order");
 
-        throw new NotFoundException("order");*/
-        return null;
+        else
+
+            return listOrders.FirstOrDefault(func);
     }
+
+
 
 }
