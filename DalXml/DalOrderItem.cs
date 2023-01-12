@@ -6,6 +6,7 @@ namespace Dal;
 
 internal class DalOrderItem : IOrderItem
 {
+    const string s_entityName = "OrderItem";
     /// <summary>
     /// Adds a new order item to the order item's list
     /// </summary>
@@ -21,11 +22,14 @@ internal class DalOrderItem : IOrderItem
     public int Add(OrderItem newOrderItem) // to check throw
     {
 
-        XElement orderItemElment = LoadListFromXMLElment("");
-        XElement newXElement = itemToXelement(newOrderItem, "OrderItem");
-        orderItemElment.Add(newXElement);
-        saveListToXMLElment(orderItemElment, "");
+        XElement orderItemElment = LoadListFromXMLElment(s_entityName);
+        XElement newXElement = itemToXelement(newOrderItem, s_entityName);
 
+        int id = XmlTools.getRunNumber(s_entityName);
+        newOrderItem.OrderItemID = id;
+        orderItemElment.Add(newXElement);
+        saveListToXMLElment(orderItemElment, s_entityName);
+        XmlTools.saveRunNumber(s_entityName, id);
         return 0;// to return the run numbers
     }
 
@@ -56,13 +60,13 @@ internal class DalOrderItem : IOrderItem
     public void Delete(int orderItemId)
     {
 
-        XElement xElement = LoadListFromXMLElment("");
+        XElement xElement = LoadListFromXMLElment(s_entityName);
 
-        XElement xElementToDelete = xElement.Elements().FirstOrDefault(e => e.Element("OrderItemID").Value == orderItemId.ToString()) ?? throw new NotFoundException("Order item");
+        XElement xElementToDelete = xElement.Elements().FirstOrDefault(e => e.Element(s_entityName).Value == orderItemId.ToString()) ?? throw new NotFoundException("Order item");
 
         xElementToDelete.Remove();
 
-        saveListToXMLElment(xElement, "");
+        saveListToXMLElment(xElement, s_entityName);
     }
 
     /// <summary>
@@ -98,8 +102,8 @@ internal class DalOrderItem : IOrderItem
     /// <returns>the list of all orderItems that got true in the condition</returns>
     public IEnumerable<OrderItem?> GetList(Func<OrderItem?, bool>? func)// to check throw
     {
-        XElement xElement = LoadListFromXMLElment("");
-        IEnumerable<OrderItem?> items = xelementToItems<OrderItem?>(xElement);
+        XElement xElement = LoadListFromXMLElment(s_entityName);
+        IEnumerable<OrderItem?> items = xelementToItems<OrderItem>(xElement).Select(o => (OrderItem?)o);
         return func is null ? items.Select(o => o) : items.Where(func);
     }
 

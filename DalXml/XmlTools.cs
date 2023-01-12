@@ -9,7 +9,7 @@ namespace Dal;
 public static class XmlTools
 {
     const string S_DIR = @"..\xml\";
-
+   static XElement dalConfig = XElement.Load(@"..\xml\dal-config.xml");
     static XmlTools()
     {
         if (!Directory.Exists(S_DIR)) Directory.CreateDirectory(S_DIR);
@@ -22,7 +22,7 @@ public static class XmlTools
 
     public static void saveListToXMLElment(XElement rootElem, string entity)
     {
-        string filePath = $"{S_DIR + entity}.xml";
+        string filePath = $"{S_DIR + entity}";
         try
         {
             rootElem.Save(filePath);
@@ -56,18 +56,18 @@ public static class XmlTools
 
     #region Save\Load with Xml Serialier
 
-    public static void SaveListToXMLSerializer<T>(List<T> list, string entity, string rootName)
+    public static void SaveListToXMLSerializer<T>(List<T> list, string rootName, string entity)
     {
         string filePath = $"{S_DIR + entity}.xml";
         try
         {
             using FileStream file = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
 
-            using XmlWriter xmlWriter = XmlWriter.Create(file, new XmlWriterSettings { Indent = true });
+            //using XmlWriter xmlWriter = XmlWriter.Create(file, new XmlWriterSettings { Indent = true });
 
-            XmlSerializer serializer = new(typeof(List<T>), new XmlRootAttribute(rootName));
+            XmlSerializer serializer = new(list.GetType());
 
-            serializer.Serialize(xmlWriter, list);
+            serializer.Serialize(file, list);
         }
         catch (Exception ex)
         {
@@ -80,13 +80,15 @@ public static class XmlTools
         string filePath = $"{S_DIR + entity}.xml";
         try
         {
-            if (!File.Exists(filePath)) return new();
+            if (!File.Exists(filePath)) return  new();
 
-            using FileStream file = new(filePath, FileMode.Open);
+           using FileStream file = new(filePath, FileMode.Open);
 
             XmlSerializer serializer = new(typeof(List<T>));
-
-            return serializer.Deserialize(file) as List<T> ?? new();
+            List<T> list = new List<T>();
+            list = (List<T>)serializer.Deserialize(file);
+            
+            return list;
         }
         catch (Exception ex)
         {
@@ -112,17 +114,17 @@ public static class XmlTools
     internal static Item xelementToItem<Item>(XElement xElement) where Item : new()
     {
         Item newItem = new Item();
-
+        object obj = newItem;
         IEnumerable<XElement> elements = xElement.Elements();
 
-        Dictionary<string, PropertyInfo> items = newItem.GetType().GetProperties().ToDictionary(k => k.Name, v => v);
+        Dictionary<string, PropertyInfo> items = obj.GetType().GetProperties().ToDictionary(k => k.Name, v => v);
 
         foreach (var item in elements)
         {
-            items[item.Name.LocalName].SetValue(newItem, item.Value);
+            items[item.Name.LocalName].SetValue(obj, Convert.ChangeType(item.Value, items[item.Name.LocalName].PropertyType));
         }
 
-        return newItem;
+        return (Item)obj;
     }
 
     internal static IEnumerable<Item> xelementToItems<Item>(XElement xElement) where Item : new()
@@ -130,8 +132,20 @@ public static class XmlTools
         return from element in xElement.Elements()
                select xelementToItem<Item>(element);
     }
+
+    internal static  int getRunNumber(string entityName)
+    {
+        
+        return int.Parse(dalConfig.Element(entityName)!.Value!) + 1;
+    }
+
+    internal static void saveRunNumber(string entityName, int runNumber)
+    {
+           dalConfig.Element(entityName)!.Value = runNumber.ToString();
+           saveListToXMLElment(dalConfig, entityName);
+    }
     #endregion
 
-  
+
 
 }

@@ -7,7 +7,7 @@ namespace Dal;
 internal class DalOrder : IOrder
 {
     const string s_orders = @"orders";
-
+    const string s_entityName = "Order";
     /// <summary>
     /// Adds a new order to the _orders array
     /// </summary>
@@ -23,11 +23,13 @@ internal class DalOrder : IOrder
     public int Add(Order newOrder)
     {
         
-        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
-        //newOrder.ID = runNumber;
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
+        int id = XmlTools.getRunNumber(s_entityName);
+        newOrder.ID = id;
         listOrders.Add(newOrder);
-
-        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+        
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
+        XmlTools.saveRunNumber(s_entityName, id);
         return newOrder.ID;
 
 
@@ -57,12 +59,13 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// In case the order does not exist in the array
     /// </exception>
-    public void Delete(int orderId)// => _orders.Remove(Get(orderId));
+    public void Delete(int orderId)
     {
-        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         
         listOrders.Remove(Get(orderId));
-        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
 
     }
 
@@ -77,10 +80,10 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Update(Order orderUpdate)
     {
-        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
         Delete(orderUpdate.ID);
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         listOrders.Add(orderUpdate);
-        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, "Order.xml");
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName); // לבדוק 
 
     }
 
@@ -92,7 +95,7 @@ internal class DalOrder : IOrder
     public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null)
     {
 
-        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         if (func is null)
 
             return listOrders.Select(ord => ord).OrderBy(ord => ord?.ID);
@@ -110,7 +113,7 @@ internal class DalOrder : IOrder
     public Order? Get(Func<Order?, bool>? func)
     {
         
-       var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_orders);
+       var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         if (func is null)
             throw new NotFoundException("order");
 

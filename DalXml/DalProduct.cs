@@ -4,7 +4,7 @@ namespace Dal;
 
 internal class DalProduct : IProduct
 {
-    const string s_products = @"Product";
+    const string s_entityName = @"Product";
 
     /// <summary>
     /// adds a new product to the products list
@@ -20,13 +20,13 @@ internal class DalProduct : IProduct
     /// </exception> 
     public int Add(Product newProduct)
     {
-        var listProducts = XmlTools.LoadListFromXMLSerializer<Product?>(s_products);
+        var listProducts = XmlTools.LoadListFromXMLSerializer<Product?>(s_entityName);
         if (listProducts.FirstOrDefault(o => o?.ID == newProduct.ID) is not null)
             throw new AlreadyExistException("product");
 
         listProducts.Add(newProduct);
 
-        XmlTools.SaveListToXMLSerializer(listProducts, s_products, "Product");
+        XmlTools.SaveListToXMLSerializer(listProducts, s_entityName, s_entityName);
 
         return newProduct.ID;
     }
@@ -55,8 +55,12 @@ internal class DalProduct : IProduct
     /// <exception cref="Exception">
     /// In case the product does not exist in the list
     /// </exception>
-    public void Delete(int productId) => XmlTools.LoadListFromXMLSerializer<Product?>(s_products).Remove(Get(productId));
-
+    public void Delete(int productId)
+    {
+        var products = XmlTools.LoadListFromXMLSerializer<Product?>(s_entityName);
+        products.Remove(Get(productId));
+        XmlTools.SaveListToXMLSerializer(products, s_entityName, s_entityName);
+    }
     /// <summary>
     /// updates a product's details
     /// </summary>
@@ -68,10 +72,10 @@ internal class DalProduct : IProduct
     /// </exception>
     public void Update(Product updateProduct)
     {
-        Delete(updateProduct.ID);
-        var products = XmlTools.LoadListFromXMLSerializer<Product?>(s_products);
+       Delete(updateProduct.ID);
+        var products = XmlTools.LoadListFromXMLSerializer<Product?>(s_entityName);
         products.Add(updateProduct);
-        XmlTools.SaveListToXMLSerializer(products, s_products, "Product");
+        XmlTools.SaveListToXMLSerializer(products, s_entityName, s_entityName);
     }
 
     /// <summary>
@@ -82,7 +86,7 @@ internal class DalProduct : IProduct
     /// <exception cref="NotFoundException">In case we didn't find a product that fits the condition</exception>
     public Product? Get(Func<Product?, bool>? func)
     {
-        if (XmlTools.LoadListFromXMLSerializer<Product?>(s_products).FirstOrDefault(func!) is Product product)
+        if (XmlTools.LoadListFromXMLSerializer<Product?>(s_entityName).FirstOrDefault(func!) is Product product)
             return product;
         throw new NotFoundException("Product");
     }
@@ -94,7 +98,7 @@ internal class DalProduct : IProduct
     /// <returns>the list of all orders that got true in the condition</returns>
     public IEnumerable<Product?> GetList(Func<Product?, bool>? func)
     {
-        var products = XmlTools.LoadListFromXMLSerializer<Product?>(s_products);
+        var products = XmlTools.LoadListFromXMLSerializer<Product?>(s_entityName);
         return func is null ? products.Select(product => product) : products.Where(func);
     }
        
