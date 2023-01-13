@@ -4,7 +4,7 @@ namespace Dal;
 
 internal class DalProduct : IProduct
 {
-    const string s_entityName = @"Product";
+    const string s_entityName = @"Products";
 
     /// <summary>
     /// adds a new product to the products list

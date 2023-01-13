@@ -29,9 +29,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xml", "xml", "{689E58D6-42EA-4D50-B3E5-33EE0E6A5FD7}"
 	ProjectSection(SolutionItems) = preProject
 		xml\dal-config.xml = xml\dal-config.xml
-		xml\Order.xml = xml\Order.xml
-		xml\OrderItem.xml = xml\OrderItem.xml
-		xml\Product.xml = xml\Product.xml
+		xml\OrderItems.xml = xml\OrderItems.xml
+		xml\Orders.xml = xml\Orders.xml
+		xml\Products.xml = xml\Products.xml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalXml", "DalXml\DalXml.csproj", "{32A0CBF3-83BC-44F8-AC6C-3904DA6C368A}"

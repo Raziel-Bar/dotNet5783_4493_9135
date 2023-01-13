@@ -5,6 +5,6 @@
     <list>DalList</list>
     <xml>DalXml</xml>
   </dal-packages>
-  <Order>21</Order>
-  <OrderItem>45</OrderItem>
+  <Orders>21</Orders>
+  <OrderItems>45</OrderItems>
 </config>

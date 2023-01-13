@@ -6,8 +6,8 @@ namespace Dal;
 
 internal class DalOrder : IOrder
 {
-    const string s_orders = @"orders";
-    const string s_entityName = "Order";
+    const string s_orders = @"Orders";
+    const string s_entityName = "Orders";
     /// <summary>
     /// Adds a new order to the _orders array
     /// </summary>

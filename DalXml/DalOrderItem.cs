@@ -6,7 +6,7 @@ namespace Dal;
 
 internal class DalOrderItem : IOrderItem
 {
-    const string s_entityName = "OrderItem";
+    const string s_entityName = "OrderItems";
     /// <summary>
     /// Adds a new order item to the order item's list
     /// </summary>
