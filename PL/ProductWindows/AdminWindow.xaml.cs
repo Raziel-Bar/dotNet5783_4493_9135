@@ -172,4 +172,9 @@ public partial class AdminWindow : Window
         this.Close();
     }
 
+    private void ToProductRemove(object sender, RoutedEventArgs e)
+    {
+        new ProductRemoveAdminWindow().Show();
+        this.Close();
+    }
 }

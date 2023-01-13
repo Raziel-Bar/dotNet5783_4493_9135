@@ -53,16 +53,4 @@ public partial class AdminVerificationWindow : Window
         }
     }
 
-    /// <summary>
-    /// Verifies the password when the Enter key is pressed.
-    /// </summary>
-    /// <param name="sender">The password input box.</param>
-    /// <param name="e">The key event arguments.</param>
-    private void EnterKeyCheck(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            VerifyPassword_Click(sender, e);
-        }
-    }
 }

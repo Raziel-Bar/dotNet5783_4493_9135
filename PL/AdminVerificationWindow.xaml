@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
-        DataContext="{Binding pwInput, RelativeSource={RelativeSource self}}"
         mc:Ignorable="d"
         Title="Verify" MinHeight="150" Height="150" Width="300" MinWidth="300" MaxWidth="400">
     <Grid>
@@ -19,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" TextAlignment="Center" TextWrapping="Wrap" Text="Please Enter Password" Margin="2,2,2,2" FontSize="16" Foreground="white"/>
-        <PasswordBox Name="PassWordBox" Grid.Row="1" Margin="20,2" MaxLength="4" KeyDown="EnterKeyCheck"/>
+        <PasswordBox Name="PassWordBox" Grid.Row="1" Margin="20,2" MaxLength="4"/>
         <TextBlock Grid.Row="2" TextAlignment="Center" TextWrapping="Wrap" Text="Hint: 1234" Margin="2,2,2,2" FontSize="10" Foreground="red" FontStyle="Italic"/>
         <Button Content="Verify" Grid.Row="3" Height="30" Width="50" HorizontalAlignment="center" Margin="2,2,2,2" Click="VerifyPassword_Click" Tag="{Binding ElementName=PassWordBox}" Style="{StaticResource ButtonStyleLowerRuler}">
             <Button.Resources>

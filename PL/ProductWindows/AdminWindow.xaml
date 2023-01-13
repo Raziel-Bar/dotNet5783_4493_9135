@@ -75,10 +75,12 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Content="Back" Grid.Column="0" HorizontalAlignment="Left"  Click="BackToMainWindow" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
             <Button Content="Order list" Grid.Column="1" Width="150" HorizontalAlignment="Center" Click="OrderList_Click" Style="{StaticResource ButtonStyleLowerRuler}"/>
-            <Button Content="Add new Product" Grid.Column="2" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" Visibility="{Binding }" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
+            <Button Content="Remove Product" Grid.Column="2" Width="150" HorizontalAlignment="Right" Click="ToProductRemove" Style="{StaticResource ButtonStyleLowerRuler}" Margin="0,0,20,0"/>
+            <Button Content="Add new Product" Grid.Column="3" Width="150" HorizontalAlignment="Right" Click="ToProductWindowAddMode" Style="{StaticResource ButtonStyleLowerRuler}" Visibility="{Binding }" RenderTransformOrigin="0.428,0.551" Margin="0,0,20,0"/>
         </Grid>
     </Grid>
 </Window>
