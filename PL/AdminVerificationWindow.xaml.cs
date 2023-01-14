@@ -25,6 +25,7 @@ public partial class AdminVerificationWindow : Window
     /// The correct password for the administrator.
     /// </summary>
     private string password = "1234";
+    public bool isVerified = false;
 
     public AdminVerificationWindow()
     {
@@ -48,6 +49,7 @@ public partial class AdminVerificationWindow : Window
         }
         else
         {
+            isVerified = true;
             new AdminWindow().Show();
             this.Close();
         }
