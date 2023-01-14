@@ -9,7 +9,7 @@ namespace Dal;
 public static class XmlTools
 {
     const string S_DIR = @"..\xml\";
-   static XElement dalConfig = XElement.Load(@"..\xml\dal-config.xml");
+
     static XmlTools()
     {
         if (!Directory.Exists(S_DIR)) Directory.CreateDirectory(S_DIR);
@@ -22,7 +22,7 @@ public static class XmlTools
 
     public static void saveListToXMLElment(XElement rootElem, string entity)
     {
-        string filePath = $"{S_DIR + entity}";
+        string filePath = $"{S_DIR + entity}.xml";// .xml
         try
         {
             rootElem.Save(filePath);
@@ -63,7 +63,7 @@ public static class XmlTools
         {
             using FileStream file = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
 
-            //using XmlWriter xmlWriter = XmlWriter.Create(file, new XmlWriterSettings { Indent = true });
+
 
             XmlSerializer serializer = new(list.GetType());
 
@@ -80,14 +80,14 @@ public static class XmlTools
         string filePath = $"{S_DIR + entity}.xml";
         try
         {
-            if (!File.Exists(filePath)) return  new();
+            if (!File.Exists(filePath)) return new();
 
-           using FileStream file = new(filePath, FileMode.Open);
+            using FileStream file = new(filePath, FileMode.Open);
 
             XmlSerializer serializer = new(typeof(List<T>));
             List<T> list = new List<T>();
             list = (List<T>)serializer.Deserialize(file);
-            
+
             return list;
         }
         catch (Exception ex)
@@ -98,6 +98,8 @@ public static class XmlTools
 
 
     #endregion
+
+    //================================= Bonus ==================================
 
     #region xmlConvertor
 
@@ -133,19 +135,28 @@ public static class XmlTools
                select xelementToItem<Item>(element);
     }
 
-    internal static  int getRunNumber(string entityName)
+    #endregion
+
+    #region RunNumber
+    internal static int getRunNumber(string entityName)
     {
-        
+
+        XElement dalConfig = XElement.Load(S_DIR + "config.xml");
+
         return int.Parse(dalConfig.Element(entityName)!.Value!) + 1;
     }
 
     internal static void saveRunNumber(string entityName, int runNumber)
     {
-           dalConfig.Element(entityName)!.Value = runNumber.ToString();
-           saveListToXMLElment(dalConfig, entityName);
-    }
-    #endregion
 
+        XElement dalConfig = XElement.Load(S_DIR + "config.xml");
+
+        dalConfig.Element(entityName)!.Value = runNumber.ToString();
+
+        dalConfig.Save(S_DIR + "config.xml");
+    }
+
+    #endregion
 
 
 }

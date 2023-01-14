@@ -23,14 +23,18 @@ internal class DalOrderItem : IOrderItem
     {
 
         XElement orderItemElment = LoadListFromXMLElment(s_entityName);
+
+        int id = getRunNumber(s_entityName);
+        newOrderItem.OrderItemID = id;
+
         XElement newXElement = itemToXelement(newOrderItem, s_entityName);
 
-        int id = XmlTools.getRunNumber(s_entityName);
-        newOrderItem.OrderItemID = id;
         orderItemElment.Add(newXElement);
+
         saveListToXMLElment(orderItemElment, s_entityName);
-        XmlTools.saveRunNumber(s_entityName, id);
-        return 0;// to return the run numbers
+
+        saveRunNumber(s_entityName, id);
+        return id;
     }
 
     /// <summary>

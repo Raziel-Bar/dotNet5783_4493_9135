@@ -1,1 +1,108 @@
-﻿<?xml version="1.0" encoding="utf-8"?><ArrayOfProduct xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Product><ID>400987</ID><Name>Gamla Cabernet Sauvignon-Merlot -  2017</Name><Price>130</Price><Category>GOLAN</Category><InStock>0</InStock></Product><Product><ID>210969</ID><Name>Yarden Rom - 2014</Name><Price>216</Price><Category>GOLAN</Category><InStock>78</InStock></Product><Product><ID>117783</ID><Name>Yarden Katzrin - 2016</Name><Price>225</Price><Category>GOLAN</Category><InStock>40</InStock></Product><Product><ID>895725</ID><Name>GALILO - 2017</Name><Price>149</Price><Category>DALTON</Category><InStock>37</InStock></Product><Product><ID>497201</ID><Name>SINGLE VINEYARD SHIRAZ ELKOSH - 2016 </Name><Price>118</Price><Category>DALTON</Category><InStock>88</InStock></Product><Product><ID>576026</ID><Name>PLATINUM CABERNET SAUVIGNON - 2018 </Name><Price>83</Price><Category>TEPERBERG</Category><InStock>64</InStock></Product><Product><ID>357785</ID><Name>CABERNET SAUVIGNON - 2019 </Name><Price>93</Price><Category>TEPERBERG</Category><InStock>28</InStock></Product><Product><ID>374793</ID><Name>REICHAN 2014</Name><Price>194</Price><Category>TEPERBERG</Category><InStock>91</InStock></Product><Product><ID>380134</ID><Name>Carmel Private Collection Cabernet Sauvignon - 2019</Name><Price>68</Price><Category>CARMEL</Category><InStock>46</InStock></Product><Product><ID>675665</ID><Name>Carmel VineYard 2020</Name><Price>64</Price><Category>CARMEL</Category><InStock>99</InStock></Product><Product><ID>358570</ID><Name>MIDITERRANEAN 2016</Name><Price>81</Price><Category>CARMEL</Category><InStock>50</InStock></Product><Product><ID>631820</ID><Name>BarKan Platinum Merlot 2018</Name><Price>62</Price><Category>BARKAN</Category><InStock>23</InStock></Product><Product><ID>857197</ID><Name>Altitude 720 Petite Verdot 2015</Name><Price>61</Price><Category>BARKAN</Category><InStock>97</InStock></Product><Product><ID>807541</ID><Name>Barkan Superior 2017</Name><Price>94</Price><Category>BARKAN</Category><InStock>23</InStock></Product><Product><ID>987654</ID><Name>7654jh</Name><Price>16</Price><Category>GOLAN</Category><InStock>4</InStock></Product><Product><ID>356148</ID><Name>NADAV SINGLE VINEYARD - 2020</Name><Price>87</Price><Category>DALTON</Category><InStock>4</InStock></Product></ArrayOfProduct>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfProduct xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Product>
+		<ID>713003</ID>
+		<Name>Gamla Cabernet Sauvignon-Merlot -  2017</Name>
+		<Price>166</Price>
+		<Category>GOLAN</Category>
+		<InStock>0</InStock>
+	</Product>
+	<Product>
+		<ID>421292</ID>
+		<Name>SINGLE VINEYARD SHIRAZ ELKOSH - 2016 </Name>
+		<Price>87</Price>
+		<Category>DALTON</Category>
+		<InStock>75</InStock>
+	</Product>
+	<Product>
+		<ID>946338</ID>
+		<Name>GALILO - 2017</Name>
+		<Price>143</Price>
+		<Category>DALTON</Category>
+		<InStock>0</InStock>
+	</Product>
+	<Product>
+		<ID>537193</ID>
+		<Name>NADAV SINGLE VINEYARD - 2020</Name>
+		<Price>97</Price>
+		<Category>DALTON</Category>
+		<InStock>57</InStock>
+	</Product>
+	<Product>
+		<ID>478543</ID>
+		<Name>Barkan Superior 2017</Name>
+		<Price>94</Price>
+		<Category>BARKAN</Category>
+		<InStock>71</InStock>
+	</Product>
+	<Product>
+		<ID>120440</ID>
+		<Name>BarKan Platinum Merlot 2018</Name>
+		<Price>85</Price>
+		<Category>BARKAN</Category>
+		<InStock>36</InStock>
+	</Product>
+	<Product>
+		<ID>752342</ID>
+		<Name>PLATINUM CABERNET SAUVIGNON - 2018 </Name>
+		<Price>165</Price>
+		<Category>TEPERBERG</Category>
+		<InStock>73</InStock>
+	</Product>
+	<Product>
+		<ID>117622</ID>
+		<Name>REICHAN 2014</Name>
+		<Price>124</Price>
+		<Category>TEPERBERG</Category>
+		<InStock>43</InStock>
+	</Product>
+	<Product>
+		<ID>362764</ID>
+		<Name>CABERNET SAUVIGNON - 2019 </Name>
+		<Price>80</Price>
+		<Category>TEPERBERG</Category>
+		<InStock>91</InStock>
+	</Product>
+	<Product>
+		<ID>317751</ID>
+		<Name>Yarden Katzrin - 2016</Name>
+		<Price>145</Price>
+		<Category>GOLAN</Category>
+		<InStock>57</InStock>
+	</Product>
+	<Product>
+		<ID>621024</ID>
+		<Name>MIDITERRANEAN 2016</Name>
+		<Price>67</Price>
+		<Category>CARMEL</Category>
+		<InStock>91</InStock>
+	</Product>
+	<Product>
+		<ID>907882</ID>
+		<Name>Carmel VineYard 2020</Name>
+		<Price>87</Price>
+		<Category>CARMEL</Category>
+		<InStock>49</InStock>
+	</Product>
+	<Product>
+		<ID>976207</ID>
+		<Name>Carmel Private Collection Cabernet Sauvignon - 2019</Name>
+		<Price>84</Price>
+		<Category>CARMEL</Category>
+		<InStock>29</InStock>
+	</Product>
+	<Product>
+		<ID>601259</ID>
+		<Name>Altitude 720 Petite Verdot 2015</Name>
+		<Price>62</Price>
+		<Category>BARKAN</Category>
+		<InStock>17</InStock>
+	</Product>
+	<Product>
+		<ID>620865</ID>
+		<Name>Yarden Rom - 2014</Name>
+		<Price>104</Price>
+		<Category>GOLAN</Category>
+		<InStock>35</InStock>
+	</Product>
+</ArrayOfProduct>

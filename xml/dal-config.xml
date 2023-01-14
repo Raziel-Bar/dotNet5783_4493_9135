@@ -6,8 +6,4 @@
 		<xml>DalXml</xml>
 	</dal-packages>
 
-
-		<Orders>20</Orders>
-		<OrderItems>45</OrderItems>
-
 </config>
