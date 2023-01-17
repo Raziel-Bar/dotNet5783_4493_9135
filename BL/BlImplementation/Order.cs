@@ -177,7 +177,7 @@ internal class Order : IOrder
     }
 
     /// <summary>
-    /// updates an already confirmed order's orderItem's details
+    /// BONUS updates an already confirmed order's orderItem's details
     /// </summary>
     /// <param name="orderID">The order's ID</param>
     /// <param name="orderItemID">The orderItem's ID</param>
@@ -296,13 +296,27 @@ internal class Order : IOrder
         catch (DO.NotFoundException ex) { throw new BO.NotFoundInDalException("Order/OrderItem", ex); }
     }
 
+    /// <summary>
+    /// finds the order (from either the PENDING or SHIPPED orders) that has the oldest status change.
+    /// used by the Simulator for taking care of orders
+    /// </summary>
+    /// <returns>the order that fits the conditions mentioned above</returns>
+    public BO.Order? NextOrderInLine()
+    {
+        IEnumerable<BO.Order> ordersInLine = from order in RequestOrdersListAdmin()
+                                             where order.Status != BO.ORDER_STATUS.DELIVERED
+                                             select RequestOrderDetails(order.ID);
+        return ordersInLine.Where(order => GetLatestDate(order) == ordersInLine.Min(_order => GetLatestDate(_order))).FirstOrDefault();
+    }
+
+
     #region private utility methods
     /// <summary>
     /// order ID validity general checker
     /// </summary>
     /// <param name="id">given order id number</param>
     /// <exception cref="BO.InvalidDataException">in case the number is negative</exception>
-    private void IDCheck(int id)
+    private static void IDCheck(int id)
     {
         if (id < 0)
             throw new BO.InvalidDataException("Order");
@@ -313,7 +327,16 @@ internal class Order : IOrder
     /// </summary>
     /// <param name="order">given order</param>
     /// <returns>the current status of the order</returns>
-    private BO.ORDER_STATUS? GetStatus(DO.Order order) =>
+    private static BO.ORDER_STATUS? GetStatus(DO.Order order) =>
     order.DeliveryDate is not null ? BO.ORDER_STATUS.DELIVERED : order.ShipDate is not null ? BO.ORDER_STATUS.SHIPPED : BO.ORDER_STATUS.PENDING;
+
+    /// <summary>
+    /// order's Latest date calculator. 
+    /// </summary>
+    /// <param name="order">given order</param>
+    /// <returns>the latest date in the order's statuc</returns>
+    private static DateTime? GetLatestDate(BO.Order order) =>
+    order.DeliveryDate is not null ? order.DeliveryDate : order.ShipDate is not null ? order.ShipDate : order.OrderDate;
+
     #endregion
 }

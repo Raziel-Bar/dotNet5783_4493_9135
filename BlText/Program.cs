@@ -6,7 +6,7 @@ internal class Program
     private enum ENTITIES { EXIT, PRODUCT, ORDER, CART };
     private enum PRODUCT { EXIT, GET_LIST, PRODUCT_DETAILS_CART, ADMIN_PRODUCT_DETAILS, ADD_ADMIN, DELETE_ADMIN, UPDATE_ADMIN };
     private enum CART { EXIT, ADD_PRODUCT, UPDATE_PRODUCT, DISPLAY, CONFIRM }
-    private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN }
+    private enum ORDER { EXIT, GET_LIST, GET_ORDER, UPDATE_SHIP, UPDATE_DELIVERY, ORDER_TRACKING, UPDATE_ORDER_ADMIN, GET_NEXT_ORDER_IN_LINE }
 
     private static BlApi.IBl? ibl = BlApi.Factory.Get();
 
@@ -222,6 +222,7 @@ Please choose one of the fowling options:
  4.update order delivery date.
  5.order tracking information.
  6.Update order information (admin)
+ 7.Get the next order in line
 ");
             option = yourChoiceInt();
             switch ((ORDER)option)
@@ -255,6 +256,11 @@ Please choose one of the fowling options:
 In case of removing item from order, set new amount to 0
 In case of adding a new item to the order, set order item ID to 0");
                     ibl?.Order.UpdateOrderAdmin(yourChoiceInt(), yourChoiceInt(), yourChoiceInt(), yourChoiceInt());
+                    break;
+                case ORDER.GET_NEXT_ORDER_IN_LINE:
+                    BO.Order? order = ibl!.Order.NextOrderInLine();
+                    if (order != null) Console.WriteLine(order);
+                    else Console.WriteLine("No orders in Line Atm");
                     break;
 
             }

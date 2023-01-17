@@ -65,4 +65,11 @@ public interface IOrder
     /// NOTE: FOR THE TIME BEING, this method will be void. In the future it might turn into either DO or BO order...
     /// </BONUS_METHOD_explanation>
     void UpdateOrderAdmin(int orderID, int productID, int orderItemID, int newAmount);
+
+    /// <summary>
+    /// finds the order (from either the PENDING or SHIPPED orders) that has the oldest status change.
+    /// used by the Simulator for taking care of orders
+    /// </summary>
+    /// <returns>the order that fits the conditions mentioned above</returns>
+    Order? NextOrderInLine();
 }
