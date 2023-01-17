@@ -26,7 +26,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Text="{Binding Timer, Mode=OneWay}" Foreground="White" FontSize="60" Margin="20,0" />
-        <TextBlock Grid.Row="1" Text="Currently handling order number:" TextAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+        <TextBlock Grid.Row="1" Text="Currently handling order:" TextAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="50,0" />
         <TextBlock Grid.Row="1" Text="{Binding CurrentOrderInLine.ID}" TextAlignment="right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,40,0" />
         
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Current status:" TextAlignment="left" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="50,0" />
