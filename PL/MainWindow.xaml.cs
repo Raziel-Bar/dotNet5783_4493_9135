@@ -65,5 +65,10 @@ namespace PL
             new OrderTrackingWindow().Show();
             this.Close();
         }
+
+        private void Simulation_Click(object sender, RoutedEventArgs e)
+        {
+            new SimulatorWindow().Show();
+        }
     }
 }

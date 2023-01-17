@@ -25,6 +25,7 @@
         <Button Content="Manager access" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="AdminAccessButton_Click" Style="{StaticResource ButtonStyle1Menu}"/>
         <Button Content="New Order" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Click="NewOrderButton_Click"  Style="{StaticResource ButtonStyle1Menu}"/>
         <Button Content="Trace Order" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Click="OrderTraceButton_Click" Style="{StaticResource ButtonStyle1Menu}"/>
+        <Button Content="Simulation" Grid.Row="2" HorizontalAlignment="right" VerticalAlignment="Top" Click="Simulation_Click" Style="{StaticResource ButtonStyle1Menu}"/>
         <Button Content="Exit" Grid.Row="3" HorizontalAlignment="left" VerticalAlignment="Center" Click="Exit" Style="{StaticResource ButtonStyleLowerRuler}"/>
     </Grid>
 </Window>

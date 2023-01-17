@@ -1,0 +1,45 @@
+﻿<Window x:Class="PL.SimulatorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        MouseDown="Window_MouseDown"
+        ResizeMode="NoResize"
+        BorderBrush="#4B0000" BorderThickness="20"
+        DataContext="{Binding Data, RelativeSource={RelativeSource self}}"
+        Title="Simulator" Height="450" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/pics/red-wine.jpg" Opacity="1" />
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Text="{Binding Timer, Mode=OneWay}" Foreground="White" FontSize="60" Margin="20,0" />
+        <TextBlock Grid.Row="1" Text="Currently handling order number:" TextAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+        <TextBlock Grid.Row="1" Text="{Binding CurrentOrderInLine.ID}" TextAlignment="right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,40,0" />
+        
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Current status:" TextAlignment="left" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="50,0" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding CurrentOrderInLine.Status}" TextAlignment="Right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,100,0" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="Processing start time:" TextAlignment="left" VerticalAlignment="Center" Foreground="White" FontSize="20" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding StartTime}" TextAlignment="Right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,40,0" />
+        
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Next status:" TextAlignment="left" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="50,0" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding NextStatus}" TextAlignment="Right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,100,0" />
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="Estimated handling time:" TextAlignment="left" VerticalAlignment="Center" Foreground="White" FontSize="20" />
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding HandleTime}" TextAlignment="Right" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="0,0,40,0" />
+        <Button Content="Back" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left"  Click="EndSimulation" Style="{StaticResource ButtonStyleLowerRuler}" Margin="20,0"/>
+
+
+    </Grid>
+</Window>
