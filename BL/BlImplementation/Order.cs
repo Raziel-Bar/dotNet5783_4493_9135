@@ -49,26 +49,7 @@ internal class Order : IOrder
             // getting a DO orderItems list for the price and amount info
             IEnumerable<DO.OrderItem?> doOrderItems = dal.OrderItem.GetList(orderItem => orderItem?.OrderID == orderID);
 
-            /*
-             double totalPriceOrder = 0; // sum for the total price
-
-             boOrder.ListOfItems = new List<BO.OrderItem?>();
-
-             foreach (var item in doOrderItems) // running over the order items
-             {
-                 if (item is DO.OrderItem orderItem)
-                 {
-                     BO.OrderItem boOrderItem = orderItem.CopyPropTo(new BO.OrderItem()); // Bonus
-
-                     boOrderItem.ProductName = dal.Product.Get(orderItem.ProductID)?.Name; // unique prop
-
-                     boOrderItem.TotalPrice = orderItem.Price * orderItem.Amount; // unique prop
-
-                     boOrder.ListOfItems.Add(boOrderItem);
-
-                     totalPriceOrder += boOrderItem.TotalPrice;
-                 }
-             }                                          &*&*&*&*&*&*&*&*&*&*&**/
+    
 
             boOrder.ListOfItems = (from doOrderItem in doOrderItems
                                    orderby dal.Product.Get((int)doOrderItem?.ProductID!)?.Name // we sort the items by their names and not their OrderItemID
@@ -80,7 +61,7 @@ internal class Order : IOrder
 
             boOrder.TotalPrice = boOrder.ListOfItems!.Sum(boOrderItem => boOrderItem!.TotalPrice); // sum for the total price
 
-            // boOrder.TotalPrice = totalPriceOrder; // sets the total price field &*&*&*&*&*&*&*&*&*&**&*
+     
 
             boOrder.Status = GetStatus(doOrder); // only 1 value left, the status
 
@@ -303,10 +284,14 @@ internal class Order : IOrder
     /// <returns>the order that fits the conditions mentioned above</returns>
     public BO.Order? NextOrderInLine()
     {
-        IEnumerable<BO.Order> ordersInLine = from order in RequestOrdersListAdmin()
-                                             where order.Status != BO.ORDER_STATUS.DELIVERED
-                                             select RequestOrderDetails(order.ID);
-        return ordersInLine.Where(order => GetLatestDate(order) == ordersInLine.Min(_order => GetLatestDate(_order))).FirstOrDefault();
+        return RequestOrderDetails(
+            dal.Order.GetList(order => order?.DeliveryDate is null)
+            .MinBy(order => order?.ShipDate is null ? order?.OrderDate : order?.ShipDate)?.ID 
+            ?? throw new BO.UnexpectedException());
+        //IEnumerable<BO.Order> ordersInLine = from order in RequestOrdersListAdmin()
+        //                                     where order.Status != BO.ORDER_STATUS.DELIVERED
+        //                                     select RequestOrderDetails(order.ID);
+        //return ordersInLine.Where(order => GetLatestDate(order) == ordersInLine.Min(_order => GetLatestDate(_order))).FirstOrDefault();
     }
 
 

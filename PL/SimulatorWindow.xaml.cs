@@ -1,33 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using BO;
+using Simulator;
+using static System.Net.Mime.MediaTypeNames;
+
 namespace PL;
 
 public class SimulatorWindowData : DependencyObject
 {
-    public string Timer
-    {
-        get { return (string)GetValue(TimerProperty); }
-        set { SetValue(TimerProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for Timer.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty TimerProperty =
-        DependencyProperty.Register("Timer", typeof(string), typeof(SimulatorWindowData));
-
     public Order? CurrentOrderInLine
     {
         get { return (Order?)GetValue(CurrentOrderInLineProperty); }
@@ -38,7 +22,7 @@ public class SimulatorWindowData : DependencyObject
     public static readonly DependencyProperty CurrentOrderInLineProperty =
         DependencyProperty.Register("CurrentOrderInLine", typeof(Order), typeof(SimulatorWindowData));
 
-    public ORDER_STATUS NextStatus
+    public ORDER_STATUS? NextStatus 
     {
         get { return (ORDER_STATUS)GetValue(NextStatusProperty); }
         set { SetValue(NextStatusProperty, value); }
@@ -46,8 +30,7 @@ public class SimulatorWindowData : DependencyObject
 
     // Using a DependencyProperty as the backing store for NextStatus.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty NextStatusProperty =
-        DependencyProperty.Register("NextStatus", typeof(ORDER_STATUS), typeof(SimulatorWindowData));
-
+        DependencyProperty.Register("NextStatus", typeof(ORDER_STATUS?), typeof(SimulatorWindowData));
 
 
     public string? StartTime
@@ -60,8 +43,6 @@ public class SimulatorWindowData : DependencyObject
     public static readonly DependencyProperty startTimeProperty =
         DependencyProperty.Register("StartTime", typeof(string), typeof(SimulatorWindowData));
 
-
-
     public string? HandleTime
     {
         get { return (string)GetValue(handleTimeProperty); }
@@ -71,9 +52,6 @@ public class SimulatorWindowData : DependencyObject
     // Using a DependencyProperty as the backing store for handleTime.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty handleTimeProperty =
         DependencyProperty.Register("HandleTime", typeof(string), typeof(SimulatorWindowData));
-
-
-
 
 }
 
@@ -86,7 +64,26 @@ public partial class SimulatorWindow : Window
     private readonly BlApi.IBl? bl = BlApi.Factory.Get();
     private bool IsRunTimer { get; set; }
     private Stopwatch? Watch { get; set; }
-    private Thread? TimerThread { get; set; }
+
+    public string Timer
+    {
+        get { return (string)GetValue(TimerProperty); }
+        set { SetValue(TimerProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for Timer.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty TimerProperty =
+        DependencyProperty.Register("Timer", typeof(string), typeof(SimulatorWindow));
+
+    public int TimeProgress
+    {
+        get { return (int)GetValue(TimeProgressProperty); }
+        set { SetValue(TimeProgressProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for Timer.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty TimeProgressProperty =
+        DependencyProperty.Register("TimeProgress", typeof(int), typeof(SimulatorWindow));
 
     public SimulatorWindowData Data
     {
@@ -98,65 +95,144 @@ public partial class SimulatorWindow : Window
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register("Data", typeof(SimulatorWindowData), typeof(SimulatorWindow));
 
-
+    private BackgroundWorker _backgroundWorker;
     public SimulatorWindow()
     {
         InitializeComponent();
         this.WindowStyle = WindowStyle.None;
-        Data = new()
-        {
-            Timer = "00:00:00",
-            CurrentOrderInLine = bl.Order.NextOrderInLine(),
-            StartTime = DateTime.Now.ToString("HH:mm:ss"),
-            HandleTime = $"{new Random().Next(3, 11)} seconds"
-    };
-        if(Data.CurrentOrderInLine != null) 
-            Data.NextStatus = Data.CurrentOrderInLine.Status == ORDER_STATUS.PENDING ? ORDER_STATUS.SHIPPED : ORDER_STATUS.DELIVERED;
-        IsRunTimer = true;
+        //    if(Data.CurrentOrderInLine != null) 
+        //        Data.NextStatus = Data.CurrentOrderInLine.Status == ORDER_STATUS.PENDING ? ORDER_STATUS.SHIPPED : ORDER_STATUS.DELIVERED;
+
         Watch = new Stopwatch();
-        TimerThread = new Thread(RunTimer);
 
         Watch.Restart();
-        TimerThread.Start();
-    }
 
-    private string Random(int v1, int v2)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetTextInvoke(string text)
-    {
-        if (!(CheckAccess()))
+        _backgroundWorker = new BackgroundWorker
         {
-            Action<string> d = SetTextInvoke;
-            Dispatcher.BeginInvoke(d, new object[] { text });
-        }
-        else
-        {
-            Data!.Timer = text;
-        }
+            WorkerReportsProgress = true,
+            WorkerSupportsCancellation = true
+        };
+
+        _backgroundWorker.DoWork += _backgroundWorker_DoWork;
+        _backgroundWorker.ProgressChanged += _backgroundWorker_ProgressChanged;
+        _backgroundWorker.RunWorkerCompleted += _backgroundWorker_RunWorkerCompleted;
+        _backgroundWorker.RunWorkerAsync();
     }
 
-    private void RunTimer()
+    private void _backgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
-        while (IsRunTimer)
+   
+        Watch!.Stop();
+        Simulator.Simulator.s_StopSimulation -= cancelAsync;
+        Simulator.Simulator.s_UpdateSimulation -= reportProgress;
+        _backgroundWorker.Dispose();
+        this.Close();
+    }
+
+    private void _backgroundWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
+    {
+        int action = e.ProgressPercentage;
+
+        if (action == 0)
+        {
+            Timer = (e.UserState as string)!;
+        }
+
+        if (action == 1)
+        {
+            if (Data is null)
+                Data = new();
+
+                (Data.CurrentOrderInLine, Data.NextStatus, Data.StartTime, Data.HandleTime)
+               = (e.UserState as Tuple<BO.Order, BO.ORDER_STATUS?, string, string>)!;
+        }
+
+        if (action == 2)
+            TimeProgress = (int)e.UserState!;
+    }
+
+    private void _backgroundWorker_DoWork(object? sender, DoWorkEventArgs e)
+    {
+        Simulator.Simulator.s_StopSimulation += cancelAsync;
+
+        Simulator.Simulator.s_UpdateSimulation += reportProgress;
+
+        Simulator.Simulator.BeginSimulation();
+
+        while (!_backgroundWorker.CancellationPending)
         {
             string timer = Watch!.Elapsed.ToString().Substring(0, 8);
-            SetTextInvoke(timer);
+            reportProgress(0, timer);
+
             Thread.Sleep(1000);
         }
     }
+
+    private void cancelAsync()
+    {
+        _backgroundWorker.CancelAsync();
+    }
+
+    private void reportProgress(int progressPercentage, object? userState)
+    {
+        if (_backgroundWorker.IsBusy)
+        {
+            _backgroundWorker.ReportProgress(progressPercentage, userState);
+        }
+    }
+          
+
+    private void EndSimulationClick(object sender, RoutedEventArgs e)
+    {
+        Simulator.Simulator.StopSimulation();
+    }
+
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
             this.DragMove();
     }
-
-    private void EndSimulation(object sender, RoutedEventArgs e)
-    {
-        Watch!.Stop();
-        IsRunTimer = false;
-        this.Close();
-    }
 }
+//private Thread? TimerThread { get; set; }
+//IsRunTimer = true;
+//TimerThread = new Thread(RunTimer);
+//TimerThread.Start();
+//private string Random(int v1, int v2)
+//{
+//    throw new NotImplementedException();
+//}
+
+//public void SetTextInvoke(string text)
+//{
+//    if (!(CheckAccess()))
+//    {
+//        Action<string> d = SetTextInvoke;
+//        Dispatcher.BeginInvoke(d, new object[] { text });
+//    }
+//    else
+//    {
+//        Data!.Timer = text;
+//    }
+//}
+
+//private void RunTimer()
+//{
+//    while (IsRunTimer)
+//    {
+//        string timer = Watch!.Elapsed.ToString().Substring(0, 8);
+//        SetTextInvoke(timer);
+//        Thread.Sleep(1000);
+//    }
+//}
+//private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+//{
+//    if (e.ChangedButton == MouseButton.Left)
+//        this.DragMove();
+//}
+
+//private void EndSimulation(object sender, RoutedEventArgs e)
+//{
+//    Watch!.Stop();
+//    IsRunTimer = false;
+//    this.Close();
+//}
