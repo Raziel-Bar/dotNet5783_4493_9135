@@ -118,31 +118,13 @@
 		<DeliveryDate>2023-01-19T21:46:09.8081252+02:00</DeliveryDate>
 	</Order>
 	<Order>
-		<ID>18</ID>
-		<CustomerName>Reena Montague</CustomerName>
-		<CustomerEmail>jratteryf@friendfeed.com</CustomerEmail>
-		<CustomerAddress>96 Bobwhite Circle</CustomerAddress>
-		<OrderDate>2021-09-27T04:22:41.0034728+03:00</OrderDate>
-		<ShipDate>2023-01-19T21:46:15.8346246+02:00</ShipDate>
-		<DeliveryDate xsi:nil="true" />
-	</Order>
-	<Order>
-		<ID>9</ID>
-		<CustomerName>Torrie Jacobson</CustomerName>
-		<CustomerEmail>tkiggel5@1688.com</CustomerEmail>
-		<CustomerAddress>5 Warrior Lane </CustomerAddress>
-		<OrderDate>2022-05-17T12:51:38.5739371+03:00</OrderDate>
-		<ShipDate>2023-01-19T21:46:37.3668867+02:00</ShipDate>
-		<DeliveryDate xsi:nil="true" />
-	</Order>
-	<Order>
 		<ID>16</ID>
 		<CustomerName>Kali Shayler</CustomerName>
 		<CustomerEmail>beslandc@nps.gov</CustomerEmail>
 		<CustomerAddress>592 Gale Pass</CustomerAddress>
 		<OrderDate>2022-12-10T00:25:22.7102752+02:00</OrderDate>
 		<ShipDate>2022-12-14T17:09:35.9657437+02:00</ShipDate>
-		<DeliveryDate>2023-01-19T21:46:43.4070428+02:00</DeliveryDate>
+		<DeliveryDate xsi:nil="true" />
 	</Order>
 	<Order>
 		<ID>19</ID>
@@ -151,7 +133,7 @@
 		<CustomerAddress>7 Park Meadow Way</CustomerAddress>
 		<OrderDate>2020-09-30T16:48:00.7437153+03:00</OrderDate>
 		<ShipDate>2023-01-19T15:34:39.8272747+02:00</ShipDate>
-		<DeliveryDate>2023-01-19T21:46:53.4289057+02:00</DeliveryDate>
+		<DeliveryDate xsi:nil="true" />
 	</Order>
 	<Order>
 		<ID>20</ID>
@@ -159,8 +141,8 @@
 		<CustomerEmail>jratteryf@friendfeed.com</CustomerEmail>
 		<CustomerAddress>96 Bobwhite Circle</CustomerAddress>
 		<OrderDate>2021-01-21T12:53:22.9817985+02:00</OrderDate>
-		<ShipDate>2023-01-19T15:34:48.8754011+02:00</ShipDate>
-		<DeliveryDate>2023-01-19T21:47:03.4515216+02:00</DeliveryDate>
+		<ShipDate xsi:nil="true" />
+		<DeliveryDate xsi:nil="true" />
 	</Order>
 	<Order>
 		<ID>17</ID>
@@ -168,16 +150,7 @@
 		<CustomerEmail>tkiggel5@1688.com</CustomerEmail>
 		<CustomerAddress>5 Warrior Lane </CustomerAddress>
 		<OrderDate>2021-04-07T16:39:26.7162592+03:00</OrderDate>
-		<ShipDate>2023-01-19T15:35:02.9051659+02:00</ShipDate>
-		<DeliveryDate>2023-01-19T21:47:13.4796183+02:00</DeliveryDate>
-	</Order>
-	<Order>
-		<ID>23</ID>
-		<CustomerName>kzzofesfd</CustomerName>
-		<CustomerEmail>fgs@Wsx</CustomerEmail>
-		<CustomerAddress>vd</CustomerAddress>
-		<OrderDate>2023-01-19T21:41:11.0597101+02:00</OrderDate>
-		<ShipDate>2023-01-19T21:51:33.0702314+02:00</ShipDate>
+		<ShipDate xsi:nil="true" />
 		<DeliveryDate xsi:nil="true" />
 	</Order>
 	<Order>
@@ -186,7 +159,26 @@
 		<CustomerEmail>msemor9@canalblog.com</CustomerEmail>
 		<CustomerAddress>0449 Norway Maple Place</CustomerAddress>
 		<OrderDate>2020-05-29T07:08:14.4124456+03:00</OrderDate>
-		<ShipDate>2023-01-19T21:46:01.7713394+02:00</ShipDate>
-		<DeliveryDate>2023-01-19T21:52:17.9222127+02:00</DeliveryDate>
+		<ShipDate xsi:nil="true" />
+		<DeliveryDate xsi:nil="true" />
 	</Order>
+	<Order>
+		<ID>18</ID>
+		<CustomerName>Reena Montague</CustomerName>
+		<CustomerEmail>jratteryf@friendfeed.com</CustomerEmail>
+		<CustomerAddress>96 Bobwhite Circle</CustomerAddress>
+		<OrderDate>2021-09-27T04:22:41.0034728+03:00</OrderDate>
+		<ShipDate xsi:nil="true" />
+		<DeliveryDate xsi:nil="true" />
+	</Order>
+	<Order>
+		<ID>9</ID>
+		<CustomerName>Torrie Jacobson</CustomerName>
+		<CustomerEmail>tkiggel5@1688.com</CustomerEmail>
+		<CustomerAddress>5 Warrior Lane </CustomerAddress>
+		<OrderDate>2022-05-17T12:51:38.5739371+03:00</OrderDate>
+		<ShipDate xsi:nil="true" />
+		<DeliveryDate xsi:nil="true" />
+	</Order>
+
 </ArrayOfOrder>

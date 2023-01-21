@@ -33,12 +33,12 @@ public static class Simulator
     private static void simulationProgress()
     {
         Delegate[] delegates = s_updateSimulation!.GetInvocationList();
-
+        Order? order;
         while (!s_flagStopSimulation)
         {
 
 
-            Order? order = _bl!.Order.NextOrderInLine()!;
+            order = _bl!.Order.NextOrderInLine()!;
 
             if (order is null)
                 Thread.Sleep(c_sleepTime);
@@ -57,7 +57,7 @@ public static class Simulator
 
                 int sleepTime = timeOfTreatment * 1000;
 
-                new Thread(() => updateTime(timeOfTreatment, delegates)).Start();// for the bar
+                new Thread(() => updateTime(timeOfTreatment, delegates)).Start();// for the bar update
 
                 Thread.Sleep(sleepTime);
 

@@ -301,39 +301,5 @@
     <Price>146</Price>
     <Amount>18</Amount>
   </OrderItem>
-  <OrderItems>
-    <OrderItemID>45</OrderItemID>
-    <ProductID>279726</ProductID>
-    <OrderID>22</OrderID>
-    <Price>142</Price>
-    <Amount>1</Amount>
-  </OrderItems>
-  <OrderItems>
-    <OrderItemID>46</OrderItemID>
-    <ProductID>191228</ProductID>
-    <OrderID>22</OrderID>
-    <Price>148</Price>
-    <Amount>1</Amount>
-  </OrderItems>
-  <OrderItems>
-    <OrderItemID>47</OrderItemID>
-    <ProductID>332252</ProductID>
-    <OrderID>22</OrderID>
-    <Price>191</Price>
-    <Amount>1</Amount>
-  </OrderItems>
-  <OrderItems>
-    <OrderItemID>48</OrderItemID>
-    <ProductID>711278</ProductID>
-    <OrderID>23</OrderID>
-    <Price>165</Price>
-    <Amount>1</Amount>
-  </OrderItems>
-  <OrderItems>
-    <OrderItemID>49</OrderItemID>
-    <ProductID>612508</ProductID>
-    <OrderID>23</OrderID>
-    <Price>146</Price>
-    <Amount>1</Amount>
-  </OrderItems>
+
 </ArrayOfOrderItem>

@@ -284,14 +284,14 @@ internal class Order : IOrder
     /// <returns>the order that fits the conditions mentioned above</returns>
     public BO.Order? NextOrderInLine()
     {
-        return RequestOrderDetails(
-            dal.Order.GetList(order => order?.DeliveryDate is null)
-            .MinBy(order => order?.ShipDate is null ? order?.OrderDate : order?.ShipDate)?.ID 
-            ?? throw new BO.UnexpectedException());
-        //IEnumerable<BO.Order> ordersInLine = from order in RequestOrdersListAdmin()
-        //                                     where order.Status != BO.ORDER_STATUS.DELIVERED
-        //                                     select RequestOrderDetails(order.ID);
-        //return ordersInLine.Where(order => GetLatestDate(order) == ordersInLine.Min(_order => GetLatestDate(_order))).FirstOrDefault();
+        //return RequestOrderDetails(
+        //    dal.Order.GetList(order => order?.DeliveryDate is null)
+        //    .MinBy(order => order?.ShipDate is null ? order?.OrderDate : order?.ShipDate)?.ID 
+        //    ?? throw new BO.UnexpectedException());
+        IEnumerable<BO.Order> ordersInLine = from order in RequestOrdersListAdmin()
+                                             where order.Status != BO.ORDER_STATUS.DELIVERED
+                                             select RequestOrderDetails(order.ID);
+        return ordersInLine.Where(order => GetLatestDate(order) == ordersInLine.Min(_order => GetLatestDate(_order))).FirstOrDefault();
     }
 
 
