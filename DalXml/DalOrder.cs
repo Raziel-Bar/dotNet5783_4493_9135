@@ -1,9 +1,7 @@
 ﻿using DalApi;
 using DO;
-using static Dal.XmlTools;
-using System.Runtime.CompilerServices;
-
 namespace Dal;
+using System.Runtime.CompilerServices;
 
 internal class DalOrder : IOrder
 {
@@ -26,19 +24,17 @@ internal class DalOrder : IOrder
     [MethodImpl(MethodImplOptions.Synchronized)]
     public int Add(Order newOrder)
     {
-
-        var listOrders = LoadListFromXMLSerializer<Order?>(s_entityName);
-
-        int id = getRunNumber(s_entityName);
-
+        
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
+        int id = XmlTools.getRunNumber(s_entityName);
         newOrder.ID = id;
-
         listOrders.Add(newOrder);
+        
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
+        XmlTools.saveRunNumber(s_entityName, id);
+        return newOrder.ID;
 
-        SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
 
-        saveRunNumber(s_entityName, id);
-        return id;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
@@ -68,11 +64,11 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Delete(int orderId)
     {
-        var listOrders = LoadListFromXMLSerializer<Order?>(s_entityName);
-
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
+        
         listOrders.Remove(Get(orderId));
 
-        SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
 
     }
 
@@ -89,9 +85,9 @@ internal class DalOrder : IOrder
     public void Update(Order orderUpdate)
     {
         Delete(orderUpdate.ID);
-        var listOrders = LoadListFromXMLSerializer<Order?>(s_entityName);
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         listOrders.Add(orderUpdate);
-        SaveListToXMLSerializer(listOrders, s_orders, s_entityName);
+        XmlTools.SaveListToXMLSerializer(listOrders, s_orders, s_entityName); // לבדוק 
 
     }
 
@@ -104,7 +100,7 @@ internal class DalOrder : IOrder
     public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null)
     {
 
-        var listOrders = LoadListFromXMLSerializer<Order?>(s_entityName);
+        var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         if (func is null)
 
             return listOrders.Select(ord => ord).OrderBy(ord => ord?.ID);
@@ -122,8 +118,8 @@ internal class DalOrder : IOrder
     /// <exception cref="NotFoundException">In case we didn't find an order that fits the condition</exception>
     public Order? Get(Func<Order?, bool>? func)
     {
-
-        var listOrders = LoadListFromXMLSerializer<Order?>(s_entityName);
+        
+       var listOrders = XmlTools.LoadListFromXMLSerializer<Order?>(s_entityName);
         if (func is null)
             throw new NotFoundException("order");
 

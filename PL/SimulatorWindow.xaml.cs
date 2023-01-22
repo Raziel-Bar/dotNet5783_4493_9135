@@ -100,6 +100,10 @@ public partial class SimulatorWindow : Window
 
     private event Action _onClosingWindow;
 
+    /// <summary>
+    /// Initializes the window and starts the simulation.
+    /// </summary>
+    /// <param name="_onClosingWindow">Event that is triggered when the window is closed.</param>
     public SimulatorWindow(Action _onClosingWindow)
     {
         InitializeComponent();
@@ -125,6 +129,11 @@ public partial class SimulatorWindow : Window
         _backgroundWorker.RunWorkerAsync();
     }
 
+    /// <summary>
+    /// Handles the RunWorkerCompleted event of the _backgroundWorker control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="RunWorkerCompletedEventArgs"/> instance containing the event data.</param>
     private void _backgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
    
@@ -135,6 +144,11 @@ public partial class SimulatorWindow : Window
         this.Close();
     }
 
+    /// <summary>
+    /// Handles the ProgressChanged event of the _backgroundWorker control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
     private void _backgroundWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
     {
 
@@ -161,6 +175,13 @@ public partial class SimulatorWindow : Window
         } 
     }
 
+    /// <summary>
+    /// The _backgroundWorker_DoWork method is called when the background worker starts working.
+    /// It subscribes to the "s_StopSimulation" and "s_UpdateSimulation" events from the Simulator class,
+    /// starts the simulation and enters a loop to update the timer.
+    /// </summary>
+    /// <param name="sender">The object that raised the event.</param>
+    /// <param name="e">The event data.</param>
     private void _backgroundWorker_DoWork(object? sender, DoWorkEventArgs e)
     {
         Simulator.Simulator.s_StopSimulation += cancelAsync;
@@ -178,11 +199,18 @@ public partial class SimulatorWindow : Window
         }
     }
 
+    /// <summary>
+    /// The cancelAsync method is called when the "s_StopSimulation" event is raised from the Simulator class.
+    /// It cancels the background worker.
+    /// </summary>
     private void cancelAsync()
     {
         _backgroundWorker.CancelAsync();
     }
 
+    /// <summary>
+    /// reportProgress method is used to update the progress of the simulation, it checks if the background worker is busy then it reports the progress percentage and the user state.
+    /// </summary>
     private void reportProgress(int progressPercentage, object? userState)
     {
         if (_backgroundWorker.IsBusy)
@@ -190,59 +218,21 @@ public partial class SimulatorWindow : Window
             _backgroundWorker.ReportProgress(progressPercentage, userState);
         }
     }
-          
 
+    /// <summary>
+    /// EndSimulationClick method is used to stop the simulation when the button is clicked, it calls the StopSimulation method from the Simulator class.
+    /// </summary>
     private void EndSimulationClick(object sender, RoutedEventArgs e)
     {
         Simulator.Simulator.StopSimulation();
     }
 
+    /// <summary>
+    /// Window_MouseDown method is used to move the window when left-clicked and dragged.
+    /// </summary>
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
             this.DragMove();
     }
 }
-//private Thread? TimerThread { get; set; }
-//IsRunTimer = true;
-//TimerThread = new Thread(RunTimer);
-//TimerThread.Start();
-//private string Random(int v1, int v2)
-//{
-//    throw new NotImplementedException();
-//}
-
-//public void SetTextInvoke(string text)
-//{
-//    if (!(CheckAccess()))
-//    {
-//        Action<string> d = SetTextInvoke;
-//        Dispatcher.BeginInvoke(d, new object[] { text });
-//    }
-//    else
-//    {
-//        Data!.Timer = text;
-//    }
-//}
-
-//private void RunTimer()
-//{
-//    while (IsRunTimer)
-//    {
-//        string timer = Watch!.Elapsed.ToString().Substring(0, 8);
-//        SetTextInvoke(timer);
-//        Thread.Sleep(1000);
-//    }
-//}
-//private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-//{
-//    if (e.ChangedButton == MouseButton.Left)
-//        this.DragMove();
-//}
-
-//private void EndSimulation(object sender, RoutedEventArgs e)
-//{
-//    Watch!.Stop();
-//    IsRunTimer = false;
-//    this.Close();
-//}
