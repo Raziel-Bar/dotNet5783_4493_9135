@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 using static Dal.DataSource;
 namespace Dal;
 
@@ -10,6 +11,7 @@ namespace Dal;
 /// </summary>
 internal class DalProduct : IProduct
 {
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// adds a new product to the products list
     /// </summary>
@@ -36,6 +38,7 @@ internal class DalProduct : IProduct
 
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// searches for a specific product according to its ID
     /// </summary>
@@ -50,6 +53,7 @@ internal class DalProduct : IProduct
     /// </exception>
     public Product? Get(int productId) => Get(product => product?.ID == productId);
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// deletes a product from the list
     /// </summary>
@@ -61,6 +65,7 @@ internal class DalProduct : IProduct
     /// </exception>
     public void Delete(int productId) => _products.Remove(Get(productId));
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// updates a product's details
     /// </summary>
@@ -76,6 +81,7 @@ internal class DalProduct : IProduct
         _products.Add(updateProduct);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// gets a product that fits a condition
     /// </summary>
@@ -89,6 +95,7 @@ internal class DalProduct : IProduct
         throw new NotFoundException("Product");
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// returns a list of all products that fits a given condition
     /// </summary>

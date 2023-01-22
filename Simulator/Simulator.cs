@@ -12,12 +12,13 @@ public static class Simulator
 
     private static readonly Random _random = new();// random numbers maker
 
+
     private static event Action? s_stopSimulation;
 
     public static event Action? s_StopSimulation
     {
         add => s_stopSimulation += value;
-        remove => s_stopSimulation -= value;    
+        remove => s_stopSimulation -= value;
     }
 
     private static event Action<int, object?>? s_updateSimulation;
@@ -34,26 +35,25 @@ public static class Simulator
     {
         Delegate[] delegates = s_updateSimulation!.GetInvocationList();
         Order? order;
+        s_flagStopSimulation = false;
         while (!s_flagStopSimulation)
         {
-
-
             order = _bl!.Order.NextOrderInLine()!;
 
             if (order is null)
                 Thread.Sleep(c_sleepTime);
-           
+
             else
             {
                 int timeOfTreatment = _random.Next(3, 10);
                 int nextStatus = ((int)order.Status! + 1);
                 BO.ORDER_STATUS? oRDER_STATUS = (ORDER_STATUS)nextStatus;
 
-                
-                Tuple<Order, BO.ORDER_STATUS?, string, string> items = 
+
+                Tuple<Order, BO.ORDER_STATUS?, string, string> items =
                     Tuple.Create(order, oRDER_STATUS, DateTime.Now.ToString(), DateTime.Now.AddSeconds(timeOfTreatment).ToString());
 
-                baginInvoke(delegates, 1, items);
+                beginInvoke(delegates, 1, items);
 
                 int sleepTime = timeOfTreatment * 1000;
 
@@ -67,13 +67,11 @@ public static class Simulator
                 items =
                      Tuple.Create(order, (order.Status == ORDER_STATUS.SHIPPED ? (ORDER_STATUS?)ORDER_STATUS.DELIVERED : null), "", "");
 
-                baginInvoke(delegates, 1, items);
+                beginInvoke(delegates, 1, items);
             }
 
             Thread.Sleep(c_sleepTime);
         }
-
-        s_flagStopSimulation = false;
     }
 
     private static void updateTime(int sleepTime, Delegate[] delegates)
@@ -84,22 +82,22 @@ public static class Simulator
         {
             if (!s_flagStopSimulation)
             {
-                baginInvoke(delegates, 2, i);
+                beginInvoke(delegates, 2, i);
                 Thread.Sleep(1000);
             }
             else
                 break;
-            
         }
     }
 
     public static void StopSimulation()
     {
-        s_flagStopSimulation = true; 
-        baginInvoke(s_stopSimulation?.GetInvocationList());
+        s_flagStopSimulation = true;
+        s_stopSimulation?.Invoke();
     }
 
-    private static void baginInvoke(Delegate[]? delegates, params object[]? objects)
+
+    private static void beginInvoke(Delegate[]? delegates, params object[]? objects)
     {
         foreach (var @delegate in delegates!)
             @delegate?.DynamicInvoke(objects);

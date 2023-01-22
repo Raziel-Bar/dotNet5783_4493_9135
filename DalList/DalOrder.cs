@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 using static Dal.DataSource;
 namespace Dal;
 
@@ -8,6 +9,7 @@ namespace Dal;
 /// </summary>
 internal class DalOrder : IOrder
 {
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// Adds a new order to the _orders array
     /// </summary>
@@ -27,6 +29,7 @@ internal class DalOrder : IOrder
         return newOrder.ID;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// search for a specific order based on its ID
     /// </summary>
@@ -41,6 +44,7 @@ internal class DalOrder : IOrder
     /// </exception>
     public Order? Get(int orderId) => Get(order => order?.ID == orderId);
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -52,6 +56,7 @@ internal class DalOrder : IOrder
     /// </exception>
     public void Delete(int orderId) => _orders.Remove(Get(orderId));
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// updates an existing order
     /// </summary>
@@ -67,6 +72,7 @@ internal class DalOrder : IOrder
         _orders.Add(orderUpdate);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// returns a list of all orders that fits a given condition
     /// </summary>
@@ -75,6 +81,7 @@ internal class DalOrder : IOrder
     public IEnumerable<Order?> GetList(Func<Order?, bool>? func = null) =>
         func is null ? _orders.Select(order => order) : _orders.Where(func);
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// gets an order that fits a condition
     /// </summary>

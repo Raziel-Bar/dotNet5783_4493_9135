@@ -1,11 +1,13 @@
 ﻿using DalApi;
 using DO;
 using static Dal.XmlTools;
+using System.Runtime.CompilerServices;
 
 namespace Dal;
 
 internal class DalOrder : IOrder
 {
+
     const string s_orders = @"Orders";
     const string s_entityName = "Orders";
     /// <summary>
@@ -20,6 +22,8 @@ internal class DalOrder : IOrder
     /// <exception cref="Exception">
     /// in case the order already exists in the _orders array
     /// </exception>
+    /// 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public int Add(Order newOrder)
     {
 
@@ -37,6 +41,7 @@ internal class DalOrder : IOrder
         return id;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// search for a specific order based on its ID
     /// </summary>
@@ -51,7 +56,7 @@ internal class DalOrder : IOrder
     /// </exception>
     public Order? Get(int orderId) => Get(order => order?.ID == orderId);
 
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// deletes an order from the _orders array
     /// </summary>
@@ -71,6 +76,7 @@ internal class DalOrder : IOrder
 
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// updates an existing order
     /// </summary>
@@ -89,6 +95,7 @@ internal class DalOrder : IOrder
 
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// returns a list of all orders that fits a given condition
     /// </summary>
@@ -106,6 +113,7 @@ internal class DalOrder : IOrder
             return listOrders.Where(func).OrderBy(ord => ord?.ID);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// gets an order that fits a condition
     /// </summary>

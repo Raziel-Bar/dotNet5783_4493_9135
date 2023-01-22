@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
 using static Dal.DataSource;
 namespace Dal;
 
@@ -8,6 +9,7 @@ namespace Dal;
 /// </summary>
 internal class DalOrderItem : IOrderItem
 {
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// Adds a new order item to the order item's list
     /// </summary>
@@ -29,6 +31,7 @@ internal class DalOrderItem : IOrderItem
         return newOrderItem.OrderItemID;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// Global search if the given item exists in any order at all
     /// </summary>
@@ -43,6 +46,7 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public OrderItem? Get(int orderItemId) => Get(item => item?.OrderItemID == orderItemId);
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// deletes an order item from the list
     /// </summary>
@@ -54,6 +58,7 @@ internal class DalOrderItem : IOrderItem
     /// </exception>
     public void Delete(int orderItemId) => _orderItems.Remove(Get(orderItemId));
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// Updates a specific order item's details
     /// </summary>
@@ -69,6 +74,7 @@ internal class DalOrderItem : IOrderItem
         _orderItems.Add(updateOrderItem);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// gets an orderItem that fits a condition
     /// </summary>
@@ -82,6 +88,7 @@ internal class DalOrderItem : IOrderItem
         throw new NotFoundException("Order item");
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// returns a list of all orderItems that fits a given condition
     /// </summary>

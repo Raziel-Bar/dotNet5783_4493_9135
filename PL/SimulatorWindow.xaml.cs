@@ -12,6 +12,7 @@ namespace PL;
 
 public class SimulatorWindowData : DependencyObject
 {
+
     public Order? CurrentOrderInLine
     {
         get { return (Order?)GetValue(CurrentOrderInLineProperty); }
@@ -96,10 +97,15 @@ public partial class SimulatorWindow : Window
         DependencyProperty.Register("Data", typeof(SimulatorWindowData), typeof(SimulatorWindow));
 
     private BackgroundWorker _backgroundWorker;
-    public SimulatorWindow()
+
+    private event Action _onClosingWindow;
+
+    public SimulatorWindow(Action _onClosingWindow)
     {
         InitializeComponent();
         this.WindowStyle = WindowStyle.None;
+
+        this._onClosingWindow = _onClosingWindow;
         //    if(Data.CurrentOrderInLine != null) 
         //        Data.NextStatus = Data.CurrentOrderInLine.Status == ORDER_STATUS.PENDING ? ORDER_STATUS.SHIPPED : ORDER_STATUS.DELIVERED;
 
@@ -125,30 +131,34 @@ public partial class SimulatorWindow : Window
         Watch!.Stop();
         Simulator.Simulator.s_StopSimulation -= cancelAsync;
         Simulator.Simulator.s_UpdateSimulation -= reportProgress;
-        _backgroundWorker.Dispose();
+        _onClosingWindow?.Invoke();
         this.Close();
     }
 
     private void _backgroundWorker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
     {
-        int action = e.ProgressPercentage;
 
-        if (action == 0)
+        if (_backgroundWorker.IsBusy)
         {
-            Timer = (e.UserState as string)!;
-        }
+            int action = e.ProgressPercentage;
 
-        if (action == 1)
-        {
-            if (Data is null)
-                Data = new();
+            if (action == 0)
+            {
+                Timer = (e.UserState as string)!;
+            }
+
+            if (action == 1)
+            {
+                if (Data is null)
+                    Data = new();
 
                 (Data.CurrentOrderInLine, Data.NextStatus, Data.StartTime, Data.HandleTime)
                = (e.UserState as Tuple<BO.Order, BO.ORDER_STATUS?, string, string>)!;
-        }
+            }
 
-        if (action == 2)
-            TimeProgress = (int)e.UserState!;
+            if (action == 2)
+                TimeProgress = (int)e.UserState!;
+        } 
     }
 
     private void _backgroundWorker_DoWork(object? sender, DoWorkEventArgs e)

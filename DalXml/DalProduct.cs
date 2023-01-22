@@ -1,11 +1,14 @@
 ﻿using DalApi;
 using DO;
+using System.Runtime.CompilerServices;
+
 namespace Dal;
 using static Dal.XmlTools;
 internal class DalProduct : IProduct
 {
     const string s_entityName = @"Products";
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// adds a new product to the products list
     /// </summary>
@@ -32,6 +35,7 @@ internal class DalProduct : IProduct
         return newProduct.ID;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// searches for a specific product according to its ID
     /// </summary>
@@ -46,7 +50,7 @@ internal class DalProduct : IProduct
     /// </exception>
     public Product? Get(int productId) => Get(product => product?.ID == productId);
 
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// deletes a product from the list
     /// </summary>
@@ -62,6 +66,8 @@ internal class DalProduct : IProduct
         products.Remove(Get(productId));
         SaveListToXMLSerializer(products, s_entityName, s_entityName);
     }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// updates a product's details
     /// </summary>
@@ -79,6 +85,7 @@ internal class DalProduct : IProduct
         SaveListToXMLSerializer(products, s_entityName, s_entityName);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// gets a product that fits a condition
     /// </summary>
@@ -92,6 +99,7 @@ internal class DalProduct : IProduct
         throw new NotFoundException("Product");
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     /// <summary>
     /// returns a list of all products that fits a given condition
     /// </summary>
